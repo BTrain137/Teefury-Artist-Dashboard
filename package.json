@@ -1,0 +1,46 @@
+{
+  "name": "starter-express-react",
+  "version": "1.0.0",
+  "description": "Express react.js project start project",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel ./src -d dist",
+    "client": "cd client && npm start",
+    "install": "cd client && npm install",
+    "local-prod-code": "NODE_ENV=production npm run start:prod",
+    "start-just-server": "nodemon --ignore 'client/*' ./src/index.js --exec babel-node -e js",
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:dev": "concurrently \"nodemon --ignore 'client/*' ./src/index.js --exec babel-node -e js \" \"npm run client\"",
+    "start:prod": "npm run build && cd client && npm run build && cd .. && node ./dist/index.js",
+    "test": "mocha --require @babel/register --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bryan89tran/starter-express-react.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bryan89tran/starter-express-react/issues"
+  },
+  "homepage": "https://github.com/bryan89tran/starter-express-react#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/node": "^7.7.7",
+    "@babel/register": "^7.7.7",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "concurrently": "^5.0.2",
+    "mocha": "^7.0.0",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.21.2",
+    "if-env": "^1.0.4",
+    "morgan": "^1.9.1"
+  }
+}
