@@ -8,8 +8,8 @@
     "client": "cd client && npm start",
     "install": "cd client && npm install",
     "local-prod-code": "NODE_ENV=production npm run start:prod",
-    "start-just-server": "nodemon --ignore 'client/*' ./src/index.js --exec babel-node -e js",
-    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start-just-server": "NODE_ENV=dev nodemon --ignore 'client/*' ./src/index.js --exec babel-node -e js",
+    "start": "if-env NODE_ENV=production && npm run start:prod || NODE_ENV=dev npm run start:dev",
     "start:dev": "concurrently \"nodemon --ignore 'client/*' ./src/index.js --exec babel-node -e js \" \"npm run client\"",
     "start:prod": "npm run build && cd client && npm run build && cd .. && node ./dist/index.js",
     "test": "mocha --require @babel/register --exit"
@@ -38,9 +38,11 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.21.2",
     "if-env": "^1.0.4",
+    "mariadb": "^2.2.0",
     "morgan": "^1.9.1"
   }
 }
