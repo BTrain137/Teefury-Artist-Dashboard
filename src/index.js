@@ -1,4 +1,4 @@
-import "../config.js";
+import "./config.js";
 import express from "express";
 import cors from "cors";
 import logger from "morgan";
