@@ -1,9 +1,11 @@
+import "../config.js";
 import express from "express";
 import cors from "cors";
 import logger from "morgan";
 import helmet from "helmet";
 import path from 'path';
 import routes from "./routes";
+import "./database";
 
 const app = express();
 const { NODE_ENV, PORT, DEBUG, } = process.env;
