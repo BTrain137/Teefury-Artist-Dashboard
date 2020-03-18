@@ -3,7 +3,7 @@ const router = Router();
 import helloWorld from './helloWorld.js';
 
 // Test Route
-// /webhook/orders
+// /webhook/hello-world
 router.use("/hello-world", helloWorld);
 
 export default router;
