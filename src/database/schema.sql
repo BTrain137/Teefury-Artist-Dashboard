@@ -10,7 +10,7 @@ CREATE TABLE `artist_profile` (
   `artist_name` VARCHAR(30) NOT NULL UNIQUE,
   `first_name` VARCHAR(30) NOT NULL,
   `last_name` VARCHAR(30) NOT NULL,
-  `contact_email` VARCHAR(255),
+  `username_contact_email` VARCHAR(255) UNIQUE,
   `paypal_email` VARCHAR(255),
   `phone` VARCHAR(20),
   `social_facebook` TEXT,
@@ -25,7 +25,7 @@ CREATE TABLE `artist_profile` (
 -- Examples
 
 -- Insert Many 
--- INSERT INTO `artist_profile` (`artist_name`, `first_name`, `last_name`, `contact_email`, `paypal_email`, `phone`, `social_facebook`, `social_instagram`, `social_twitter`, `international`) 
+-- INSERT INTO `artist_profile` (`artist_name`, `first_name`, `last_name`, `username_contact_email`, `paypal_email`, `phone`, `social_facebook`, `social_instagram`, `social_twitter`, `international`) 
 -- VALUES ("locoMotive", "Tom", "Thomas", "tom@email.com", "tom@email.com", "", "", "", "",  true),
 -- ("babyUprising", "John", "Johnson", "john@email.com", "john@email.com", "", "", "", "",  false),
 -- ("jacksonFive", "Jack", "Jackson", "jack@email.com", "jack@email.com", "", "", "", "",  true);
