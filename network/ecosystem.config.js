@@ -1,14 +1,15 @@
-// pm1 start ./network/ecosystem.config.js --env production
+// pm2 start ./network/ecosystem.config.js --env production
 module.exports = {
   apps: [
     {
       name: "artist-dashboard",
-      cwd: "../",
-      script: "npm",
-      args: "start:prod", 
+      script: "npm start",
+      env: {
+        NODE_ENV: "dev"
+      },
       env_production: {
         NODE_ENV: "production"
       }
     }
   ]
-}
+};
