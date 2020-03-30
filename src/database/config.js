@@ -1,10 +1,10 @@
 import { createPool } from "mariadb";
-const { DB_HOST, DB_USER, DB_PASSWORD } = process.env;
+const { DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE } = process.env;
 
 export default createPool({
   host: DB_HOST,
   user: DB_USER,
   password: DB_PASSWORD,
-  database: "artist_dashboard",
+  database: DB_DATABASE,
   connectionLimit: 5
 });
