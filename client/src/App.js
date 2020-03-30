@@ -1,6 +1,5 @@
 import React from 'react';
 import logo from './logo.svg';
-import Button from "./components/Button/Button";
 import './App.css';
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
         >
           Learn React
         </a>
-        <Button>Fire API</Button>
       </header>
     </div>
   );
