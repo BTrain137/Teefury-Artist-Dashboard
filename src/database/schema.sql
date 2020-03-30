@@ -1,4 +1,4 @@
--- mysql -u username -p < file.sql
+-- mysql -u username -p < schema.sql 
 
 -- Database
 CREATE DATABASE IF NOT EXISTS `artist_dashboard`;
@@ -32,3 +32,16 @@ CREATE TABLE `artist_profile` (
 
 -- Update One
 -- UPDATE `artist_profile` SET `first_name`="Henry" WHERE `artist_name`="locoMotive";
+
+
+-- 
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) UNIQUE,
+  `is_admin` BOOLEAN NOT NULL DEFAULT 0,
+  `password` BINARY(60),
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`)
+);
