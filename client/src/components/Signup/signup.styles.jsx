@@ -64,3 +64,13 @@ export const Img = style.img`
   display: inline-flex;
   margin-bottom: -2px;
 `;
+
+export const Button = style.button`
+  padding: 10px 20px;
+  border-radius: 13px;
+  width: 100%;
+  font-size: 19px;
+  font-weight: bold;
+  background-color: #50B8BD;
+  color: white;
+`;

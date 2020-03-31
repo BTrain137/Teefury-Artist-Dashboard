@@ -12,7 +12,8 @@ import {
   Span,
   Img,
   Terms,
-  LinkToTerm
+  LinkToTerm,
+  Button
 } from "./signup.styles.jsx";
 import logo from "../../assets/logo.png";
 
@@ -21,21 +22,65 @@ class Signup extends Component {
     super(props);
 
     this.state = {
-      email: "",
-      password: "",
-      checked: false
+      artistName: "",
+      firstName: "",
+      lastName: "",
+      contactEmail: "",
+      paypalEmail: "",
+      phoneNumber: "",
+      socialFacebook: "",
+      socialInstagram: "",
+      socialTwitter: "",
+      isInternational: true,
+      hasAcceptTerms: false
     };
   }
 
   handleSubmit = async event => {
     event.preventDefault();
 
-    const { email, password } = this.state;
+    const {
+      artistName,
+      firstName,
+      lastName,
+      contactEmail,
+      paypalEmail,
+      phoneNumber,
+      socialFacebook,
+      socialInstagram,
+      socialTwitter,
+      isInternational,
+      hasAcceptTerms
+    } = this.state;
+
+    console.log(
+      artistName,
+      firstName,
+      lastName,
+      contactEmail,
+      paypalEmail,
+      phoneNumber,
+      socialFacebook,
+      socialInstagram,
+      socialTwitter,
+      isInternational,
+      hasAcceptTerms
+    );
 
     try {
-      console.log("Email: ", email);
-      console.log("password: ", password);
-      this.setState({ email: "", password: "" });
+      this.setState({
+        artistName: "",
+        firstName: "",
+        lastName: "",
+        contactEmail: "",
+        paypalEmail: "",
+        phoneNumber: "",
+        socialFacebook: "",
+        socialInstagram: "",
+        socialTwitter: "",
+        isInternational: true,
+        hasAcceptTerms: false
+      });
     } catch (error) {
       console.log("Sign In -> handle Submit", error);
     }
@@ -43,13 +88,21 @@ class Signup extends Component {
 
   handleChange = event => {
     const { name, value } = event.target;
-
-    this.setState({ [name]: value }, () => console.log(this.state));
+    this.setState({ [name]: value });
   };
 
   handleCheckboxChange = event => {
-    const { checked } = event.target;
-    this.setState({ checked });
+    const { name, checked } = event.target;
+    this.setState({ [name]: checked });
+  };
+
+  handleToggleCheckBox = event => {
+    const {
+      name,
+      dataset: { bool }
+    } = event.target;
+    const boolValue = bool.toLowerCase() === "true" ? true : false;
+    this.setState({ [name]: boolValue });
   };
 
   render() {
@@ -69,75 +122,120 @@ class Signup extends Component {
           <div style={{ flexBasis: "50%" }}>
             <FormInput
               type="text"
-              name="artist-name"
+              name="artistName"
               label="Artist Name"
               isLabelHidden={true}
               placeholder="@Artist Name"
               style={{ fontSize: "21px" }}
               handleChange={this.handleChange}
-              value={this.state.email}
+              value={this.state.artistName}
               required
             />
             <FormInput
               type="text"
-              name="first_name"
+              name="firstName"
               label="First Name"
               isLabelHidden={true}
               placeholder="First Name"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.password}
+              value={this.state.firstName}
               required
             />
             <FormInput
               type="text"
-              name="last_name"
+              name="lastName"
               label="Last Name"
               isLabelHidden={true}
               placeholder="Last Name"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.password}
+              value={this.state.lastName}
               required
             />
             <FormInput
               type="email"
-              name="contact_email"
+              name="contactEmail"
               isLabelHidden={true}
               label="contact_email"
               placeholder="Contact Email"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.password}
+              value={this.state.contactEmail}
               required
             />
             <FormInput
               type="email"
-              name="paypal_email"
+              name="paypalEmail"
               isLabelHidden={true}
               label="Paypal Email"
               placeholder="Paypal Email"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.password}
+              value={this.state.paypalEmail}
               required
+            />
+            <FormInput
+              type="text"
+              name="phoneNumber"
+              isLabelHidden={true}
+              label="Phone Number"
+              placeholder="Phone Number"
+              style={{ fontSize: "15px" }}
+              handleChange={this.handleChange}
+              value={this.state.phoneNumber}
+              required
+            />
+            <FormInput
+              type="text"
+              name="socialFacebook"
+              isLabelHidden={true}
+              label="Facebook"
+              placeholder="Facebook Handle"
+              style={{ fontSize: "15px" }}
+              handleChange={this.handleChange}
+              value={this.state.socialFacebook}
+            />
+            <FormInput
+              type="text"
+              name="socialInstagram"
+              isLabelHidden={true}
+              label="Instagram"
+              placeholder="Instagram Handle"
+              style={{ fontSize: "15px" }}
+              handleChange={this.handleChange}
+              value={this.state.socialInstagram}
+            />
+            <FormInput
+              type="text"
+              name="socialTwitter"
+              isLabelHidden={true}
+              label="Twitter"
+              placeholder="Twitter Handle"
+              style={{ fontSize: "15px" }}
+              handleChange={this.handleChange}
+              value={this.state.socialTwitter}
             />
           </div>
           <div style={{ flexBasis: "50%", textAlign: "left", display: "flex" }}>
-            <div style={{ display: "inline-block", margin: "0 auto" }}>
+            <div style={{ display: "inline-block", margin: "0 auto", minWidth: "233px" }}>
               <P>INTERNATIONAL?</P>
               <div style={{ marginBottom: "30px", display: "flex" }}>
                 <label style={{ flexBasis: "50%" }}>
                   <Checkbox
-                    checked={this.state.checked}
-                    onChange={this.handleCheckboxChange}
+                    name="isInternational"
+                    data-bool={true}
+                    checked={this.state.isInternational}
+                    onChange={this.handleToggleCheckBox}
                   />
                   <Span>Yes</Span>
                 </label>
                 <label style={{ flexBasis: "50%" }}>
                   <Checkbox
-                    checked={this.state.checked}
-                    onChange={this.handleCheckboxChange}
+                    name="isInternational"
+                    data-bool={false}
+                    checked={!this.state.isInternational}
+                    onChange={this.handleToggleCheckBox}
                   />
                   <Span>No</Span>
                 </label>
@@ -145,7 +243,8 @@ class Signup extends Component {
               <div style={{ display: "flex" }}>
                 <label>
                   <Checkbox
-                    checked={this.state.checked}
+                    name="hasAcceptTerms"
+                    checked={this.state.hasAcceptTerms}
                     onChange={this.handleCheckboxChange}
                   />
                 </label>
@@ -155,6 +254,11 @@ class Signup extends Component {
                     terms and conditions
                   </LinkToTerm>
                 </Terms>
+              </div>
+              <div style={{ marginTop: "20px" }}>
+                <Button type="submit">
+                  Create Profile
+                </Button>
               </div>
             </div>
           </div>
