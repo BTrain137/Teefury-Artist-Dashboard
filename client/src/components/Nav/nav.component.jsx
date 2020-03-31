@@ -1,5 +1,9 @@
 import React from "react";
 
+import { ReactComponent as BellIcon } from "../../assets/bell.svg";
+import { ReactComponent as CogIcon } from "../../assets/cog.svg";
+import { ReactComponent as ComputerIcon } from "../../assets/computer.svg";
+import { ReactComponent as HouseIcon } from "../../assets/house.svg";
 import NavItem from "../NavItem/nav-item.component";
 
 import { NavHeader, NavWrapper, Title, LogoImg, Subtitle } from "./nav.styles";
@@ -13,16 +17,24 @@ const Nav = ({ match }) => (
     </Title>
     <Subtitle>Dashboard</Subtitle>
     <NavWrapper>
-      <NavItem currentPath={match.path} to="/artist/profile">
+      <NavItem to="/artist/profile" currentPath={match.path} Icon={HouseIcon}>
         Home
       </NavItem>
-      <NavItem currentPath={match.path} to="/artist/submission">
+      <NavItem
+        to="/artist/submission"
+        currentPath={match.path}
+        Icon={ComputerIcon}
+      >
         Submissions
       </NavItem>
-      <NavItem currentPath={match.path} to="/artist/commission">
+      <NavItem to="/artist/commission" currentPath={match.path} Icon={CogIcon}>
         Commission
       </NavItem>
-      <NavItem currentPath={match.path} to="/artist/notifications">
+      <NavItem
+        to="/artist/notifications"
+        currentPath={match.path}
+        Icon={BellIcon}
+      >
         Notifications
       </NavItem>
     </NavWrapper>

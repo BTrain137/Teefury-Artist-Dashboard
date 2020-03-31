@@ -1,21 +1,27 @@
 import React from "react";
 
 import {
+  LinkWrapperSelected,
+  LinkAnchorSelected,
   LinkWrapper,
-  SelectedLink,
   LinkAnchor,
-  SelectedAnchor
 } from "./nav-item.styles";
 
-const NavItem = ({ children, to, currentPath, ...otherProps }) => (
+const NavItem = ({ children, to, currentPath, Icon, ...otherProps }) => (
   <>
     {currentPath === to ? (
-      <SelectedLink {...otherProps}>
-        <SelectedAnchor to={to}>{children}</SelectedAnchor>
-      </SelectedLink>
+      <LinkWrapperSelected {...otherProps}>
+        <LinkAnchorSelected to={to}>
+          <Icon />
+          {children}
+        </LinkAnchorSelected>
+      </LinkWrapperSelected>
     ) : (
-      <LinkWrapper>
-        <LinkAnchor to={to}>{children}</LinkAnchor>
+      <LinkWrapper {...otherProps}>
+        <LinkAnchor to={to}>
+          <Icon />
+          {children}
+        </LinkAnchor>
       </LinkWrapper>
     )}
   </>
