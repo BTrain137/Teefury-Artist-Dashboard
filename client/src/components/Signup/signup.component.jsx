@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 
 import FormInput from "../FormInput/form-input.component";
-import Checkbox from "../CheckBox/checkbox.component";
+import {
+  CheckboxesContainer,
+  Checkbox,
+  Label
+} from "../CheckBox/checkbox.component";
 
 import {
   SignUpContainer,
@@ -124,7 +128,6 @@ class Signup extends Component {
               type="text"
               name="artistName"
               label="Artist Name"
-              isLabelHidden={true}
               placeholder="@Artist Name"
               style={{ fontSize: "21px" }}
               handleChange={this.handleChange}
@@ -135,7 +138,6 @@ class Signup extends Component {
               type="text"
               name="firstName"
               label="First Name"
-              isLabelHidden={true}
               placeholder="First Name"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
@@ -146,7 +148,6 @@ class Signup extends Component {
               type="text"
               name="lastName"
               label="Last Name"
-              isLabelHidden={true}
               placeholder="Last Name"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
@@ -156,7 +157,6 @@ class Signup extends Component {
             <FormInput
               type="email"
               name="contactEmail"
-              isLabelHidden={true}
               label="contact_email"
               placeholder="Contact Email"
               style={{ fontSize: "15px" }}
@@ -167,7 +167,6 @@ class Signup extends Component {
             <FormInput
               type="email"
               name="paypalEmail"
-              isLabelHidden={true}
               label="Paypal Email"
               placeholder="Paypal Email"
               style={{ fontSize: "15px" }}
@@ -178,7 +177,6 @@ class Signup extends Component {
             <FormInput
               type="text"
               name="phoneNumber"
-              isLabelHidden={true}
               label="Phone Number"
               placeholder="Phone Number"
               style={{ fontSize: "15px" }}
@@ -189,7 +187,6 @@ class Signup extends Component {
             <FormInput
               type="text"
               name="socialFacebook"
-              isLabelHidden={true}
               label="Facebook"
               placeholder="Facebook Handle"
               style={{ fontSize: "15px" }}
@@ -199,7 +196,6 @@ class Signup extends Component {
             <FormInput
               type="text"
               name="socialInstagram"
-              isLabelHidden={true}
               label="Instagram"
               placeholder="Instagram Handle"
               style={{ fontSize: "15px" }}
@@ -209,7 +205,6 @@ class Signup extends Component {
             <FormInput
               type="text"
               name="socialTwitter"
-              isLabelHidden={true}
               label="Twitter"
               placeholder="Twitter Handle"
               style={{ fontSize: "15px" }}
@@ -218,10 +213,16 @@ class Signup extends Component {
             />
           </div>
           <div style={{ flexBasis: "50%", textAlign: "left", display: "flex" }}>
-            <div style={{ display: "inline-block", margin: "0 auto", minWidth: "233px" }}>
+            <div
+              style={{
+                display: "inline-block",
+                margin: "0 auto",
+                minWidth: "233px"
+              }}
+            >
               <P>INTERNATIONAL?</P>
-              <div style={{ marginBottom: "30px", display: "flex" }}>
-                <label style={{ flexBasis: "50%" }}>
+              <CheckboxesContainer>
+                <Label>
                   <Checkbox
                     name="isInternational"
                     data-bool={true}
@@ -229,8 +230,8 @@ class Signup extends Component {
                     onChange={this.handleToggleCheckBox}
                   />
                   <Span>Yes</Span>
-                </label>
-                <label style={{ flexBasis: "50%" }}>
+                </Label>
+                <Label>
                   <Checkbox
                     name="isInternational"
                     data-bool={false}
@@ -238,8 +239,8 @@ class Signup extends Component {
                     onChange={this.handleToggleCheckBox}
                   />
                   <Span>No</Span>
-                </label>
-              </div>
+                </Label>
+              </CheckboxesContainer>
               <div style={{ display: "flex" }}>
                 <label>
                   <Checkbox
@@ -256,9 +257,7 @@ class Signup extends Component {
                 </Terms>
               </div>
               <div style={{ marginTop: "20px" }}>
-                <Button type="submit">
-                  Create Profile
-                </Button>
+                <Button type="submit">Create Profile</Button>
               </div>
             </div>
           </div>
