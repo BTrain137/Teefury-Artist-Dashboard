@@ -3,12 +3,12 @@ import express from "express";
 import cors from "cors";
 import logger from "morgan";
 import helmet from "helmet";
-import path from 'path';
+import path from "path";
 import routes from "./routes";
 import "./database";
 
 const app = express();
-const { NODE_ENV, PORT, DEBUG, } = process.env;
+const { NODE_ENV, PORT } = process.env;
 const port = PORT || 3001;
 
 // Middleware
@@ -16,7 +16,7 @@ app.use(helmet());
 app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-if (DEBUG) app.use(logger("dev"));
+if (NODE_ENV === "development") app.use(logger("dev"));
 
 // API Routes
 app.use(routes);
