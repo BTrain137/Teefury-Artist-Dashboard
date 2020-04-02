@@ -1,6 +1,15 @@
 import styled, { css } from "styled-components";
 
-export const CheckboxContainer = styled.div`
+export const CheckboxesContainerStyled = styled.div`
+  margin-bottom: 30px;
+  display: flex;
+`;
+
+export const LabelStyled = styled.label`
+  flex-basis: 50%;
+`;
+
+export const CheckboxWrapper = styled.div`
   display: inline-block;
   vertical-align: middle;
 `;

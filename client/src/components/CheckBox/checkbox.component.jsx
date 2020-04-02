@@ -1,20 +1,28 @@
 import React from "react";
 import {
-  CheckboxContainer,
+  CheckboxesContainerStyled,
+  CheckboxWrapper,
   HiddenCheckbox,
-  StyledCheckbox, 
-  Icon
+  StyledCheckbox,
+  Icon,
+  LabelStyled
 } from "./checkbox.styles.jsx";
 
-const Checkbox = ({ className, checked, ...props }) => (
-  <CheckboxContainer className={className}>
+export const Checkbox = ({ className, checked, ...props }) => (
+  <CheckboxWrapper className={className}>
     <HiddenCheckbox checked={checked} {...props} />
     <StyledCheckbox checked={checked}>
       <Icon viewBox="0 0 24 24">
         <polyline points="20 6 9 17 4 12" />
       </Icon>
     </StyledCheckbox>
-  </CheckboxContainer>
-)
+  </CheckboxWrapper>
+);
 
-export default Checkbox;
+export const Label = ({ children, ...props }) => (
+  <LabelStyled {...props}>{children}</LabelStyled>
+);
+
+export const CheckboxesContainer = ({ children, ...props }) => (
+  <CheckboxesContainerStyled {...props}>{children}</CheckboxesContainerStyled>
+);
