@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { ButtonCenter, Button } from "../Button/button.component";
+import { ButtonLgCenter, ButtonLg } from "../Button/button.component";
 import {
   Checkbox,
   Label,
@@ -193,7 +193,7 @@ class ArtistProfile extends Component {
                 <span>No</span>
               </Label>
             </CheckboxesContainer>
-            <Button onClick={this.handleSubmit}>Save</Button>
+            <ButtonLg onClick={this.handleSubmit}>Save</ButtonLg>
           </ProfileForm>
         ) : (
           <>
@@ -204,7 +204,7 @@ class ArtistProfile extends Component {
               <EnvelopIcon />
               {contactEmail}
             </ProfileInfo>
-            <ButtonCenter onClick={this.handleClick}>EDIT PROFILE</ButtonCenter>
+            <ButtonLgCenter onClick={this.handleClick}>EDIT PROFILE</ButtonLgCenter>
           </>
         )}
       </ArtistProfileContainer>

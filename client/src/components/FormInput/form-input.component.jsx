@@ -1,7 +1,20 @@
 import React from "react";
-import { FormInputContainer, InputStyled } from "./form-input.styles";
+import {
+  FormStyled,
+  FormInputContainer,
+  InputStyled
+} from "./form-input.styles";
 
-const FormInput = ({ handleChange, label, isShowLabel, ...otherProps }) => (
+export const Form = ({ children, ...props }) => (
+  <FormStyled {...props}>{children}</FormStyled>
+);
+
+export const FormInput = ({
+  handleChange,
+  label,
+  isShowLabel,
+  ...otherProps
+}) => (
   <FormInputContainer>
     {label ? (
       <label className={isShowLabel ? "form-label" : "display-none"}>
@@ -15,5 +28,3 @@ const FormInput = ({ handleChange, label, isShowLabel, ...otherProps }) => (
     />
   </FormInputContainer>
 );
-
-export default FormInput;

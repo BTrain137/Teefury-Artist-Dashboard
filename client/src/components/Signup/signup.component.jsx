@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
-import FormInput from "../FormInput/form-input.component";
+import { Form, FormInput } from "../FormInput/form-input.component";
+import { ButtonMd } from "../Button/button.component";
 import {
   CheckboxesContainer,
   Checkbox,
@@ -17,7 +18,6 @@ import {
   Img,
   Terms,
   LinkToTerm,
-  Button
 } from "./signup.styles.jsx";
 import logo from "../../assets/logo.png";
 
@@ -119,9 +119,9 @@ class Signup extends Component {
         </H2>
         <H3>Dashboard</H3>
 
-        <form
+        <Form
           onSubmit={this.handleSubmit}
-          style={{ display: "flex", marginTop: "84px" }}
+          style={{ display: "flex" }}
         >
           <div style={{ flexBasis: "50%" }}>
             <FormInput
@@ -256,12 +256,10 @@ class Signup extends Component {
                   </LinkToTerm>
                 </Terms>
               </div>
-              <div style={{ marginTop: "20px" }}>
-                <Button type="submit">Create Profile</Button>
-              </div>
+                <ButtonMd type="submit">Create Profile</ButtonMd>
             </div>
           </div>
-        </form>
+        </Form>
       </SignUpContainer>
     );
   }

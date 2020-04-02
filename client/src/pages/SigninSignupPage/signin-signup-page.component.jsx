@@ -1,11 +1,17 @@
 import React from "react"
 import Signup from "../../components/Signup/signup.component";
+import Signin from "../../components/Signin/signin.component";
+
 import { SignInSignUpContainer } from "./signin-signup-page.styles";
 
-const SingInSignUpPage = () => (
+export const SignUpPage = () => (
   <SignInSignUpContainer>
     <Signup />
   </SignInSignUpContainer>
 );
 
-export default SingInSignUpPage;
+export const SignInPage = () => (
+  <SignInSignUpContainer>
+    <Signin />
+  </SignInSignUpContainer>
+);

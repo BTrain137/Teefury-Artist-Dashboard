@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const FormStyled = styled.form`
+  margin-top: 84px;
+`;
+
 export const FormInputContainer = styled.div`
   display: block;
 

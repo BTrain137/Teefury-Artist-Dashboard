@@ -1,12 +1,25 @@
 import React from "react";
-import { ButtonContainer, ButtonStyled } from "./button.styles";
+import {
+  ButtonLgContainer,
+  ButtonLgStyled,
+  ButtonMdContainer,
+  ButtonMdStyled
+} from "./button.styles";
 
-export const ButtonCenter = ({ children, ...props }) => (
-  <ButtonContainer>
-    <ButtonStyled {...props}>{children}</ButtonStyled>
-  </ButtonContainer>
+export const ButtonLgCenter = ({ children, ...props }) => (
+  <ButtonLgContainer>
+    <ButtonLgStyled {...props}>{children}</ButtonLgStyled>
+  </ButtonLgContainer>
 );
 
-export const Button = ({ children, ...props }) => (
-  <ButtonStyled {...props}>{children}</ButtonStyled>
+export const ButtonLg = ({ children, ...props }) => (
+  <ButtonLgStyled {...props}>{children}</ButtonLgStyled>
+);
+
+export const ButtonMd = ({ children, ...props }) => (
+  <ButtonMdContainer>
+    <ButtonMdStyled {...props}>
+      {children}
+    </ButtonMdStyled>
+  </ButtonMdContainer>
 );
