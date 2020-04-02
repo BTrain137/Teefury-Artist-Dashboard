@@ -1,6 +1,15 @@
-import style from "styled-components";
+import styled from "styled-components";
 
-export const InputStyled = style.input`
+export const FormInputContainer = styled.div`
+  display: block;
+
+  .form-label {
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+`;
+
+export const InputStyled = styled.input`
   background-color: #F4F2F2;
   border: none;
   padding: 16px;

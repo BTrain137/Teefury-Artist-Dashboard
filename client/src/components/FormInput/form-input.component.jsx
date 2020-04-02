@@ -1,17 +1,19 @@
 import React from "react";
-import { InputStyled } from "./form-input.styles";
+import { FormInputContainer, InputStyled } from "./form-input.styles";
 
-const FormInput = ({ handleChange, label, isLabelHidden, ...otherProps }) => (
-  <>
+const FormInput = ({ handleChange, label, isShowLabel, ...otherProps }) => (
+  <FormInputContainer>
+    {label ? (
+      <label className={isShowLabel ? "form-label" : "display-none"}>
+        {label}
+      </label>
+    ) : null}
     <InputStyled
       className="form-input"
       onChange={handleChange}
       {...otherProps}
     />
-    {label ? (
-      <label className={isLabelHidden ? "display-none" : ""}>{label}</label>
-    ) : null}
-  </>
+  </FormInputContainer>
 );
 
 export default FormInput;
