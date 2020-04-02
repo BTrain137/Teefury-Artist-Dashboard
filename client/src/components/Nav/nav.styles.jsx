@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 export const NavHeader = styled.header`
-background-color: #6CB6BB;
-min-height: 100vh;
-width: 260px;
-border-radius: 0px 70px 0px 0px;
+  background-color: #6CB6BB;
+  min-height: 100vh;
+  flex-basis: 20%;
+  border-radius: 0px 70px 0px 0px;
 `;
 
 export const Title = styled.h2`
