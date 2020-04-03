@@ -1,5 +1,9 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import axios from "axios";
 import { Link } from "react-router-dom";
+
+import { setUserJWTToken } from "../../redux/user/user.action";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
 import { ButtonMd } from "../Button/button.component";
@@ -13,22 +17,29 @@ class Signin extends Component {
 
     this.state = {
       contactEmail: "",
-      password: ""
+      password: "",
     };
   }
 
-  handleSubmit = async event => {
+  handleSubmit = async (event) => {
     event.preventDefault();
+    const { setUserJWTToken } = this.props;
     const { contactEmail, password } = this.state;
     try {
-      console.log({ contactEmail, password });
+      const {
+        data: { token },
+      } = await axios.post("/api/login-user", {
+        username: contactEmail,
+        password,
+      });
+      setUserJWTToken(token);
       this.setState({ contactEmail: "", password: "" });
     } catch (error) {
       console.log("Error Sign Up: ", error);
     }
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
   };
@@ -76,4 +87,8 @@ class Signin extends Component {
   }
 }
 
-export default Signin;
+const mapDispatchToProps = (dispatch) => ({
+  setUserJWTToken: (token) => dispatch(setUserJWTToken(token)),
+});
+
+export default connect(null, mapDispatchToProps)(Signin);
