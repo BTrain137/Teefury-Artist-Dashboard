@@ -1,4 +1,4 @@
-import pool from "./config.js";
+import pool from "./connection.js";
 let conn;
 
 const init = function() {
