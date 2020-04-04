@@ -15,7 +15,7 @@ const passRegisterOpt = {
   usernameField: "email",
   passwordField: "password",
   passReqToCallback: true,
-  session: false
+  session: false,
 };
 
 passport.use(
@@ -34,18 +34,18 @@ passport.use(
         );
 
         const queryString =
-          "INSERT INTO `user` (`email`, `password`) VALUES (?, ?)";
+          "INSERT INTO `users` (`username_contact_email`, `password`) VALUES (?, ?)";
         await pool.query(queryString, [usernameField, hashedPassword]);
 
         const [
-          user
+          user,
         ] = await pool.query(
-          "SELECT `id`, `email`, `password` FROM `user`  WHERE `email`=?",
+          "SELECT `id`, `username_contact_email`, `password` FROM `users`  WHERE `username_contact_email`=?",
           [usernameField]
         );
 
         conn.end();
-        return done(null, user.id);
+        return done(null, user);
       } catch (error) {
         conn.end();
         if (error.code === "ER_DUP_ENTRY") {
@@ -61,7 +61,7 @@ passport.use(
 const passLoginOpt = {
   usernameField: "username",
   passwordField: "password",
-  session: false
+  session: false,
 };
 
 passport.use(
@@ -72,29 +72,45 @@ passport.use(
       conn = await pool.getConnection();
 
       const [
-        user
+        user,
       ] = await pool.query(
-        "SELECT `id`, `email`, `password` FROM `user`  WHERE `email`=?",
+        "SELECT `id`, `username_contact_email` AS `email`, " + 
+        "`password`, `is_admin` FROM `users`  " + 
+        "WHERE `username_contact_email`=?",
         [usernameField]
       );
 
       if (!user) {
-        return done(null, false, { message: "User Not Found" });
+        return done(null, false, {
+          message: "User Does Not Exist",
+          status: 404,
+        });
       }
 
       const doesPasswordMatch = await bcrypt.compare(
         password,
-        user.password.toString()
+        user.password.toString("utf-8")
       );
 
       if (!doesPasswordMatch) {
-        return done(null, false, { message: "Incorrect Password" });
+        return done(null, false, {
+          message: "Incorrect Password",
+          status: 401,
+        });
       }
 
       conn.end();
       return done(null, user);
     } catch (error) {
       conn.end();
+      if (error.code === "ER_DUP_ENTRY") {
+        error.message = "User has already been taken";
+        error.status = 409;
+      } else {
+        console.log("error.message: ", error.message);
+        error.message = "Internal Server Error";
+        error.status = 500;
+      }
       done(error);
     }
   })
@@ -102,7 +118,7 @@ passport.use(
 
 const JWTOpts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
-  secretOrKey: jwtSecret.secret
+  secretOrKey: jwtSecret.secret,
 };
 
 passport.use(
@@ -110,9 +126,9 @@ passport.use(
   new JWTStrategy(JWTOpts, async (jwt_payload, done) => {
     // jwt_payload is decoded by JWTStrategy with the JWTOpts options object
     const [
-      user
+      user,
     ] = await pool.query("SELECT `id`, `email` FROM `user` WHERE `id`=?", [
-      jwt_payload.id
+      jwt_payload.id,
     ]);
 
     if (user) {
@@ -127,17 +143,22 @@ passport.use(
 passport.use(
   "jwt-artist-profile",
   new JWTStrategy(JWTOpts, async (jwt_payload, done) => {
-    const [
-      user
-    ] = await pool.query("SELECT `id`, `email` FROM `user` WHERE `id`=?", [
-      jwt_payload.id
-    ]);
+    try {
+      const [
+        user,
+      ] = await pool.query("SELECT `id`, `email` FROM `user` WHERE `id`=?", [
+        jwt_payload.id,
+      ]);
 
-    if (user) {
-      done(null, user);
-    } else {
-      // 401 Unauthorized would be sent to user
-      done(null, false);
+      if (user) {
+        done(null, user);
+      } else {
+        // 401 Unauthorized would be sent to user
+        done(null, false);
+      }
+    } catch (error) {
+      // TODO: Handle errors
+      done(error);
     }
   })
 );
