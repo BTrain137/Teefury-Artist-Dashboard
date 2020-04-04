@@ -18,6 +18,7 @@ CREATE TABLE `users` (
 
 DROP TABLE IF EXISTS `artist_profile`;
 CREATE TABLE `artist_profile` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `artist_name` VARCHAR(30) NOT NULL UNIQUE,
   `first_name` VARCHAR(30) NOT NULL,
   `last_name` VARCHAR(30) NOT NULL,
@@ -30,5 +31,5 @@ CREATE TABLE `artist_profile` (
   `international` BOOLEAN,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY(`artist_name`)
+  PRIMARY KEY(`id`)
 );
