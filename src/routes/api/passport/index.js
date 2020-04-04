@@ -38,17 +38,25 @@ router.post("/login-user", (req, res, next) => {
       let currentUser;
 
       if (!is_admin) {
-        const [artist] = await pool.query(
-          "SELECT `id`, " +
-            "`artist_name` AS `artistName`, " +
-            "`first_name` AS `firstName`, " +
-            "`last_name` AS `lastName`, " +
-            "`username_contact_email` AS `contactEmail` " +
-            "FROM `artist_profile` " +
-            "WHERE `username_contact_email`=?",
-          [contactEmail]
-        );
-        currentUser = artist;
+        let conn
+        try {
+          conn = await pool.getConnection();
+          const [artist] = await pool.query(
+            "SELECT `id`, " +
+              "`artist_name` AS `artistName`, " +
+              "`first_name` AS `firstName`, " +
+              "`last_name` AS `lastName`, " +
+              "`username_contact_email` AS `contactEmail` " +
+              "FROM `artist_profile` " +
+              "WHERE `username_contact_email`=?",
+            [contactEmail]
+          );
+          conn.end();
+          currentUser = artist;
+        } catch (error) {
+          conn.end();
+          return next(error);
+        }
       } else {
         currentUser = user;
       }
