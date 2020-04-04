@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-import { setUserJWTToken } from "../../redux/user/user.action";
+import { setCurrentUser, setUserJWTToken } from "../../redux/user/user.action";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
 import { ButtonMd } from "../Button/button.component";
@@ -23,16 +23,16 @@ class Signin extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { setUserJWTToken } = this.props;
+    const { setCurrentUser, setUserJWTToken } = this.props;
     const { contactEmail, password } = this.state;
     try {
-      const {
-        data: { token },
-      } = await axios.post("/api/login-user", {
+      const { data } = await axios.post("/api/login-user", {
         username: contactEmail,
         password,
       });
+      const { token, currentUser } = data;
       setUserJWTToken(token);
+      setCurrentUser(currentUser);
       this.setState({ contactEmail: "", password: "" });
     } catch (error) {
       console.log("Error Sign Up: ", error);
@@ -89,6 +89,7 @@ class Signin extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   setUserJWTToken: (token) => dispatch(setUserJWTToken(token)),
+  setCurrentUser: (currentUser) => dispatch(setCurrentUser(currentUser)),
 });
 
 export default connect(null, mapDispatchToProps)(Signin);
