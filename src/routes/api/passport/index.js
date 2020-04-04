@@ -34,7 +34,7 @@ router.post("/login-user", (req, res, next) => {
 
     req.login(user, async (err) => {
       if (err) return next(err);
-      const { email, id, is_admin } = user;
+      const { contactEmail, id, is_admin } = user;
       let currentUser;
 
       if (!is_admin) {
@@ -44,10 +44,10 @@ router.post("/login-user", (req, res, next) => {
           "SELECT `artist_name` AS `artistName`, " +
             "`first_name` AS `firstName`, " +
             "`last_name` AS `lastName`, " +
-            "`username_contact_email` AS `email` " +
+            "`username_contact_email` AS `contactEmail` " +
             "FROM `artist_profile` " +
             "WHERE `username_contact_email`=?",
-          [email]
+          [contactEmail]
         );
         currentUser = artist
       }
@@ -55,7 +55,7 @@ router.post("/login-user", (req, res, next) => {
         currentUser = user;
       }
 
-      const token = jwt.sign({ id, email }, secret, {
+      const token = jwt.sign({ id, email: contactEmail }, secret, {
         expiresIn: 60 * 60 * 24 * 90,
       });
       return res.status(200).send({

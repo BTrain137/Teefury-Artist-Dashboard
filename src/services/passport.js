@@ -12,7 +12,7 @@ passport.serializeUser((user, done) => {
 });
 
 const passRegisterOpt = {
-  usernameField: "email",
+  usernameField: "contactEmail",
   passwordField: "password",
   passReqToCallback: true,
   session: false,
@@ -59,7 +59,7 @@ passport.use(
 );
 
 const passLoginOpt = {
-  usernameField: "username",
+  usernameField: "contactEmail",
   passwordField: "password",
   session: false,
 };
@@ -74,7 +74,7 @@ passport.use(
       const [
         user,
       ] = await pool.query(
-        "SELECT `id`, `username_contact_email` AS `email`, " + 
+        "SELECT `id`, `username_contact_email` AS `contactEmail`, " + 
         "`password`, `is_admin` FROM `users`  " + 
         "WHERE `username_contact_email`=?",
         [usernameField]
@@ -124,11 +124,11 @@ const JWTOpts = {
 passport.use(
   "jwt",
   new JWTStrategy(JWTOpts, async (jwt_payload, done) => {
-    // jwt_payload is decoded by JWTStrategy with the JWTOpts options object
+    
     const [
       user,
-    ] = await pool.query("SELECT `id`, `email` FROM `user` WHERE `id`=?", [
-      jwt_payload.id,
+    ] = await pool.query("", [
+      jwt_payload.contactEmail,
     ]);
 
     if (user) {
@@ -146,8 +146,8 @@ passport.use(
     try {
       const [
         user,
-      ] = await pool.query("SELECT `id`, `email` FROM `user` WHERE `id`=?", [
-        jwt_payload.id,
+      ] = await pool.query("", [
+        jwt_payload.contactEmail,
       ]);
 
       if (user) {

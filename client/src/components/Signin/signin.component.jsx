@@ -27,7 +27,7 @@ class Signin extends Component {
     const { contactEmail, password } = this.state;
     try {
       const { data } = await axios.post("/api/login-user", {
-        username: contactEmail,
+        contactEmail,
         password,
       });
       const { token, currentUser } = data;
