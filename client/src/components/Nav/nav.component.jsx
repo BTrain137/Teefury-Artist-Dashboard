@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 
 import { ReactComponent as BellIcon } from "../../assets/bell.svg";
 import { ReactComponent as CogIcon } from "../../assets/cog.svg";
@@ -9,7 +10,7 @@ import NavItem from "../NavItem/nav-item.component";
 import { NavHeader, NavWrapper, Title, LogoImg, Subtitle } from "./nav.styles";
 import logo from "../../assets/logo.png";
 
-const Nav = ({ match }) => (
+const Nav = ({ location: { pathname } }) => (
   <NavHeader>
     <Title>
       <LogoImg src={logo} alt="Teefury Logo" />
@@ -17,22 +18,22 @@ const Nav = ({ match }) => (
     </Title>
     <Subtitle>Dashboard</Subtitle>
     <NavWrapper>
-      <NavItem to="/artist/profile" currentPath={match.path} Icon={HouseIcon}>
+      <NavItem to="/artist/profile" currentPath={pathname} Icon={HouseIcon}>
         Home
       </NavItem>
       <NavItem
         to="/artist/submission"
-        currentPath={match.path}
+        currentPath={pathname}
         Icon={ComputerIcon}
       >
         Submissions
       </NavItem>
-      <NavItem to="/artist/commission" currentPath={match.path} Icon={CogIcon}>
+      <NavItem to="/artist/commission" currentPath={pathname} Icon={CogIcon}>
         Commission
       </NavItem>
       <NavItem
         to="/artist/notifications"
-        currentPath={match.path}
+        currentPath={pathname}
         Icon={BellIcon}
       >
         Notifications
@@ -41,4 +42,4 @@ const Nav = ({ match }) => (
   </NavHeader>
 );
 
-export default Nav;
+export default withRouter(Nav);

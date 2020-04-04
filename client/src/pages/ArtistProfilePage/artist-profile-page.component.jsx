@@ -5,9 +5,9 @@ import ArtistProfile from "../../components/ArtistProfile/artist-profile.compone
 
 import { ArtistContainer } from "./artist-profile-page.styles";
 
-const ArtistProfilePage = props => (
+const ArtistProfilePage = () => (
   <ArtistContainer>
-    <Nav {...props} />
+    <Nav />
     <ArtistProfile />
   </ArtistContainer>
 );
