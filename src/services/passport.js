@@ -40,7 +40,8 @@ passport.use(
         const [
           user,
         ] = await pool.query(
-          "SELECT `id`, `username_contact_email`, `password` FROM `users`  WHERE `username_contact_email`=?",
+          "SELECT `id`, `username_contact_email` AS `contactEmail` " +
+            "FROM `users`  WHERE `username_contact_email`=?",
           [usernameField]
         );
 
@@ -71,12 +72,10 @@ passport.use(
     try {
       conn = await pool.getConnection();
 
-      const [
-        user,
-      ] = await pool.query(
-        "SELECT `id`, `username_contact_email` AS `contactEmail`, " + 
-        "`password`, `is_admin` FROM `users`  " + 
-        "WHERE `username_contact_email`=?",
+      const [user] = await pool.query(
+        "SELECT `id`, `is_admin`, `password`, " +
+          "`username_contact_email` AS `contactEmail` " +
+          "FROM `users` WHERE `username_contact_email`=?",
         [usernameField]
       );
 
@@ -124,40 +123,28 @@ const JWTOpts = {
 passport.use(
   "jwt",
   new JWTStrategy(JWTOpts, async (jwt_payload, done) => {
-    
-    const [
-      user,
-    ] = await pool.query("", [
-      jwt_payload.contactEmail,
-    ]);
-
-    if (user) {
-      done(null, user);
-    } else {
-      // 401 Unauthorized would be sent to user
-      done(null, false);
-    }
-  })
-);
-
-passport.use(
-  "jwt-artist-profile",
-  new JWTStrategy(JWTOpts, async (jwt_payload, done) => {
+    const { id } = jwt_payload;
+    let conn;
     try {
-      const [
-        user,
-      ] = await pool.query("", [
-        jwt_payload.contactEmail,
-      ]);
+      conn = await pool.getConnection();
+
+      const [user] = await pool.query(
+        "SELECT `id`, `is_admin`, " +
+          "`username_contact_email` AS `contactEmail` " +
+          "FROM `users` WHERE `id`=?",
+        [id]
+      );
 
       if (user) {
-        done(null, user);
+        conn.end();
+        done(null, { ...user });
       } else {
         // 401 Unauthorized would be sent to user
+        conn.end();
         done(null, false);
       }
     } catch (error) {
-      // TODO: Handle errors
+      conn.end();
       done(error);
     }
   })

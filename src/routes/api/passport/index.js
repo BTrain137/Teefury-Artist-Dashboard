@@ -12,9 +12,9 @@ router.post("/register-user", (req, res, next) => {
 
     req.login(user, (err) => {
       if (err) return next(err);
-
-      const token = jwt.sign({ id: user.id, email: user.email }, secret, {
-        expiresIn: 60 * 60,
+      const { id, contactEmail } = user;
+      const token = jwt.sign({ id, contactEmail }, secret, {
+        expiresIn: 60 * 60 * 24 * 90,
       });
 
       res.status(200).json({
@@ -38,10 +38,9 @@ router.post("/login-user", (req, res, next) => {
       let currentUser;
 
       if (!is_admin) {
-        const [
-          artist,
-        ] = await pool.query(
-          "SELECT `artist_name` AS `artistName`, " +
+        const [artist] = await pool.query(
+          "SELECT `id`, " +
+            "`artist_name` AS `artistName`, " +
             "`first_name` AS `firstName`, " +
             "`last_name` AS `lastName`, " +
             "`username_contact_email` AS `contactEmail` " +
@@ -49,13 +48,12 @@ router.post("/login-user", (req, res, next) => {
             "WHERE `username_contact_email`=?",
           [contactEmail]
         );
-        currentUser = artist
-      }
-      else {
+        currentUser = artist;
+      } else {
         currentUser = user;
       }
 
-      const token = jwt.sign({ id, email: contactEmail }, secret, {
+      const token = jwt.sign({ id, contactEmail, is_admin }, secret, {
         expiresIn: 60 * 60 * 24 * 90,
       });
       return res.status(200).send({
@@ -66,13 +64,6 @@ router.post("/login-user", (req, res, next) => {
       });
     });
   })(req, res, next);
-});
-
-router.get("/artist-profile", passport.authenticate("jwt"), (req, res) => {
-  res.status(200).send({
-    message: "artist found in db",
-    isAuth: req.isAuthenticated(),
-  });
 });
 
 export default router;
