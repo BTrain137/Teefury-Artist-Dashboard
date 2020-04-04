@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { selectCurrentUser } from "../../redux/user/user.selector";
 
 import { ButtonLgCenter, ButtonLg } from "../Button/button.component";
 import {
@@ -23,18 +27,27 @@ class ArtistProfile extends Component {
     super(props);
 
     this.state = {
-      artistName: "BTrain",
-      firstName: "Bryan",
-      lastName: "Tran",
-      contactEmail: "btran@teefury",
-      paypalEmail: "btran@teefury",
-      phoneNumber: "34342423122",
-      socialFacebook: "btran",
-      socialInstagram: "btran",
-      socialTwitter: "btran",
-      isInternational: false,
+      artistName: "",
+      firstName: "",
+      lastName: "",
+      contactEmail: "",
+      paypalEmail: "",
+      phoneNumber: "",
+      socialFacebook: "",
+      socialInstagram: "",
+      socialTwitter: "",
+      isInternational: "",
       isEditMode: false
     };
+  }
+
+  componentDidMount() {
+    this._loadCurrentUser();
+  }
+
+  _loadCurrentUser = () => {
+    const { basicArtistInfo } = this.props;
+    this.setState({ ...basicArtistInfo }, () => console.log(this.state));
   }
 
   handleSubmit = async event => {
@@ -212,4 +225,8 @@ class ArtistProfile extends Component {
   }
 }
 
-export default ArtistProfile;
+const mapStateToProps = createStructuredSelector({
+  basicArtistInfo: selectCurrentUser
+});
+
+export default connect(mapStateToProps)(ArtistProfile);
