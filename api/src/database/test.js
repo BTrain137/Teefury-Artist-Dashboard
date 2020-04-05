@@ -1,6 +1,6 @@
 import pool from "./connection.js";
 
-export const asyncFunction = async () => {
+const asyncFunction = async () => {
   let conn;
   console.log("hit");
   try {
@@ -19,3 +19,5 @@ export const asyncFunction = async () => {
     if (conn) return conn.end();
   }
 }
+
+asyncFunction();

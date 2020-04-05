@@ -1,7 +1,7 @@
 import http from "http";
 import { assert, expect } from "chai";
 
-import server from "../src/index.js";
+import server from "../api/src/index.js";
 
 describe("Backend express API endpoints", () => {
   it("Hello world", done => {
