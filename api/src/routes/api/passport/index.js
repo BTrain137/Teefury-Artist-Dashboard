@@ -58,7 +58,15 @@ router.post("/login-user", (req, res, next) => {
             [contactEmail]
           );
           conn.end();
-          currentUser = artist;
+          // If user signed up but did not create artist profile
+          if(artist) {
+            currentUser = artist;
+          }
+          else {
+            currentUser = {
+              contactEmail
+            }
+          }
         } catch (error) {
           conn.end();
           return next(error);
