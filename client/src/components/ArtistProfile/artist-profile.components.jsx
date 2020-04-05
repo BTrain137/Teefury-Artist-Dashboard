@@ -1,14 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import axios from "axios";
 
-import { selectCurrentUser } from "../../redux/user/user.selector";
+import {
+  selectCurrentUser,
+  selectUserJWTToken,
+} from "../../redux/user/user.selector";
 
 import { ButtonLgCenter, ButtonLg } from "../Button/button.component";
 import {
   Checkbox,
   Label,
-  CheckboxesContainer
+  CheckboxesContainer,
 } from "../CheckBox/checkbox.component";
 import { ReactComponent as EnvelopIcon } from "../../assets/envelope.svg";
 
@@ -19,7 +23,7 @@ import {
   FullName,
   ProfileForm,
   ProfileInfo,
-  FormInputStyled
+  FormInputStyled,
 } from "./artist-profile.styles";
 
 class ArtistProfile extends Component {
@@ -37,47 +41,101 @@ class ArtistProfile extends Component {
       socialInstagram: "",
       socialTwitter: "",
       isInternational: "",
-      isEditMode: false
+      isEditMode: false,
     };
   }
 
   componentDidMount() {
-    this._loadCurrentUser();
+    this._loadBasicArtistInfo();
   }
 
-  _loadCurrentUser = () => {
-    const { basicArtistInfo } = this.props;
-    this.setState({ ...basicArtistInfo }, () => console.log(this.state));
-  }
-
-  handleSubmit = async event => {
+  handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitted");
 
-    setTimeout(() => {
-      this.setState({ isEditMode: false });
-    }, 500);
+    await this._updateProfile();
+    this.setState({ isEditMode: false });
   };
 
-  handleChange = event => {
-    const { name, value } = event.target;
+  handleSubmitResetFields = (event) => {
+    event.preventDefault();
+    this._loadBasicArtistInfo();
+    this.setState({ isEditMode: false });
+  };
 
+  handleChange = (event) => {
+    const { name, value } = event.target;
     this.setState({ [name]: value });
   };
 
-  handleClick = () => {
-    this.setState({ isEditMode: !this.state.isEditMode }, () =>
-      console.log(this.state)
-    );
+  handleClick = async () => {
+    const artistDetails = await this._fetchProfile();
+    this.setState({ isEditMode: !this.state.isEditMode, ...artistDetails });
   };
 
-  handleToggleCheckBox = event => {
+  handleToggleCheckBox = (event) => {
     const {
       name,
-      dataset: { bool }
+      dataset: { bool },
     } = event.target;
     const boolValue = bool.toLowerCase() === "true" ? true : false;
     this.setState({ [name]: boolValue });
+  };
+
+  _loadBasicArtistInfo = () => {
+    const { basicArtistInfo } = this.props;
+    this.setState({ ...basicArtistInfo });
+  };
+
+  _fetchProfile = async () => {
+    try {
+      const { token } = this.props;
+      const { data } = await axios.get("/api/artist-profile-details", {
+        headers: { Authorization: `JWT ${token}` },
+      });
+
+      return data;
+    } catch (error) {
+      console.log("_fetchProfileDetails", error);
+    }
+  };
+
+  _updateProfile = async () => {
+    try {
+      const { token } = this.props;
+      const {
+        artistName,
+        firstName,
+        lastName,
+        contactEmail,
+        paypalEmail,
+        phoneNumber,
+        socialFacebook,
+        socialInstagram,
+        socialTwitter,
+        isInternational,
+      } = this.state;
+
+      const reqBody = {
+        artistName,
+        firstName,
+        lastName,
+        contactEmail,
+        paypalEmail,
+        phoneNumber,
+        socialFacebook,
+        socialInstagram,
+        socialTwitter,
+        isInternational,
+      };
+
+      const response = await axios("/api/artist-profile-details", reqBody, {
+        headers: { Authorization: `JWT ${token}` },
+      });
+
+      return response;
+    } catch (error) {
+      console.log("_updateProfile", error);
+    }
   };
 
   render() {
@@ -91,7 +149,8 @@ class ArtistProfile extends Component {
       socialFacebook,
       socialInstagram,
       socialTwitter,
-      isEditMode
+      isInternational,
+      isEditMode,
     } = this.state;
     return (
       <ArtistProfileContainer>
@@ -191,7 +250,7 @@ class ArtistProfile extends Component {
                 <Checkbox
                   name="isInternational"
                   data-bool={true}
-                  checked={this.state.isInternational}
+                  checked={isInternational}
                   onChange={this.handleToggleCheckBox}
                 />
                 <span>Yes</span>
@@ -200,13 +259,14 @@ class ArtistProfile extends Component {
                 <Checkbox
                   name="isInternational"
                   data-bool={false}
-                  checked={!this.state.isInternational}
+                  checked={!isInternational}
                   onChange={this.handleToggleCheckBox}
                 />
                 <span>No</span>
               </Label>
             </CheckboxesContainer>
-            <ButtonLg onClick={this.handleSubmit}>Save</ButtonLg>
+            <ButtonLg onClick={this.handleSubmit}>Save</ButtonLg>{" "}
+            <ButtonLg onClick={this.handleSubmitResetFields}>Close</ButtonLg>
           </ProfileForm>
         ) : (
           <>
@@ -217,7 +277,9 @@ class ArtistProfile extends Component {
               <EnvelopIcon />
               {contactEmail}
             </ProfileInfo>
-            <ButtonLgCenter onClick={this.handleClick}>EDIT PROFILE</ButtonLgCenter>
+            <ButtonLgCenter onClick={this.handleClick}>
+              EDIT PROFILE
+            </ButtonLgCenter>
           </>
         )}
       </ArtistProfileContainer>
@@ -226,7 +288,8 @@ class ArtistProfile extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  basicArtistInfo: selectCurrentUser
+  basicArtistInfo: selectCurrentUser,
+  token: selectUserJWTToken,
 });
 
 export default connect(mapStateToProps)(ArtistProfile);
