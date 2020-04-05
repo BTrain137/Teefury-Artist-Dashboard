@@ -128,7 +128,7 @@ class ArtistProfile extends Component {
         isInternational,
       };
 
-      const response = await axios("/api/artist-profile-details", reqBody, {
+      const response = await axios.put("/api/artist-profile-details", reqBody, {
         headers: { Authorization: `JWT ${token}` },
       });
 
