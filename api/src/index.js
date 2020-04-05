@@ -37,6 +37,11 @@ app.use((error, req, res, next) => {
     return next(error);
   }
 
+  if(!error.status) {
+    error.message = "We are experiencing some issues please check again later."
+    // TODO: Sent an alert to dev to check why there is a 500 error
+  }
+
   res.status(error.status || 500).json({
     status: error.status,
     message: error.message
