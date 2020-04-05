@@ -6,7 +6,6 @@ import helmet from "helmet";
 import path from "path";
 import passport from "passport"
 import routes from "./routes";
-import "./database";
 import "./services/passport.js";
 
 const app = express();
