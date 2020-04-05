@@ -9,7 +9,7 @@ module.exports = {
       script: "npm start",
       max_memory_restart: "200M",
       env_dev: {
-        NODE_ENV: "dev"
+        NODE_ENV: "development"
       },
       env_production: {
         NODE_ENV: "production"
