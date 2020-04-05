@@ -80,8 +80,9 @@ passport.use(
       );
 
       if (!user) {
+        conn.end();
         return done(null, false, {
-          message: "User Does Not Exist",
+          message: "User Does Not Exist.",
           status: 404,
         });
       }
@@ -92,6 +93,7 @@ passport.use(
       );
 
       if (!doesPasswordMatch) {
+        conn.end();
         return done(null, false, {
           message: "Incorrect Password",
           status: 401,
