@@ -12,6 +12,7 @@ router.post("/register-user", (req, res, next) => {
 
     req.login(user, (err) => {
       if (err) return next(err);
+
       const { id, contactEmail } = user;
       const token = jwt.sign({ id, contactEmail }, secret, {
         expiresIn: 60 * 60 * 24 * 90,
@@ -21,6 +22,7 @@ router.post("/register-user", (req, res, next) => {
         auth: true,
         message: "User Created & Logged In",
         token,
+        currentUser: { contactEmail },
       });
     });
   })(req, res, next);
@@ -38,10 +40,12 @@ router.post("/login-user", (req, res, next) => {
       let currentUser;
 
       if (!is_admin) {
-        let conn
+        let conn;
         try {
           conn = await pool.getConnection();
-          const [artist] = await pool.query(
+          const [
+            artist,
+          ] = await pool.query(
             "SELECT `artist_name` AS `artistName`, " +
               "`first_name` AS `firstName`, " +
               "`last_name` AS `lastName`, " +
@@ -63,7 +67,7 @@ router.post("/login-user", (req, res, next) => {
       const token = jwt.sign({ id, contactEmail, is_admin }, secret, {
         expiresIn: 60 * 60 * 24 * 90,
       });
-      return res.status(200).send({
+      res.status(200).send({
         auth: true,
         message: "User Found & Logged In",
         token,
