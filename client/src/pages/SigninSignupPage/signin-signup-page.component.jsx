@@ -1,4 +1,5 @@
 import React from "react"
+import CreateArtist from "../../components/CreateArtist/create-artist.component";
 import Signup from "../../components/Signup/signup.component";
 import Signin from "../../components/Signin/signin.component";
 
@@ -15,3 +16,9 @@ export const SignInPage = () => (
     <Signin />
   </SignInSignUpContainer>
 );
+
+export const CreateArtistPage = () => (
+  <SignInSignUpContainer>
+    <CreateArtist />
+  </SignInSignUpContainer>
+)

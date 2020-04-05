@@ -18,10 +18,10 @@ import {
   Img,
   Terms,
   LinkToTerm,
-} from "./signup.styles.jsx";
+} from "./create-artist.styles.jsx";
 import logo from "../../assets/logo.png";
 
-class Signup extends Component {
+class CreateArtist extends Component {
   constructor(props) {
     super(props);
 
@@ -265,4 +265,4 @@ class Signup extends Component {
   }
 }
 
-export default Signup;
+export default CreateArtist;
