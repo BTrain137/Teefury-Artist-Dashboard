@@ -42,8 +42,7 @@ router.post("/login-user", (req, res, next) => {
         try {
           conn = await pool.getConnection();
           const [artist] = await pool.query(
-            "SELECT `id`, " +
-              "`artist_name` AS `artistName`, " +
+            "SELECT `artist_name` AS `artistName`, " +
               "`first_name` AS `firstName`, " +
               "`last_name` AS `lastName`, " +
               "`username_contact_email` AS `contactEmail` " +
