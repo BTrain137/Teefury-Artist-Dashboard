@@ -1,0 +1,103 @@
+import express from "express";
+import pool from "../../../database/connection";
+import passport from "passport";
+
+const router = express.Router();
+
+router.get(
+  "/artist-profile-details",
+  passport.authenticate("jwt"),
+  async (req, res, next) => {
+    const { contactEmail } = req.user;
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const [
+        artist,
+      ] = await pool.query(
+        "SELECT `artist_name` AS `artistName`, " +
+          "`first_name` AS `firstName`, " +
+          "`last_name` AS `lastName`, " +
+          "`username_contact_email` AS `contactEmail`, " +
+          "`paypal_email` AS `paypalEmail`, " +
+          "`phone` AS `phoneNumber`, " +
+          "`social_facebook` AS `socialFacebook`, " +
+          "`social_instagram` AS `socialInstagram`, " +
+          "`social_twitter` AS `socialTwitter`, " +
+          "`international` FROM `artist_profile` " +
+          "WHERE `username_contact_email`=?",
+        [contactEmail]
+      );
+      conn.end();
+
+      artist.isInternational = artist.international ? true : false;
+      delete artist.international;
+
+      res.status(200).send(artist);
+    } catch (error) {
+      conn.end();
+      return next(error);
+    }
+  }
+);
+
+router.put(
+  "/artist-profile-details",
+  passport.authenticate("jwt"),
+  async (req, res, next) => {
+    let conn;
+    const {
+      artistName,
+      firstName,
+      lastName,
+      contactEmail,
+      paypalEmail,
+      phoneNumber,
+      socialFacebook,
+      socialInstagram,
+      socialTwitter,
+      isInternational,
+    } = req.body;
+
+    try {
+      conn = await pool.getConnection();
+      const { affectedRows } = await pool.query(
+        "UPDATE `artist_profile` SET " +
+          "`first_name`=?, `last_name`=?, `username_contact_email`=?, `paypal_email`=?, `phone`=?, " +
+          "`social_facebook`=?, `social_instagram`=?, `social_twitter`=?, `international`=? " +
+          "WHERE `artist_name`=?",
+        [
+          firstName,
+          lastName,
+          contactEmail,
+          paypalEmail,
+          phoneNumber,
+          socialFacebook,
+          socialInstagram,
+          socialTwitter,
+          isInternational,
+          artistName,
+        ]
+      );
+      conn.end();
+
+      if(affectedRows > 1) {
+        // TODO: If more than 1 row is affected do something
+        console.log(artistName, req.user);
+      }
+      res.sendStatus(200);
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+router.get("/test-artist-profile", passport.authenticate("jwt"), (req, res) => {
+  res.status(200).send({
+    message: "artist found in db",
+    isAuth: req.isAuthenticated(),
+  });
+});
+
+export default router;
