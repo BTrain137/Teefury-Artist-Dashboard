@@ -32,7 +32,10 @@ router.post("/login-user", (req, res, next) => {
   passport.authenticate("login", (err, user, info) => {
     if (err) return next(err);
 
-    if (!user) return res.status(info.status).send(info.message);
+    if (!user) {
+      const { status, message } = info;
+      return res.status(status).json({ status, message });
+    }
 
     req.login(user, async (err) => {
       if (err) return next(err);
