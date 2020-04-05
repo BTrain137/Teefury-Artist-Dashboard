@@ -10,4 +10,4 @@ VALUES ("locoMotive", "Tom", "Thomas", "tom@email.com", "tom@email.com", "", "",
 ("B-train", "Bryan", "Tran", "btran@teefury.com", "btran@teefury.com", "", "", "", "",  false);
 
 -- Update One
--- UPDATE `artist_profile` SET `first_name`="Henry" WHERE `artist_name`="locoMotive";
+-- UPDATE `artist_profile` SET `first_name`="Henry", `last_name`="Loco" WHERE `artist_name`="locoMotive";
