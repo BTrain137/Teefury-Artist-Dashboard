@@ -50,7 +50,7 @@ passport.use(
       } catch (error) {
         conn.end();
         if (error.code === "ER_DUP_ENTRY") {
-          error.message = "User has already been taken";
+          error.message = "User has already been taken.";
           error.status = 409;
         }
         done(error);
