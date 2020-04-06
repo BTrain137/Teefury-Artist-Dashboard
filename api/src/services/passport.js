@@ -40,7 +40,7 @@ passport.use(
         const [
           user,
         ] = await pool.query(
-          "SELECT `id`, `username_contact_email` AS `contactEmail` " +
+          "SELECT `id`, `is_admin`, `username_contact_email` AS `contactEmail` " +
             "FROM `users`  WHERE `username_contact_email`=?",
           [usernameField]
         );
