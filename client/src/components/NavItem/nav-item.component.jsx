@@ -5,9 +5,10 @@ import {
   LinkAnchorSelected,
   LinkWrapper,
   LinkAnchor,
+  AnchorStyle,
 } from "./nav-item.styles";
 
-const NavItem = ({ children, to, currentPath, Icon, ...otherProps }) => (
+export const NavItemLink = ({ children, to, currentPath, Icon, ...otherProps }) => (
   <>
     {currentPath === to ? (
       <LinkWrapperSelected {...otherProps}>
@@ -27,4 +28,12 @@ const NavItem = ({ children, to, currentPath, Icon, ...otherProps }) => (
   </>
 );
 
-export default NavItem;
+// Style of a NavItem without being a link
+export const NavItemStyle = ({ children, Icon, ...otherProps }) => (
+  <LinkWrapper {...otherProps}>
+    <AnchorStyle>
+      {Icon ? <Icon /> : null}
+      {children}
+    </AnchorStyle>
+  </LinkWrapper>
+);

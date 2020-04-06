@@ -54,3 +54,10 @@ export const LinkAnchor = styled(Link)`
   ${NavItemSharedStyle}
   color: #ffffff;
 `;
+
+export const AnchorStyle = styled.span`
+  ${AnchorText}
+  ${NavItemSharedStyle}
+  display: inline-block;
+  color: #ffffff;
+`;

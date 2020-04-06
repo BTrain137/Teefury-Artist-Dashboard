@@ -2,7 +2,7 @@ import { UserActionTypes } from "./user.types";
 
 const INITIAL_STATE = {
   currentUser: null,
-  JWTToken: null
+  JWTToken: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -10,12 +10,17 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case UserActionTypes.SET_CURRENT_USER:
       return {
         ...state,
-        currentUser: action.payload
+        currentUser: action.payload,
       };
     case UserActionTypes.SET_USER_JWT_TOKEN:
       return {
         ...state,
-        JWTToken: action.payload
+        JWTToken: action.payload,
+      };
+    case UserActionTypes.USER_LOG_OUT:
+      return {
+        ...state,
+        ...INITIAL_STATE,
       };
     default:
       return state;

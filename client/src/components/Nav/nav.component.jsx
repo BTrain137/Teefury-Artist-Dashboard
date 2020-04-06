@@ -5,7 +5,8 @@ import { ReactComponent as BellIcon } from "../../assets/bell.svg";
 import { ReactComponent as CogIcon } from "../../assets/cog.svg";
 import { ReactComponent as ComputerIcon } from "../../assets/computer.svg";
 import { ReactComponent as HouseIcon } from "../../assets/house.svg";
-import NavItem from "../NavItem/nav-item.component";
+import { NavItemLink, NavItemStyle } from "../NavItem/nav-item.component";
+import SignOut from "../Signout/signout.component";
 
 import { NavHeader, NavWrapper, Title, LogoImg, Subtitle } from "./nav.styles";
 import logo from "../../assets/logo.png";
@@ -18,26 +19,29 @@ const Nav = ({ location: { pathname } }) => (
     </Title>
     <Subtitle>Dashboard</Subtitle>
     <NavWrapper>
-      <NavItem to="/artist/profile" currentPath={pathname} Icon={HouseIcon}>
+      <NavItemLink to="/artist/profile" currentPath={pathname} Icon={HouseIcon}>
         Home
-      </NavItem>
-      <NavItem
+      </NavItemLink>
+      <NavItemLink
         to="/artist/submission"
         currentPath={pathname}
         Icon={ComputerIcon}
       >
         Submissions
-      </NavItem>
-      <NavItem to="/artist/commission" currentPath={pathname} Icon={CogIcon}>
+      </NavItemLink>
+      <NavItemLink to="/artist/commission" currentPath={pathname} Icon={CogIcon}>
         Commission
-      </NavItem>
-      <NavItem
+      </NavItemLink>
+      <NavItemLink
         to="/artist/notifications"
         currentPath={pathname}
         Icon={BellIcon}
       >
         Notifications
-      </NavItem>
+      </NavItemLink>
+      <NavItemStyle>
+        <SignOut />
+      </NavItemStyle>
     </NavWrapper>
   </NavHeader>
 );
