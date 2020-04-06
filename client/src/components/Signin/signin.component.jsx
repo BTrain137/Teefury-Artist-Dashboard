@@ -32,6 +32,7 @@ class Signin extends Component {
       emailError: "",
       passwordError: "",
       isDisableSubmit: false,
+      resetEmailURL: "",
     };
   }
 
@@ -106,10 +107,18 @@ class Signin extends Component {
       setCurrentUser(currentUser);
     } catch (error) {
       const { status, message } = error.response.data;
+      const teefuryEmail = "artist@teefury.com";
+      const emailSubject = "Reset User Account";
+      const msgToArtist = `Artist! Please send this email from the same inbox you are requesting the password to be reset.\nFor your account security sender email must match ${contactEmail}.\nMissed match sender email and account email will be ignored.`;
+      const emailBody = `Hello Teefury Team,\n\nPlease reset the password associated to the email, ${contactEmail}\n\n${msgToArtist}\n\nThank you!`;
+      const resetEmailURL = encodeURI(
+        `mailto:${teefuryEmail}?subject=${emailSubject}&body=${emailBody}`
+      );
       this.setState({
         emailError: message,
         errorStatus: status,
         passwordError: "",
+        resetEmailURL,
         isDisableSubmit: true,
       });
     }
@@ -139,6 +148,7 @@ class Signin extends Component {
       errorStatus,
       passwordError,
       isDisableSubmit,
+      resetEmailURL,
     } = this.state;
 
     return (
@@ -152,7 +162,7 @@ class Signin extends Component {
 
         <Form
           onSubmit={this.handleSubmit}
-          // onKeyPress={this.handleFormKeyPress}
+          onKeyPress={this.handleFormKeyPress}
         >
           {emailError ? (
             <ErrorMessages>{emailError} </ErrorMessages>
@@ -161,7 +171,10 @@ class Signin extends Component {
           )}
           {errorStatus === 404 ? (
             <ErrorMessages>
-              <Link to="/artist/reset-password"> Reset Password</Link>
+              <a target="_blank" rel="noopener noreferrer" href={resetEmailURL}>
+                {" "}
+                Reset Password
+              </a>
             </ErrorMessages>
           ) : null}
           <FormInput
