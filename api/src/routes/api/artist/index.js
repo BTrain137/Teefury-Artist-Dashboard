@@ -81,13 +81,91 @@ router.put(
       );
       conn.end();
 
-      if(affectedRows > 1) {
+      if (affectedRows > 1) {
         // TODO: If more than 1 row is affected do something
         console.log(artistName, req.user);
       }
       res.sendStatus(200);
     } catch (error) {
       conn.end();
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/artist-profile-create",
+  passport.authenticate("jwt"),
+  async (req, res, next) => {
+    let conn;
+    const {
+      artistName,
+      firstName,
+      lastName,
+      contactEmail,
+      paypalEmail,
+      phoneNumber,
+      socialFacebook,
+      socialInstagram,
+      socialTwitter,
+      isInternational,
+    } = req.body;
+
+    try {
+      conn = await pool.getConnection();
+      const {
+        affectedRows,
+      } = await pool.query(
+        "INSERT INTO `artist_profile` " +
+          "(`artist_name`, `first_name`, `last_name`, `username_contact_email`, " +
+          "`paypal_email`, `phone`, `social_facebook`, `social_instagram`, " +
+          "`social_twitter`, `international`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          artistName,
+          firstName,
+          lastName,
+          contactEmail,
+          paypalEmail,
+          phoneNumber,
+          socialFacebook,
+          socialInstagram,
+          socialTwitter,
+          isInternational,
+        ]
+      );
+
+      const [
+        artist,
+      ] = await pool.query(
+        "SELECT `artist_name` AS `artistName`, " +
+          "`first_name` AS `firstName`, " +
+          "`last_name` AS `lastName`, " +
+          "`username_contact_email` AS `contactEmail` " +
+          "FROM `artist_profile` " +
+          "WHERE `username_contact_email`=?",
+        [contactEmail]
+      );
+
+      conn.end();
+
+      if (affectedRows > 1) {
+        // TODO: If more than 1 row is affected do something
+        console.log(artistName, req.user);
+      }
+      res.status(200).send({
+        message: "Artist Created",
+        currentUser: artist,
+      });
+    } catch (error) {
+      conn.end();
+      if (error.code === "ER_DUP_ENTRY") {
+        error.message =
+          "Artist name has already been taken. Please contact us if this is in error.";
+        error.status = 409;
+      } else {
+        console.log("error.message: ", error.message);
+        error.status = 500;
+      }
       next(error);
     }
   }

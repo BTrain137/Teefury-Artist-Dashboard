@@ -1,11 +1,21 @@
 import React, { Component } from "react";
+import axios from "axios";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { setCurrentUser } from "../../redux/user/user.action";
+import {
+  selectCurrentUser,
+  selectUserJWTToken,
+} from "../../redux/user/user.selector";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
 import { ButtonMd } from "../Button/button.component";
 import {
   CheckboxesContainer,
   Checkbox,
-  Label
+  Label,
 } from "../CheckBox/checkbox.component";
 
 import {
@@ -18,6 +28,8 @@ import {
   Img,
   Terms,
   LinkToTerm,
+  ErrorTitle,
+  ErrorList,
 } from "./create-artist.styles.jsx";
 import logo from "../../assets/logo.png";
 
@@ -36,13 +48,29 @@ class CreateArtist extends Component {
       socialInstagram: "",
       socialTwitter: "",
       isInternational: true,
-      hasAcceptTerms: false
+      hasAcceptTerms: false,
+      errorMessages: [],
+      errorStatus: "",
+      isDisableSubmit: false,
     };
   }
 
-  handleSubmit = async event => {
-    event.preventDefault();
+  componentDidMount() {
+    const { currentUser, history } = this.props;
+    if (currentUser) {
+      const { contactEmail, artistName } = currentUser;
+      if(artistName) {
+        history.push("/artist/profile");
+      }
+      this.setState({ contactEmail });
+    } else {
+      history.push("/");
+    }
+  }
 
+  handleSubmit = async (event) => {
+    event.preventDefault();
+    const { token, updateArtistInfo, history } = this.props;
     const {
       artistName,
       firstName,
@@ -54,62 +82,136 @@ class CreateArtist extends Component {
       socialInstagram,
       socialTwitter,
       isInternational,
-      hasAcceptTerms
+      hasAcceptTerms,
     } = this.state;
 
-    console.log(
-      artistName,
-      firstName,
-      lastName,
-      contactEmail,
-      paypalEmail,
-      phoneNumber,
-      socialFacebook,
-      socialInstagram,
-      socialTwitter,
-      isInternational,
-      hasAcceptTerms
-    );
-
     try {
-      this.setState({
-        artistName: "",
-        firstName: "",
-        lastName: "",
-        contactEmail: "",
-        paypalEmail: "",
-        phoneNumber: "",
-        socialFacebook: "",
-        socialInstagram: "",
-        socialTwitter: "",
-        isInternational: true,
-        hasAcceptTerms: false
-      });
+      const reqBody = {
+        artistName,
+        firstName,
+        lastName,
+        contactEmail,
+        paypalEmail,
+        phoneNumber,
+        socialFacebook,
+        socialInstagram,
+        socialTwitter,
+        isInternational,
+        hasAcceptTerms,
+      };
+
+      if (
+        this._areFormFieldsValid(
+          firstName,
+          lastName,
+          paypalEmail,
+          hasAcceptTerms
+        )
+      ) {
+        const {
+          data: { currentUser },
+        } = await axios.post("/api/artist-profile-create", reqBody, {
+          headers: { Authorization: `JWT ${token}` },
+        });
+        updateArtistInfo({ ...currentUser });
+        history.push("/artist/profile");
+      }
     } catch (error) {
-      console.log("Sign In -> handle Submit", error);
+      const { status, message } = error.response.data;
+      this.setState({
+        errorMessages: [message],
+        errorStatus: status,
+        isDisableSubmit: true,
+      });
     }
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
   };
 
-  handleCheckboxChange = event => {
+  handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
     this.setState({ [name]: checked });
   };
 
-  handleToggleCheckBox = event => {
+  handleToggleCheckBox = (event) => {
     const {
       name,
-      dataset: { bool }
+      dataset: { bool },
     } = event.target;
     const boolValue = bool.toLowerCase() === "true" ? true : false;
     this.setState({ [name]: boolValue });
   };
 
+  _areFormFieldsValid = (firstName, lastName, paypalEmail, hasAcceptTerms) => {
+    const errorObj = {
+      errorMessages: [],
+      isFormValid: true,
+    };
+
+    // TODO: Validate artistName
+
+    if (!this._isNameValid(lastName)) {
+      errorObj.errorMessages.push("Please Enter A Valid Last Name.");
+      errorObj.isFormValid = false;
+    }
+
+    if (!this._isNameValid(firstName)) {
+      errorObj.errorMessages.push("Please Enter A Valid First Name.");
+      errorObj.isFormValid = false;
+    }
+
+    if (!this._isEmailValid(paypalEmail)) {
+      errorObj.errorMessages.push(
+        "Please Enter A Valid Email For Paypal Email."
+      );
+      errorObj.isFormValid = false;
+    }
+
+    if (!hasAcceptTerms) {
+      errorObj.errorMessages.push(
+        "Please read and agree to the terms and conditions."
+      );
+      errorObj.isFormValid = false;
+    }
+
+    if (!errorObj.isFormValid) {
+      this.setState(errorObj);
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  _isEmailValid = (email) => {
+    const valid_email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return valid_email.test(email);
+  };
+
+  _isNameValid = (name) => {
+    var valid_name = /^[a-zA-Z_\- ]+$/;
+    return valid_name.test(name);
+  };
+
   render() {
+    const {
+      artistName,
+      firstName,
+      lastName,
+      contactEmail,
+      paypalEmail,
+      phoneNumber,
+      socialFacebook,
+      socialInstagram,
+      socialTwitter,
+      isInternational,
+      hasAcceptTerms,
+      errorMessages,
+      isDisableSubmit,
+    } = this.state;
+
     return (
       <SignUpContainer>
         <H1>Welcome!</H1>
@@ -118,10 +220,19 @@ class CreateArtist extends Component {
           Tee<b>Fury</b>
         </H2>
         <H3>Dashboard</H3>
-
+        {errorMessages.length > 0 ? (
+          <ErrorList>
+            <ErrorTitle>Please Correct Error(s)</ErrorTitle>
+            {errorMessages.map((errMsg) => (
+              <li>{errMsg}</li>
+            ))}
+          </ErrorList>
+        ) : (
+          <div style={{ height: "85px" }} />
+        )}
         <Form
           onSubmit={this.handleSubmit}
-          style={{ display: "flex" }}
+          style={{ display: "flex", marginTop: "0" }}
         >
           <div style={{ flexBasis: "50%" }}>
             <FormInput
@@ -131,7 +242,7 @@ class CreateArtist extends Component {
               placeholder="@Artist Name"
               style={{ fontSize: "21px" }}
               handleChange={this.handleChange}
-              value={this.state.artistName}
+              value={artistName}
               required
             />
             <FormInput
@@ -141,7 +252,7 @@ class CreateArtist extends Component {
               placeholder="First Name"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.firstName}
+              value={firstName}
               required
             />
             <FormInput
@@ -151,7 +262,7 @@ class CreateArtist extends Component {
               placeholder="Last Name"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.lastName}
+              value={lastName}
               required
             />
             <FormInput
@@ -160,9 +271,10 @@ class CreateArtist extends Component {
               label="contact_email"
               placeholder="Contact Email"
               style={{ fontSize: "15px" }}
-              handleChange={this.handleChange}
-              value={this.state.contactEmail}
+              // handleChange={this.handleChange}
+              value={contactEmail}
               required
+              disabled
             />
             <FormInput
               type="email"
@@ -171,7 +283,7 @@ class CreateArtist extends Component {
               placeholder="Paypal Email"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.paypalEmail}
+              value={paypalEmail}
               required
             />
             <FormInput
@@ -181,7 +293,7 @@ class CreateArtist extends Component {
               placeholder="Phone Number"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.phoneNumber}
+              value={phoneNumber}
               required
             />
             <FormInput
@@ -191,7 +303,7 @@ class CreateArtist extends Component {
               placeholder="Facebook Handle"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.socialFacebook}
+              value={socialFacebook}
             />
             <FormInput
               type="text"
@@ -200,7 +312,7 @@ class CreateArtist extends Component {
               placeholder="Instagram Handle"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.socialInstagram}
+              value={socialInstagram}
             />
             <FormInput
               type="text"
@@ -209,7 +321,7 @@ class CreateArtist extends Component {
               placeholder="Twitter Handle"
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
-              value={this.state.socialTwitter}
+              value={socialTwitter}
             />
           </div>
           <div style={{ flexBasis: "50%", textAlign: "left", display: "flex" }}>
@@ -217,7 +329,7 @@ class CreateArtist extends Component {
               style={{
                 display: "inline-block",
                 margin: "0 auto",
-                minWidth: "233px"
+                minWidth: "233px",
               }}
             >
               <P>INTERNATIONAL?</P>
@@ -226,7 +338,7 @@ class CreateArtist extends Component {
                   <Checkbox
                     name="isInternational"
                     data-bool={true}
-                    checked={this.state.isInternational}
+                    checked={isInternational}
                     onChange={this.handleToggleCheckBox}
                   />
                   <Span>Yes</Span>
@@ -235,7 +347,7 @@ class CreateArtist extends Component {
                   <Checkbox
                     name="isInternational"
                     data-bool={false}
-                    checked={!this.state.isInternational}
+                    checked={!isInternational}
                     onChange={this.handleToggleCheckBox}
                   />
                   <Span>No</Span>
@@ -245,8 +357,9 @@ class CreateArtist extends Component {
                 <label>
                   <Checkbox
                     name="hasAcceptTerms"
-                    checked={this.state.hasAcceptTerms}
+                    checked={hasAcceptTerms}
                     onChange={this.handleCheckboxChange}
+                    required
                   />
                 </label>
                 <Terms>
@@ -256,7 +369,9 @@ class CreateArtist extends Component {
                   </LinkToTerm>
                 </Terms>
               </div>
-                <ButtonMd type="submit">Create Profile</ButtonMd>
+              <ButtonMd type="submit" disabled={isDisableSubmit}>
+                Create Profile
+              </ButtonMd>
             </div>
           </div>
         </Form>
@@ -265,4 +380,15 @@ class CreateArtist extends Component {
   }
 }
 
-export default CreateArtist;
+const mapDispatchToProps = (dispatch) => ({
+  updateArtistInfo: (basicInfo) => dispatch(setCurrentUser(basicInfo)),
+});
+
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+  token: selectUserJWTToken,
+});
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(CreateArtist)
+);

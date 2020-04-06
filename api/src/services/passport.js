@@ -109,7 +109,6 @@ passport.use(
         error.status = 409;
       } else {
         console.log("error.message: ", error.message);
-        error.message = "Internal Server Error";
         error.status = 500;
       }
       done(error);
