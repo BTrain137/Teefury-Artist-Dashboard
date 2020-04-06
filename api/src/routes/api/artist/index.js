@@ -160,7 +160,7 @@ router.post(
       conn.end();
       if (error.code === "ER_DUP_ENTRY") {
         error.message =
-          "Artist name has already been taken. Please contact us if this is in error.";
+          "Artist name has already been taken. Please contact us if this is in error. <br />Please remember to use the same email as your shopify email, you may already have an artist account.";
         error.status = 409;
       } else {
         console.log("error.message: ", error.message);

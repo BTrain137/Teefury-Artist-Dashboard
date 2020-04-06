@@ -69,6 +69,7 @@ export const ErrorList = styled.ul`
   text-align: left;
   color: red;
   min-height: 85px;
+  max-width: 600px;
 `;
 
 export const ErrorTitle = styled.h4`

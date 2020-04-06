@@ -223,8 +223,8 @@ class CreateArtist extends Component {
         {errorMessages.length > 0 ? (
           <ErrorList>
             <ErrorTitle>Please Correct Error(s)</ErrorTitle>
-            {errorMessages.map((errMsg) => (
-              <li>{errMsg}</li>
+            {errorMessages.map((errMsg, i) => (
+              <li key={i} dangerouslySetInnerHTML={{__html: errMsg}} />
             ))}
           </ErrorList>
         ) : (
