@@ -43,3 +43,8 @@ export const ErrorMessages = styled.span`
   display: inline-block;
   margin-right: 3px;
 `;
+
+export const SpaceHolder = styled.span`
+  height: 25px;
+  display: inline-block;
+`;

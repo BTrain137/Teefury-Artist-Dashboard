@@ -15,6 +15,7 @@ import {
   H3,
   Img,
   ErrorMessages,
+  SpaceHolder,
 } from "./signup.styles.jsx";
 import logo from "../../assets/logo.png";
 
@@ -25,33 +26,70 @@ class Signin extends Component {
     this.state = {
       contactEmail: "",
       password: "",
-      emailError: "",
       errorStatus: "",
+      emailError: "",
       passwordError: "",
+      isDisableSubmit: false,
+      resetEmailURL: "",
     };
   }
 
-  handleSubmit = (event) => {
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value, isDisableSubmit: false });
+  };
+
+  handleSubmit = async (event) => {
     event.preventDefault();
     const { contactEmail, password } = this.state;
-    if (this._isPasswordStrong(password)) {
-      this._createUser(contactEmail, password);
-    } else {
-      this.setState({ passwordError: "Password must be 5 characters long." });
+    if (this._areFormFieldsValid(contactEmail, password)) {
+      await this._createUser(contactEmail, password);
+      this._redirectUser();
     }
   };
 
-  handleChange = (event) => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
+  handleFormKeyPress = (event) => {
+    if (event.which === 13) {
+      this.handleSubmit(event);
+    }
+  };
+
+  _areFormFieldsValid = (contactEmail, password) => {
+    const errorObj = {
+      passwordError: "",
+      emailError: "",
+      isFormValid: true,
+    };
+
+    if (!this._isPasswordStrong(password)) {
+      errorObj.passwordError = "Password must be at least 5 characters long.";
+      errorObj.isFormValid = false;
+    }
+
+    if (!this._isEmailValid(contactEmail)) {
+      errorObj.emailError = "Please Enter A Valid Email";
+      errorObj.isFormValid = false;
+    }
+
+    if (!errorObj.isFormValid) {
+      this.setState(errorObj);
+      return false;
+    } else {
+      return true;
+    }
   };
 
   _isPasswordStrong = (password) => {
     return password.length < 6 ? false : true;
   };
 
+  _isEmailValid = (contactEmail) => {
+    const valid_email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return valid_email.test(contactEmail);
+  };
+
   _createUser = async (contactEmail, password) => {
-    const { setCurrentUser, setUserJWTToken, history } = this.props;
+    const { setCurrentUser, setUserJWTToken } = this.props;
     try {
       const { data } = await axios.post("/api/register-user", {
         contactEmail,
@@ -60,11 +98,27 @@ class Signin extends Component {
       const { token, currentUser } = data;
       setUserJWTToken(token);
       setCurrentUser(currentUser);
-      history.push("/artist/create");
     } catch (error) {
       const { status, message } = error.response.data;
-      this.setState({ emailError: message, errorStatus: status });
+      const teefuryEmail = "artist@teefury.com";
+      const emailSubject = "Reset User Account";
+      const msgToArtist = `Artist! Please send this email from the same inbox you are requesting the password to be reset.\nFor your account security sender email must match ${contactEmail}.\nMissed match sender email and account email will be ignored.`;
+      const emailBody = `Hello Teefury Team,\n\nPlease reset the password associated to the email, ${contactEmail}\n\n${msgToArtist}\n\nThank you!`;
+      const resetEmailURL = encodeURI(
+        `mailto:${teefuryEmail}?subject=${emailSubject}&body=${emailBody}`
+      );
+      this.setState({
+        emailError: message,
+        errorStatus: status,
+        passwordError: "",
+        resetEmailURL,
+        isDisableSubmit: true,
+      });
     }
+  };
+
+  _redirectUser = () => {
+    console.log(this.props);
   };
 
   render() {
@@ -74,8 +128,9 @@ class Signin extends Component {
       emailError,
       errorStatus,
       passwordError,
+      isDisableSubmit,
+      resetEmailURL,
     } = this.state;
-
     return (
       <SignUpContainer>
         <H1>Welcome!</H1>
@@ -85,11 +140,18 @@ class Signin extends Component {
         </H2>
         <H3>Dashboard</H3>
 
-        <Form onSubmit={this.handleSubmit}>
-          {emailError ? <ErrorMessages>{emailError} </ErrorMessages> : null}
+        <Form onSubmit={this.handleSubmit} onKeyPress={this.handleFormKeyPress}>
+          {emailError ? (
+            <ErrorMessages>{emailError} </ErrorMessages>
+          ) : (
+            <SpaceHolder />
+          )}
           {errorStatus === 409 ? (
             <ErrorMessages>
-              <Link to="/artist/reset-password"> Reset Password</Link>
+              <a target="_blank" rel="noopener noreferrer" href={resetEmailURL}>
+                {" "}
+                Reset Password
+              </a>
             </ErrorMessages>
           ) : null}
           <FormInput
@@ -97,25 +159,31 @@ class Signin extends Component {
             name="contactEmail"
             label="contact_email"
             placeholder="Contact Email"
-            style={{ fontSize: "16px" }}
+            style={{ fontSize: "16px", marginBottom: "10px" }}
             handleChange={this.handleChange}
             value={contactEmail}
             required
           />
           {passwordError ? (
             <ErrorMessages>{passwordError} </ErrorMessages>
-          ) : null}
+          ) : (
+            <SpaceHolder />
+          )}
           <FormInput
             type="password"
             name="password"
             label="password"
             placeholder="Password"
-            style={{ fontSize: "16px" }}
+            style={{ fontSize: "16px", marginBottom: "10px" }}
             handleChange={this.handleChange}
             value={password}
             required
           />
-          <ButtonMd type="submit" style={{ width: "110px" }}>
+          <ButtonMd
+            type="submit"
+            disabled={isDisableSubmit}
+            style={{ width: "110px" }}
+          >
             Sign Up
           </ButtonMd>
         </Form>
