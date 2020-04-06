@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
+import { createStructuredSelector } from "reselect";
 import { Link, withRouter } from "react-router-dom";
 
 import { setCurrentUser, setUserJWTToken } from "../../redux/user/user.action";
+import { selectCurrentUser } from "../../redux/user/user.selector";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
 import { ButtonMd } from "../Button/button.component";
@@ -19,7 +21,7 @@ import {
 } from "./signup.styles.jsx";
 import logo from "../../assets/logo.png";
 
-class Signin extends Component {
+class Signup extends Component {
   constructor(props) {
     super(props);
 
@@ -117,8 +119,21 @@ class Signin extends Component {
     }
   };
 
+  // Copied from signin should put both component in one.
   _redirectUser = () => {
-    console.log(this.props);
+    const { basicArtistInfo, history } = this.props;
+    if (!basicArtistInfo) {
+      return;
+    } else {
+      const { artistName, contactEmail } = basicArtistInfo;
+      if (!contactEmail) {
+        return;
+      } else if (contactEmail && artistName) {
+        history.push("/artist/profile");
+      } else if (contactEmail && !artistName) {
+        history.push("/artist/create");
+      }
+    }
   };
 
   render() {
@@ -195,9 +210,13 @@ class Signin extends Component {
   }
 }
 
+const mapStateToProps = createStructuredSelector({
+  basicArtistInfo: selectCurrentUser,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   setUserJWTToken: (token) => dispatch(setUserJWTToken(token)),
   setCurrentUser: (currentUser) => dispatch(setCurrentUser(currentUser)),
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(Signin));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Signup));

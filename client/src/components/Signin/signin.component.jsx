@@ -126,6 +126,7 @@ class Signin extends Component {
 
   _redirectUser = () => {
     const { basicArtistInfo, history } = this.props;
+    // Component did mount will execute this immediately
     if (!basicArtistInfo) {
       return;
     } else {
@@ -218,13 +219,13 @@ class Signin extends Component {
   }
 }
 
+const mapStateToProps = createStructuredSelector({
+  basicArtistInfo: selectCurrentUser,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   setUserJWTToken: (token) => dispatch(setUserJWTToken(token)),
   setCurrentUser: (currentUser) => dispatch(setCurrentUser(currentUser)),
-});
-
-const mapStateToProps = createStructuredSelector({
-  basicArtistInfo: selectCurrentUser,
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Signin));
