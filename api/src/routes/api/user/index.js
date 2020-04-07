@@ -106,4 +106,29 @@ router.post("/login-user", (req, res, next) => {
   })(req, res, next);
 });
 
+router.delete(
+  "/delete-user",
+  passport.authenticate("jwt"),
+  async (req, res, next) => {
+    const { id, contactEmail } = req.user;
+    try {
+      let conn;
+      conn = await pool.getConnection();
+      const {
+        affectedRows,
+      } = await pool.query("DELETE FROM `users` WHERE `id`=?", [id]);
+      conn.end();
+
+      if (affectedRows > 1) {
+        // TODO: Report why there are more than 1 items deleted
+        console.log({ id, contactEmail });
+      }
+
+      res.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default router;
