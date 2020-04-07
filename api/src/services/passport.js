@@ -138,11 +138,14 @@ passport.use(
 
       if (user) {
         conn.end();
-        done(null, { ...user });
+        return done(null, { ...user });
       } else {
         // 401 Unauthorized would be sent to user
         conn.end();
-        done(null, false);
+        return done(null, false, {
+          message: "Unable To Locate User.",
+          status: 401,
+        });
       }
     } catch (error) {
       conn.end();
