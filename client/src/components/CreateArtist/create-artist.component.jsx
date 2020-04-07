@@ -4,7 +4,10 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
-import { setCurrentUser } from "../../redux/user/user.action";
+import {
+  setCurrentUser,
+  clearUserAndToken,
+} from "../../redux/user/user.action";
 import {
   selectCurrentUser,
   selectUserJWTToken,
@@ -72,7 +75,8 @@ class CreateArtist extends Component {
   };
 
   handleClick = async () => {
-    await this._deleteUser();
+    await this._deleteUserAccount();
+    this._redirectUser();
   };
 
   handleCheckboxChange = (event) => {
@@ -162,6 +166,26 @@ class CreateArtist extends Component {
         isDisableSubmit: true,
       });
     }
+  };
+
+  _deleteUserAccount = async () => {
+    const { token, clearUserAndToken } = this.props;
+    try {
+      await axios.delete("/api/delete-user", {
+        headers: { Authorization: `JWT ${token}` },
+      });
+    } catch ({ response }) {
+      const { status, data } = response;
+      const { message } = data;
+      this.setState({
+        errorMessages: message
+          ? [message]
+          : ["Something went wrong please check back later."],
+        errorStatus: status,
+      });
+    }
+
+    clearUserAndToken();
   };
 
   _areFormFieldsValid = (
@@ -419,7 +443,9 @@ class CreateArtist extends Component {
               <ButtonMd type="submit" disabled={isDisableSubmit}>
                 Create Profile
               </ButtonMd>
-              <ButtonMd onClick={this.handleClick}>Take me back</ButtonMd>
+              <ButtonMd type="button" onClick={this.handleClick}>
+                Take me back
+              </ButtonMd>
             </div>
           </div>
         </Form>
@@ -430,6 +456,7 @@ class CreateArtist extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   updateArtistInfo: (basicInfo) => dispatch(setCurrentUser(basicInfo)),
+  clearUserAndToken: () => dispatch(clearUserAndToken()),
 });
 
 const mapStateToProps = createStructuredSelector({
