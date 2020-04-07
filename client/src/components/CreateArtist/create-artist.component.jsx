@@ -56,21 +56,57 @@ class CreateArtist extends Component {
   }
 
   componentDidMount() {
-    const { currentUser, history } = this.props;
-    if (currentUser) {
-      const { contactEmail, artistName } = currentUser;
-      if(artistName) {
-        history.push("/artist/profile");
-      }
-      this.setState({ contactEmail });
-    } else {
-      history.push("/");
-    }
+    this._loadContactEmail();
+    this._redirectUser();
   }
+
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { token, updateArtistInfo, history } = this.props;
+    await this._createArtistAccount();
+    this._redirectUser();
+  };
+
+  handleClick = async () => {
+    await this._deleteUser();
+  };
+
+  handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    this.setState({ [name]: checked });
+  };
+
+  handleToggleCheckBox = (event) => {
+    const {
+      name,
+      dataset: { bool },
+    } = event.target;
+    const boolValue = bool.toLowerCase() === "true" ? true : false;
+    this.setState({ [name]: boolValue });
+  };
+
+  handleFormKeyPress = (event) => {
+    if (event.which === 13) {
+      event.preventDefault();
+      this.handleSubmit(event);
+    }
+  };
+
+  _loadContactEmail = () => {
+    const { basicArtistInfo } = this.props;
+    if (basicArtistInfo) {
+      const { contactEmail } = basicArtistInfo;
+      if (contactEmail) {
+        this.setState({ contactEmail });
+      }
+    }
+  };
+
+  _createArtistAccount = async () => {
     const {
       artistName,
       firstName,
@@ -84,6 +120,8 @@ class CreateArtist extends Component {
       isInternational,
       hasAcceptTerms,
     } = this.state;
+
+    const { token, updateArtistInfo } = this.props;
 
     try {
       const reqBody = {
@@ -102,6 +140,7 @@ class CreateArtist extends Component {
 
       if (
         this._areFormFieldsValid(
+          artistName,
           firstName,
           lastName,
           paypalEmail,
@@ -114,7 +153,6 @@ class CreateArtist extends Component {
           headers: { Authorization: `JWT ${token}` },
         });
         updateArtistInfo({ ...currentUser });
-        history.push("/artist/profile");
       }
     } catch (error) {
       const { status, message } = error.response.data;
@@ -126,32 +164,26 @@ class CreateArtist extends Component {
     }
   };
 
-  handleChange = (event) => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  };
-
-  handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    this.setState({ [name]: checked });
-  };
-
-  handleToggleCheckBox = (event) => {
-    const {
-      name,
-      dataset: { bool },
-    } = event.target;
-    const boolValue = bool.toLowerCase() === "true" ? true : false;
-    this.setState({ [name]: boolValue });
-  };
-
-  _areFormFieldsValid = (firstName, lastName, paypalEmail, hasAcceptTerms) => {
+  _areFormFieldsValid = (
+    artistName,
+    firstName,
+    lastName,
+    paypalEmail,
+    hasAcceptTerms
+  ) => {
     const errorObj = {
       errorMessages: [],
       isFormValid: true,
     };
 
-    // TODO: Validate artistName
+    // TODO: Validate artistName properly
+    console.log(artistName.length);
+    if (artistName.length < 3) {
+      errorObj.errorMessages.push(
+        "Artist name must be longer than 2 characters"
+      );
+      errorObj.isFormValid = false;
+    }
 
     if (!this._isNameValid(lastName)) {
       errorObj.errorMessages.push("Please Enter A Valid Last Name.");
@@ -195,6 +227,20 @@ class CreateArtist extends Component {
     return valid_name.test(name);
   };
 
+  _redirectUser = () => {
+    const { basicArtistInfo, history } = this.props;
+    if (basicArtistInfo) {
+      const { artistName } = basicArtistInfo;
+      if (artistName) {
+        history.push("/artist/profile");
+      } else {
+        return;
+      }
+    } else {
+      history.push("/");
+    }
+  };
+
   render() {
     const {
       artistName,
@@ -224,7 +270,7 @@ class CreateArtist extends Component {
           <ErrorList>
             <ErrorTitle>Please Correct Error(s)</ErrorTitle>
             {errorMessages.map((errMsg, i) => (
-              <li key={i} dangerouslySetInnerHTML={{__html: errMsg}} />
+              <li key={i} dangerouslySetInnerHTML={{ __html: errMsg }} />
             ))}
           </ErrorList>
         ) : (
@@ -233,6 +279,7 @@ class CreateArtist extends Component {
         <Form
           onSubmit={this.handleSubmit}
           style={{ display: "flex", marginTop: "0" }}
+          onKeyPress={this.handleFormKeyPress}
         >
           <div style={{ flexBasis: "50%" }}>
             <FormInput
@@ -372,6 +419,7 @@ class CreateArtist extends Component {
               <ButtonMd type="submit" disabled={isDisableSubmit}>
                 Create Profile
               </ButtonMd>
+              <ButtonMd onClick={this.handleClick}>Take me back</ButtonMd>
             </div>
           </div>
         </Form>
@@ -385,7 +433,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser,
+  basicArtistInfo: selectCurrentUser,
   token: selectUserJWTToken,
 });
 
