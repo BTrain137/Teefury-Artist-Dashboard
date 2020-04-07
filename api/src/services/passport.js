@@ -1,11 +1,9 @@
-import bcrypt from "bcrypt";
 import passport from "passport";
-import jwtSecret from "./jwtConfig";
-import pool from "../database/connection.js";
+import bcrypt from "bcrypt";
+import { secret, BCRYPT_SALT_ROUNDS } from "./jwtConfig";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
-
-const BCRYPT_SALT_ROUNDS = 10;
+import pool from "../database/connection.js";
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -118,7 +116,7 @@ passport.use(
 
 const JWTOpts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
-  secretOrKey: jwtSecret.secret,
+  secretOrKey: secret,
 };
 
 passport.use(
