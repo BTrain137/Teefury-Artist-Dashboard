@@ -4,6 +4,7 @@ import axios from "axios";
 import { createStructuredSelector } from "reselect";
 import { Link, withRouter } from "react-router-dom";
 
+import { isEmailValid, isPasswordStrong } from "../../utils";
 import { setCurrentUser, setUserJWTToken } from "../../redux/user/user.action";
 import { selectCurrentUser } from "../../redux/user/user.selector";
 
@@ -68,12 +69,12 @@ class Signin extends Component {
       isFormValid: true,
     };
 
-    if (!this._isPasswordStrong(password)) {
+    if (!isPasswordStrong(password)) {
       errorObj.passwordError = "Password must be at least 5 characters long.";
       errorObj.isFormValid = false;
     }
 
-    if (!this._isEmailValid(contactEmail)) {
+    if (!isEmailValid(contactEmail)) {
       errorObj.emailError = "Please Enter A Valid Email";
       errorObj.isFormValid = false;
     }
@@ -84,15 +85,6 @@ class Signin extends Component {
     } else {
       return true;
     }
-  };
-
-  _isPasswordStrong = (password) => {
-    return password.length < 6 ? false : true;
-  };
-
-  _isEmailValid = (contactEmail) => {
-    const valid_email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return valid_email.test(contactEmail);
   };
 
   _signUserIn = async (contactEmail, password) => {
