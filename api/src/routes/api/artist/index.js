@@ -50,7 +50,6 @@ router.put(
       artistName,
       firstName,
       lastName,
-      contactEmail,
       paypalEmail,
       phoneNumber,
       socialFacebook,
@@ -61,15 +60,15 @@ router.put(
 
     try {
       conn = await pool.getConnection();
-      const { affectedRows } = await pool.query(
-        "UPDATE `artist_profile` SET " +
-          "`first_name`=?, `last_name`=?, `username_contact_email`=?, `paypal_email`=?, `phone`=?, " +
-          "`social_facebook`=?, `social_instagram`=?, `social_twitter`=?, `international`=? " +
-          "WHERE `artist_name`=?",
+      const {
+        affectedRows,
+      } = await pool.query(
+        "UPDATE `artist_profile` SET `first_name`=?, `last_name`=?, " +
+          "`paypal_email`=?, `phone`=?, `social_facebook`=?, `social_instagram`=?, " +
+          "`social_twitter`=?, `international`=? WHERE `artist_name`=?",
         [
           firstName,
           lastName,
-          contactEmail,
           paypalEmail,
           phoneNumber,
           socialFacebook,
@@ -79,13 +78,30 @@ router.put(
           artistName,
         ]
       );
-      conn.end();
 
       if (affectedRows > 1) {
         // TODO: If more than 1 row is affected do something
         console.log(artistName, req.user);
       }
-      res.sendStatus(200);
+
+      const [
+        artist,
+      ] = await pool.query(
+        "SELECT `artist_name` AS `artistName`, " +
+          "`first_name` AS `firstName`, " +
+          "`last_name` AS `lastName`, " +
+          "`username_contact_email` AS `contactEmail` " +
+          "FROM `artist_profile` " +
+          "WHERE `artist_name`=?",
+        [artistName]
+      );
+
+      conn.end();
+
+      res.status(200).json({
+        message: "Artist Profile Updated.",
+        currentUser: artist,
+      });
     } catch (error) {
       conn.end();
       next(error);
