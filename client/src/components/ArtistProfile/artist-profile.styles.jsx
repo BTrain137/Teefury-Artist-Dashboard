@@ -31,6 +31,10 @@ export const FullName = styled.h3`
   margin: 0;
 `;
 
+export const FormTitle = styled.h2`
+  color: white;
+`
+
 export const ProfileForm = styled.form`
   margin-left: 20px;
   margin-top: 35px;
@@ -57,4 +61,17 @@ export const FormInputStyled = styled(FormInput)`
   font-size: 16px;
   margin: initial;
   margin-bottom: 20px;
+`;
+
+export const ErrorList = styled.ul`
+  padding-left: 10px;
+  color: #ff7777;
+  font-weight: bolder;
+  text-shadow: -1px 1px 2px #000000eb;
+`;
+
+export const ErrorTitle = styled.h4`
+  font-size: 25px;
+  margin-bottom: 10px;
+  font-weight: normal;
 `;
