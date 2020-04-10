@@ -3,7 +3,8 @@ import {
   ButtonLgContainer,
   ButtonLgStyled,
   ButtonMdContainer,
-  ButtonMdStyled
+  ButtonMdStyled,
+  ButtonSmStyled,
 } from "./button.styles";
 
 export const ButtonLgCenter = ({ children, ...props }) => (
@@ -18,8 +19,10 @@ export const ButtonLg = ({ children, ...props }) => (
 
 export const ButtonMd = ({ children, ...props }) => (
   <ButtonMdContainer>
-    <ButtonMdStyled {...props}>
-      {children}
-    </ButtonMdStyled>
+    <ButtonMdStyled {...props}>{children}</ButtonMdStyled>
   </ButtonMdContainer>
+);
+
+export const ButtonSm = ({ children, ...props }) => (
+  <ButtonSmStyled {...props}>{children}</ButtonSmStyled>
 );
