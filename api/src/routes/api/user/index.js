@@ -93,7 +93,6 @@ router.post("/login-user", (req, res, next) => {
 
     if (!user) {
       const { status, message } = info;
-      console.log(info);
       return res.status(status || 401).json({ status, message });
     }
 
