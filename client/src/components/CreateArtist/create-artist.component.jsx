@@ -197,7 +197,7 @@ class CreateArtist extends Component {
   ) => {
     const errorObj = {
       errorMessages: [],
-      isFormValid: true,
+      _isFormValid: true,
     };
 
     // TODO: Validate artistName properly
@@ -206,34 +206,34 @@ class CreateArtist extends Component {
       errorObj.errorMessages.push(
         "Artist name must be longer than 2 characters"
       );
-      errorObj.isFormValid = false;
+      errorObj._isFormValid = false;
     }
 
     if (!this._isNameValid(lastName)) {
       errorObj.errorMessages.push("Please Enter A Valid Last Name.");
-      errorObj.isFormValid = false;
+      errorObj._isFormValid = false;
     }
 
     if (!this._isNameValid(firstName)) {
       errorObj.errorMessages.push("Please Enter A Valid First Name.");
-      errorObj.isFormValid = false;
+      errorObj._isFormValid = false;
     }
 
     if (!this._isEmailValid(paypalEmail)) {
       errorObj.errorMessages.push(
         "Please Enter A Valid Email For Paypal Email."
       );
-      errorObj.isFormValid = false;
+      errorObj._isFormValid = false;
     }
 
     if (!hasAcceptTerms) {
       errorObj.errorMessages.push(
         "Please read and agree to the terms and conditions."
       );
-      errorObj.isFormValid = false;
+      errorObj._isFormValid = false;
     }
 
-    if (!errorObj.isFormValid) {
+    if (!errorObj._isFormValid) {
       this.setState(errorObj);
       return false;
     } else {
