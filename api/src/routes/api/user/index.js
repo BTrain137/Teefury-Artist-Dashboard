@@ -87,8 +87,8 @@ router.post("/register-user", (req, res, next) => {
   })(req, res, next);
 });
 
-router.post("/login-user", (req, res, next) => {
-  passport.authenticate("login", async (err, user, info) => {
+router.post("/signin-user", (req, res, next) => {
+  passport.authenticate("signin", async (err, user, info) => {
     if (err) return next(err);
 
     if (!user) {

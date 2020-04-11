@@ -64,7 +64,7 @@ const passLoginOpt = {
 };
 
 passport.use(
-  "login",
+  "signin",
   new LocalStrategy(passLoginOpt, async (usernameField, password, done) => {
     let conn;
     try {

@@ -90,7 +90,7 @@ class Signin extends Component {
   _signUserIn = async (contactEmail, password) => {
     const { setCurrentUser, setUserJWTToken } = this.props;
     try {
-      const { data } = await axios.post("/api/login-user", {
+      const { data } = await axios.post("/api/signin-user", {
         contactEmail: contactEmail.trim(),
         password: password.trim(),
       });
