@@ -8,6 +8,16 @@ import { secret, BCRYPT_SALT_ROUNDS } from "../../../services/jwtConfig.js";
 const router = express.Router();
 
 /**
+ * Basic user information sent to the client after server logs user in.
+ * @typedef {{
+ *    artistName:String,
+ *    firstName:String,
+ *    lastName:String,
+ *    contactEmail:String,
+ *  }} BasicUserInfo
+ */
+
+/**
  * Login and Register share the same req.login strategies
  * If a new user signs up or logins they are checked if they have an artist account
  * Brand new users will need to create an artist account
@@ -16,7 +26,7 @@ const router = express.Router();
  * @param  {Object} req   The request object from express
  * @param  {Object} user  The user object from passport
  * @param  {Object} next  The next function to move along errors for express
- * @return {Promise<{token:String, currentUser:Object }>}
+ * @return {Promise<{token:String, currentUser:BasicUserInfo }>}
  */
 
 const reqLogin = function (req, user, next) {
@@ -57,6 +67,7 @@ const reqLogin = function (req, user, next) {
             return next(error);
           }
         } else {
+          // TODO: Set up admin
           currentUser = user;
         }
 
@@ -116,6 +127,7 @@ router.put(
     let conn;
 
     // TODO: rewrite this.
+    // Rewrite may possibly be switching into Graphql
     try {
       conn = await pool.getConnection();
 
