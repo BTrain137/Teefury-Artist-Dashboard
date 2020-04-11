@@ -91,8 +91,8 @@ class Signin extends Component {
     const { setCurrentUser, setUserJWTToken } = this.props;
     try {
       const { data } = await axios.post("/api/login-user", {
-        contactEmail,
-        password,
+        contactEmail: contactEmail.trim(),
+        password: password.trim(),
       });
       const { token, currentUser } = data;
       setUserJWTToken(token);
@@ -153,10 +153,7 @@ class Signin extends Component {
         </H2>
         <H3>Dashboard</H3>
 
-        <Form
-          onSubmit={this.handleSubmit}
-          onKeyPress={this.handleFormKeyPress}
-        >
+        <Form onSubmit={this.handleSubmit} onKeyPress={this.handleFormKeyPress}>
           {emailError ? (
             <ErrorMessages>{emailError} </ErrorMessages>
           ) : (

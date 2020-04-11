@@ -86,8 +86,8 @@ class Signup extends Component {
     const { setCurrentUser, setUserJWTToken } = this.props;
     try {
       const { data } = await axios.post("/api/register-user", {
-        contactEmail,
-        password,
+        contactEmail: contactEmail.trim(),
+        password: password.trim(),
       });
       const { token, currentUser } = data;
       setUserJWTToken(token);
