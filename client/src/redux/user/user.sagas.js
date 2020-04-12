@@ -3,10 +3,8 @@ import axios from "axios";
 import UserActionTypes from "./user.types";
 
 import {
-  signInSuccess,
-  signInFailure,
-  signUpSuccess,
-  signUpFailure,
+  authorizedSuccess,
+  authorizedFailure,
   setCurrentUser,
   setUserJWTToken,
 } from "./user.action";
@@ -18,9 +16,9 @@ export function* signIn({ payload: { contactEmail, password } }) {
       password,
     });
     // const { token, currentUser } = data;
-    yield put(signInSuccess(data));
+    yield put(authorizedSuccess(data));
   } catch (error) {
-    yield put(signInFailure(error.response));
+    yield put(authorizedFailure(error.response));
   }
 }
 
@@ -30,15 +28,13 @@ export function* signUp({ payload: { contactEmail, password } }) {
       contactEmail,
       password,
     });
-    yield put(signUpSuccess(data));
+    yield put(authorizedSuccess(data));
   } catch (error) {
-    yield put(signUpFailure(error.response));
+    yield put(authorizedFailure(error.response));
   }
 }
 
-export function* setCurrentUserAfterAuth({
-  payload: { token, currentUser },
-}) {
+export function* setCurrentUserAfterAuth({ payload: { token, currentUser } }) {
   yield put(setCurrentUser(currentUser));
   yield put(setUserJWTToken(token));
 }
@@ -47,18 +43,18 @@ export function* onSignInStart() {
   yield takeLatest(UserActionTypes.SIGN_IN_START, signIn);
 }
 
-export function* onSignInSuccess() {
-  yield takeLatest(UserActionTypes.SIGN_IN_SUCCESS, setCurrentUserAfterAuth);
-}
-
 export function* onSignUpStart() {
   yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
 }
 
-export function* onSignUpSuccess() {
-  yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, setCurrentUserAfterAuth);
+export function* onAuthorizedSuccess() {
+  yield takeLatest(UserActionTypes.AUTHORIZED_SUCCESS, setCurrentUserAfterAuth);
 }
 
 export function* userSaga() {
-  yield all([call(onSignInStart), call(onSignInSuccess), call(onSignUpStart), call(onSignUpSuccess)]);
+  yield all([
+    call(onSignInStart),
+    call(onSignUpStart),
+    call(onAuthorizedSuccess),
+  ]);
 }
