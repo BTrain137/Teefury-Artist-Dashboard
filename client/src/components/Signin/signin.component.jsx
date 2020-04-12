@@ -37,7 +37,8 @@ class Signin extends Component {
   }
 
   componentDidMount() {
-    const { basicArtistInfo } = this.props;
+    const { basicArtistInfo, clearReduxUserErrors } = this.props;
+    clearReduxUserErrors();
     if (basicArtistInfo) this._redirectUser(basicArtistInfo);
   }
 

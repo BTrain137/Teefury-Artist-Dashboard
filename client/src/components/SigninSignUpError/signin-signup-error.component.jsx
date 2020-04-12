@@ -29,8 +29,8 @@ const SignInSignUpError = ({ error }) => {
     return (
       <>
         <ErrorMessages>{message}</ErrorMessages>
-        {/* User not found 404 || Password incorrect not Authorized 401 */}
-        {status === 404 || status === 401 ? (
+        {/* User not found 404 || Password incorrect not Authorized 401 || Conflict 409 */}
+        {status === 404 || status === 401 || status === 409 ? (
           <ErrorMessages>
             <a target="_blank" rel="noopener noreferrer" href={RESET_EMAIL_URL}>
               {" "}
