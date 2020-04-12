@@ -1,5 +1,11 @@
-export const UserActionTypes = {
+const UserActionTypes = {
   SET_CURRENT_USER: "SET_CURRENT_USER",
   SET_USER_JWT_TOKEN: "SET_USER_JWT_TOKEN",
   USER_LOG_OUT: "USER_LOG_OUT",
+  SIGN_IN_START: "SIGN_IN_START",
+  SIGN_IN_SUCCESS: "SIGN_IN_SUCCESS",
+  SIGN_IN_FAILURE: "SIGN_IN_FAILURE",
+  ClEAR_USER_ERROR: "ClEAR_USER_ERROR",
 };
+
+export default UserActionTypes;
