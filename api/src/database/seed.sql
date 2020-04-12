@@ -11,3 +11,16 @@ VALUES ("locoMotive", "Tom", "Thomas", "tom@email.com", "tom@email.com", "", "",
 
 -- Update One
 -- UPDATE `artist_profile` SET `first_name`="Henry", `last_name`="Loco" WHERE `artist_name`="locoMotive";
+
+-- Create localhost user
+-- CREATE USER 'btran'@'localhost' IDENTIFIED BY 'b^8@Hc89UgVu';
+-- GRANT ALL PRIVILEGES ON artist_dashboard.* TO 'btran'@'localhost';
+-- FLUSH PRIVILEGES;
+
+-- Check User
+-- SHOW GRANTS FOR 'btran'@'localhost';
+-- mysql -u btran -p
+
+-- Seed Schema
+-- mysql -u btran -p < ./api/src/database/seed.sql
+-- mysql -u btran -p < ./api/src/database/schema.sql
