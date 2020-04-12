@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import axios from "axios";
-import { createStructuredSelector } from "reselect";
 import { Link, withRouter } from "react-router-dom";
 
 import { isEmailValid, isPasswordStrong } from "../../utils";
-import { setCurrentUser, setUserJWTToken } from "../../redux/user/user.action";
-import { selectCurrentUser } from "../../redux/user/user.selector";
+import { clearUserError, signInStart } from "../../redux/user/user.action";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
 import { ButtonMd } from "../Button/button.component";
+import SignInSignUpError from "../SigninSignUpError";
 
 import {
   SignUpContainer,
@@ -29,16 +27,16 @@ class Signin extends Component {
     this.state = {
       contactEmail: "",
       password: "",
-      errorStatus: "",
-      emailError: "",
-      passwordError: "",
+      formPasswordError: "",
+      formEmailError: "",
       isDisableSubmit: false,
-      resetEmailURL: "",
+      isFormValid: true,
     };
   }
 
   componentDidMount() {
-    this._redirectUser();
+    const { clearReduxUserErrors } = this.props;
+    clearReduxUserErrors();
   }
 
   handleChange = (event) => {
@@ -46,12 +44,29 @@ class Signin extends Component {
     this.setState({ [name]: value, isDisableSubmit: false });
   };
 
-  handleSubmit = async (event) => {
+  handleSubmit = (event) => {
     event.preventDefault();
+
+    const { signInStart, clearReduxUserErrors } = this.props;
+
     const { contactEmail, password } = this.state;
-    if (this._areFormFieldsValid(contactEmail, password)) {
-      await this._signUserIn(contactEmail, password);
-      this._redirectUser();
+    const doesFromHaveErrors = this._areFormFieldsValid(contactEmail, password);
+
+    clearReduxUserErrors();
+
+    if (doesFromHaveErrors) {
+      const { ...errorMsgs } = doesFromHaveErrors;
+      this.setState({
+        ...errorMsgs,
+        isDisableSubmit: true,
+      });
+    } else {
+      this.setState({
+        formPasswordError: "",
+        formEmailError: "",
+        isDisableSubmit: true,
+      });
+      signInStart(contactEmail.trim(), password.trim());
     }
   };
 
@@ -63,73 +78,30 @@ class Signin extends Component {
   };
 
   _areFormFieldsValid = (contactEmail, password) => {
-    const errorObj = {
-      passwordError: "",
-      emailError: "",
-      isFormValid: true,
+    const error = {
+      formPasswordError: "",
+      formEmailError: "",
+      formHasErrors: false,
     };
 
     if (!isPasswordStrong(password)) {
-      errorObj.passwordError = "Password must be at least 5 characters long.";
-      errorObj.isFormValid = false;
+      error.formPasswordError = "Password must be at least 5 characters long.";
+      error.formHasErrors = true;
     }
 
     if (!isEmailValid(contactEmail)) {
-      errorObj.emailError = "Please Enter A Valid Email";
-      errorObj.isFormValid = false;
+      error.formEmailError = "Please Enter A Valid Email";
+      error.formHasErrors = true;
     }
 
-    if (!errorObj.isFormValid) {
-      this.setState(errorObj);
+    if (error.formHasErrors) {
+      const { formPasswordError, formEmailError } = error;
+      return {
+        formPasswordError,
+        formEmailError,
+      };
+    } else {
       return false;
-    } else {
-      return true;
-    }
-  };
-
-  _signUserIn = async (contactEmail, password) => {
-    const { setCurrentUser, setUserJWTToken } = this.props;
-    try {
-      const { data } = await axios.post("/api/signin-user", {
-        contactEmail: contactEmail.trim(),
-        password: password.trim(),
-      });
-      const { token, currentUser } = data;
-      setUserJWTToken(token);
-      setCurrentUser(currentUser);
-    } catch (error) {
-      const { status, message } = error.response.data;
-      const teefuryEmail = "artist@teefury.com";
-      const emailSubject = "Reset User Account";
-      const msgToArtist = `Artist! Please send this email from the same inbox you are requesting the password to be reset.\nFor your account security sender email must match ${contactEmail}.\nMissed match sender email and account email will be ignored.`;
-      const emailBody = `Hello Teefury Team,\n\nPlease reset the password associated to the email, ${contactEmail}\n\n${msgToArtist}\n\nThank you!`;
-      const resetEmailURL = encodeURI(
-        `mailto:${teefuryEmail}?subject=${emailSubject}&body=${emailBody}`
-      );
-      this.setState({
-        emailError: message,
-        errorStatus: status,
-        passwordError: "",
-        resetEmailURL,
-        isDisableSubmit: true,
-      });
-    }
-  };
-
-  _redirectUser = () => {
-    const { basicArtistInfo, history } = this.props;
-    // Component did mount will execute this immediately
-    if (!basicArtistInfo) {
-      return;
-    } else {
-      const { artistName, contactEmail } = basicArtistInfo;
-      if (!contactEmail) {
-        return;
-      } else if (contactEmail && artistName) {
-        history.push("/artist/profile");
-      } else if (contactEmail && !artistName) {
-        history.push("/artist/create");
-      }
     }
   };
 
@@ -137,11 +109,9 @@ class Signin extends Component {
     const {
       contactEmail,
       password,
-      emailError,
-      errorStatus,
-      passwordError,
+      formEmailError,
+      formPasswordError,
       isDisableSubmit,
-      resetEmailURL,
     } = this.state;
 
     return (
@@ -154,19 +124,9 @@ class Signin extends Component {
         <H3>Dashboard</H3>
 
         <Form onSubmit={this.handleSubmit} onKeyPress={this.handleFormKeyPress}>
-          {emailError ? (
-            <ErrorMessages>{emailError} </ErrorMessages>
-          ) : (
-            <SpaceHolder />
-          )}
-          {errorStatus === 404 ? (
-            <ErrorMessages>
-              <a target="_blank" rel="noopener noreferrer" href={resetEmailURL}>
-                {" "}
-                Reset Password
-              </a>
-            </ErrorMessages>
-          ) : null}
+          {formEmailError ? (
+            <ErrorMessages>{formEmailError}</ErrorMessages>
+          ) : <SignInSignUpError />}
           <FormInput
             type="email"
             name="contactEmail"
@@ -177,8 +137,8 @@ class Signin extends Component {
             value={contactEmail}
             required
           />
-          {passwordError ? (
-            <ErrorMessages>{passwordError} </ErrorMessages>
+          {formPasswordError ? (
+            <ErrorMessages>{formPasswordError}</ErrorMessages>
           ) : (
             <SpaceHolder />
           )}
@@ -208,13 +168,10 @@ class Signin extends Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  basicArtistInfo: selectCurrentUser,
-});
-
 const mapDispatchToProps = (dispatch) => ({
-  setUserJWTToken: (token) => dispatch(setUserJWTToken(token)),
-  setCurrentUser: (currentUser) => dispatch(setCurrentUser(currentUser)),
+  clearReduxUserErrors: () => dispatch(clearUserError()),
+  signInStart: (contactEmail, password) =>
+    dispatch(signInStart({ contactEmail, password })),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Signin));
+export default withRouter(connect(null, mapDispatchToProps)(Signin));
