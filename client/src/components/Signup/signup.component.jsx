@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { Link, withRouter } from "react-router-dom";
 
-import { isEmailValid, isPasswordStrong } from "../../utils";
+import { areFormFieldsValid } from "../../utils";
 import { clearUserError, signUpStart } from "../../redux/user/user.action";
 import { selectCurrentUser } from "../../redux/user/user.selector";
 
@@ -64,7 +64,7 @@ class Signup extends Component {
     const { signUpStart, clearReduxUserErrors } = this.props;
 
     const { contactEmail, password } = this.state;
-    const doesFromHaveErrors = this._areFormFieldsValid(contactEmail, password);
+    const doesFromHaveErrors = areFormFieldsValid(contactEmail, password);
 
     clearReduxUserErrors();
 
@@ -88,34 +88,6 @@ class Signup extends Component {
     if (event.which === 13) {
       event.preventDefault();
       this.handleSubmit(event);
-    }
-  };
-
-  _areFormFieldsValid = (contactEmail, password) => {
-    const error = {
-      formPasswordError: "",
-      formEmailError: "",
-      formHasErrors: false,
-    };
-
-    if (!isPasswordStrong(password)) {
-      error.formPasswordError = "Password must be at least 5 characters long.";
-      error.formHasErrors = true;
-    }
-
-    if (!isEmailValid(contactEmail)) {
-      error.formEmailError = "Please Enter A Valid Email";
-      error.formHasErrors = true;
-    }
-
-    if (error.formHasErrors) {
-      const { formPasswordError, formEmailError } = error;
-      return {
-        formPasswordError,
-        formEmailError,
-      };
-    } else {
-      return false;
     }
   };
 

@@ -1,1 +1,7 @@
-export { isPasswordStrong, isEmailValid, isNameValid, doesPasswordMatch } from "./validationUtils";
+export {
+  isPasswordStrong,
+  isEmailValid,
+  isNameValid,
+  doesPasswordMatch,
+  areFormFieldsValid,
+} from "./validationUtils";

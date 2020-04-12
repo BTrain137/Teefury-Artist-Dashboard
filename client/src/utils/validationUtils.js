@@ -15,3 +15,31 @@ export const isNameValid = (name) => {
 export const doesPasswordMatch = (oldString, newString) => {
   return oldString === newString ? true : false;
 };
+
+export const areFormFieldsValid = (contactEmail, password) => {
+  const error = {
+    formPasswordError: "",
+    formEmailError: "",
+    formHasErrors: false,
+  };
+
+  if (!isPasswordStrong(password)) {
+    error.formPasswordError = "Password must be at least 5 characters long.";
+    error.formHasErrors = true;
+  }
+
+  if (!isEmailValid(contactEmail)) {
+    error.formEmailError = "Please Enter A Valid Email";
+    error.formHasErrors = true;
+  }
+
+  if (error.formHasErrors) {
+    const { formPasswordError, formEmailError } = error;
+    return {
+      formPasswordError,
+      formEmailError,
+    };
+  } else {
+    return false;
+  }
+};
