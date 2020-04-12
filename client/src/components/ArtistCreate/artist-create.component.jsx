@@ -4,10 +4,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
-import {
-  setCurrentUser,
-  clearUserAndToken,
-} from "../../redux/user/user.action";
+import { setCurrentUser, deleteUserStart } from "../../redux/user/user.action";
 import {
   selectCurrentUser,
   selectUserJWTToken,
@@ -59,8 +56,14 @@ class CreateArtist extends Component {
   }
 
   componentDidMount() {
-    this._loadContactEmail();
-    this._redirectUser();
+    const { basicArtistInfo } = this.props;
+    this._loadBasicArtistInfo(basicArtistInfo);
+    this._redirectUser(basicArtistInfo);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const { basicArtistInfo } = nextProps;
+    return this._redirectUser(basicArtistInfo);
   }
 
   handleChange = (event) => {
@@ -69,14 +72,23 @@ class CreateArtist extends Component {
   };
 
   handleSubmit = async (event) => {
+    // TODO: Move submit into saga and fixed redirecting here
+    // Possibly as simple as removing it.
     event.preventDefault();
     await this._createArtistAccount();
     this._redirectUser();
   };
 
-  handleClick = async () => {
-    await this._deleteUserAccount();
-    this._redirectUser();
+  handleFormKeyPress = (event) => {
+    if (event.which === 13) {
+      event.preventDefault();
+      this.handleSubmit(event);
+    }
+  };
+
+  handleClick = () => {
+    const { deleteUserStart, token } = this.props;
+    deleteUserStart(token);
   };
 
   handleCheckboxChange = (event) => {
@@ -93,15 +105,7 @@ class CreateArtist extends Component {
     this.setState({ [name]: boolValue });
   };
 
-  handleFormKeyPress = (event) => {
-    if (event.which === 13) {
-      event.preventDefault();
-      this.handleSubmit(event);
-    }
-  };
-
-  _loadContactEmail = () => {
-    const { basicArtistInfo } = this.props;
+  _loadBasicArtistInfo = (basicArtistInfo) => {
     if (basicArtistInfo) {
       const { contactEmail } = basicArtistInfo;
       if (contactEmail) {
@@ -168,26 +172,6 @@ class CreateArtist extends Component {
     }
   };
 
-  _deleteUserAccount = async () => {
-    const { token, clearUserAndToken } = this.props;
-    try {
-      await axios.delete("/api/delete-user", {
-        headers: { Authorization: `JWT ${token}` },
-      });
-    } catch ({ response }) {
-      const { status, data } = response;
-      const { message } = data;
-      this.setState({
-        errorMessages: message
-          ? [message]
-          : ["Something went wrong please check back later."],
-        errorStatus: status,
-      });
-    }
-
-    clearUserAndToken();
-  };
-
   _areFormFieldsValid = (
     artistName,
     firstName,
@@ -251,17 +235,19 @@ class CreateArtist extends Component {
     return valid_name.test(name);
   };
 
-  _redirectUser = () => {
-    const { basicArtistInfo, history } = this.props;
+  _redirectUser = (basicArtistInfo) => {
+    const { history } = this.props;
     if (basicArtistInfo) {
       const { artistName } = basicArtistInfo;
       if (artistName) {
         history.push("/artist/profile");
+        return false;
       } else {
-        return;
+        return true;
       }
     } else {
       history.push("/");
+      return false;
     }
   };
 
@@ -456,7 +442,7 @@ class CreateArtist extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   updateArtistInfo: (basicInfo) => dispatch(setCurrentUser(basicInfo)),
-  clearUserAndToken: () => dispatch(clearUserAndToken()),
+  deleteUserStart: (token) => dispatch(deleteUserStart({ token })),
 });
 
 const mapStateToProps = createStructuredSelector({

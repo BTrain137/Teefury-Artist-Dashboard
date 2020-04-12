@@ -20,11 +20,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
         JWTToken: action.payload,
         error: null,
       };
-    case UserActionTypes.USER_LOG_OUT:
-      return {
-        ...state,
-        ...INITIAL_STATE,
-      };
     case UserActionTypes.AUTHORIZED_FAILURE:
       return {
         ...state,
@@ -36,6 +31,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         error: null,
+      };
+    case UserActionTypes.CLEAR_ALL_USER_DETAILS:
+      return {
+        ...state,
+        ...INITIAL_STATE,
       };
     default:
       return state;

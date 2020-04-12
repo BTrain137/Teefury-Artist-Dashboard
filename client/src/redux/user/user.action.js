@@ -10,10 +10,6 @@ export const setUserJWTToken = (JWTToken) => ({
   payload: JWTToken,
 });
 
-export const clearUserAndToken = () => ({
-  type: UserActionTypes.USER_LOG_OUT,
-});
-
 export const signInStart = (contactEmailAndPassword) => ({
   type: UserActionTypes.SIGN_IN_START,
   payload: contactEmailAndPassword,
@@ -34,6 +30,23 @@ export const authorizedFailure = (error) => ({
   payload: error,
 });
 
+export const deleteUserStart = (JWTToken) => ({
+  type: UserActionTypes.DELETE_USER_START,
+  payload: JWTToken,
+});
+
+export const deleteUserSuccess = () => ({
+  type: UserActionTypes.DELETE_USER_SUCCESS,
+});
+
 export const clearUserError = () => ({
   type: UserActionTypes.ClEAR_USER_ERROR,
+});
+
+export const logoutStart = () => ({
+  type: UserActionTypes.LOGOUT_START,
+});
+
+export const clearAllUserDetails = () => ({
+  type: UserActionTypes.CLEAR_ALL_USER_DETAILS,
 });
