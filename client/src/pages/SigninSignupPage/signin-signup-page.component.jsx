@@ -1,5 +1,5 @@
 import React from "react"
-import CreateArtist from "../../components/CreateArtist/create-artist.component";
+import CreateArtist from "../../components/ArtistCreate/artist-create.component";
 import Signup from "../../components/Signup/signup.component";
 import Signin from "../../components/Signin/signin.component";
 

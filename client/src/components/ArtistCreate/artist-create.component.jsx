@@ -33,7 +33,7 @@ import {
   LinkToTerm,
   ErrorTitle,
   ErrorList,
-} from "./create-artist.styles.jsx";
+} from "./artist-create.styles.jsx";
 import logo from "../../assets/logo.png";
 
 class CreateArtist extends Component {
