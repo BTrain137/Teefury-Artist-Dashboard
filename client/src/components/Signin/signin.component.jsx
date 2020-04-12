@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 import { Link, withRouter } from "react-router-dom";
 
 import { isEmailValid, isPasswordStrong } from "../../utils";
 import { clearUserError, signInStart } from "../../redux/user/user.action";
+import { selectCurrentUser } from "../../redux/user/user.selector";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
 import { ButtonMd } from "../Button/button.component";
@@ -35,8 +37,18 @@ class Signin extends Component {
   }
 
   componentDidMount() {
-    const { clearReduxUserErrors } = this.props;
-    clearReduxUserErrors();
+    const { basicArtistInfo } = this.props;
+    if (basicArtistInfo) this._redirectUser(basicArtistInfo);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const { basicArtistInfo } = nextProps;
+    if (basicArtistInfo) {
+      this._redirectUser(basicArtistInfo);
+      return false;
+    } else {
+      return true;
+    }
   }
 
   handleChange = (event) => {
@@ -105,6 +117,23 @@ class Signin extends Component {
     }
   };
 
+  _redirectUser = (basicArtistInfo) => {
+    const { history } = this.props;
+    // Component did mount will execute this immediately
+    if (!basicArtistInfo) {
+      return;
+    } else {
+      const { artistName, contactEmail } = basicArtistInfo;
+      if (!contactEmail) {
+        return;
+      } else if (contactEmail && artistName) {
+        history.push("/artist/profile");
+      } else if (contactEmail && !artistName) {
+        history.push("/artist/create");
+      }
+    }
+  };
+
   render() {
     const {
       contactEmail,
@@ -126,7 +155,9 @@ class Signin extends Component {
         <Form onSubmit={this.handleSubmit} onKeyPress={this.handleFormKeyPress}>
           {formEmailError ? (
             <ErrorMessages>{formEmailError}</ErrorMessages>
-          ) : <SignInSignUpError />}
+          ) : (
+            <SignInSignUpError />
+          )}
           <FormInput
             type="email"
             name="contactEmail"
@@ -168,10 +199,14 @@ class Signin extends Component {
   }
 }
 
+const mapStateToProps = createStructuredSelector({
+  basicArtistInfo: selectCurrentUser,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   clearReduxUserErrors: () => dispatch(clearUserError()),
   signInStart: (contactEmail, password) =>
     dispatch(signInStart({ contactEmail, password })),
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(Signin));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Signin));
