@@ -4,6 +4,22 @@ import passport from "passport";
 
 const router = express.Router();
 
+/**
+ * Basic user information sent to the client after server logs user in.
+ * @typedef {{
+ *    artistName:String,
+ *    firstName:String,
+ *    lastName:String,
+ *    contactEmail:String,
+ *    paypalEmail:String,
+ *    phoneNumber:String,
+ *    social_facebook:String,
+ *    social_instagram:String,
+ *    social_twitter:String,
+ *    isInternational:Boolean,
+ *  }} artistProfile
+ */
+
 router.get(
   "/artist-profile-details",
   passport.authenticate("jwt"),
@@ -11,9 +27,10 @@ router.get(
     const { contactEmail } = req.user;
     let conn;
     try {
+
       conn = await pool.getConnection();
       const [
-        artist,
+        artistProfile,
       ] = await pool.query(
         "SELECT `artist_name` AS `artistName`, " +
           "`first_name` AS `firstName`, " +
@@ -30,10 +47,12 @@ router.get(
       );
       conn.end();
 
-      artist.isInternational = artist.international ? true : false;
-      delete artist.international;
+      artistProfile.isInternational = artistProfile.international
+        ? true
+        : false;
+      delete artistProfile.international;
 
-      res.status(200).send(artist);
+      res.status(200).json({ artistProfile });
     } catch (error) {
       conn.end();
       return next(error);
@@ -57,6 +76,8 @@ router.put(
       socialTwitter,
       isInternational,
     } = req.body;
+
+    const { contactEmail } = req.user;
 
     try {
       conn = await pool.getConnection();
@@ -85,22 +106,31 @@ router.put(
       }
 
       const [
-        artist,
+        artistProfile,
       ] = await pool.query(
         "SELECT `artist_name` AS `artistName`, " +
           "`first_name` AS `firstName`, " +
           "`last_name` AS `lastName`, " +
-          "`username_contact_email` AS `contactEmail` " +
-          "FROM `artist_profile` " +
-          "WHERE `artist_name`=?",
-        [artistName]
+          "`username_contact_email` AS `contactEmail`, " +
+          "`paypal_email` AS `paypalEmail`, " +
+          "`phone` AS `phoneNumber`, " +
+          "`social_facebook` AS `socialFacebook`, " +
+          "`social_instagram` AS `socialInstagram`, " +
+          "`social_twitter` AS `socialTwitter`, " +
+          "`international` FROM `artist_profile` " +
+          "WHERE `username_contact_email`=?",
+        [contactEmail]
       );
-
       conn.end();
+
+      artistProfile.isInternational = artistProfile.international
+        ? true
+        : false;
+      delete artistProfile.international;
 
       res.status(200).json({
         message: "Artist Profile Updated.",
-        currentUser: artist,
+        artistProfile,
       });
     } catch (error) {
       conn.end();
@@ -118,7 +148,6 @@ router.post(
       artistName,
       firstName,
       lastName,
-      contactEmail,
       paypalEmail,
       phoneNumber,
       socialFacebook,
@@ -126,6 +155,8 @@ router.post(
       socialTwitter,
       isInternational,
     } = req.body;
+
+    const { contactEmail } = req.user;
 
     try {
       conn = await pool.getConnection();
@@ -150,27 +181,37 @@ router.post(
         ]
       );
 
-      const [
-        artist,
-      ] = await pool.query(
-        "SELECT `artist_name` AS `artistName`, " +
-          "`first_name` AS `firstName`, " +
-          "`last_name` AS `lastName`, " +
-          "`username_contact_email` AS `contactEmail` " +
-          "FROM `artist_profile` " +
-          "WHERE `username_contact_email`=?",
-        [contactEmail]
-      );
-
-      conn.end();
-
       if (affectedRows > 1) {
         // TODO: If more than 1 row is affected do something
         console.log(artistName, req.user);
       }
-      res.status(200).send({
+
+      const [
+        artistProfile,
+      ] = await pool.query(
+        "SELECT `artist_name` AS `artistName`, " +
+          "`first_name` AS `firstName`, " +
+          "`last_name` AS `lastName`, " +
+          "`username_contact_email` AS `contactEmail`, " +
+          "`paypal_email` AS `paypalEmail`, " +
+          "`phone` AS `phoneNumber`, " +
+          "`social_facebook` AS `socialFacebook`, " +
+          "`social_instagram` AS `socialInstagram`, " +
+          "`social_twitter` AS `socialTwitter`, " +
+          "`international` FROM `artist_profile` " +
+          "WHERE `username_contact_email`=?",
+        [contactEmail]
+      );
+      conn.end();
+
+      artistProfile.isInternational = artistProfile.international
+        ? true
+        : false;
+      delete artistProfile.international;
+
+      res.status(200).json({
         message: "Artist Created",
-        currentUser: artist,
+        artistProfile,
       });
     } catch (error) {
       conn.end();
