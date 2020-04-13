@@ -58,9 +58,20 @@ class Signup extends Component {
     this.setState({ [name]: value, isDisableSubmit: false });
   };
 
-  handleSubmit = async (event) => {
+  handleSubmit = (event) => {
     event.preventDefault();
+    this._signUpUser();
+  };
 
+  handleFormKeyPress = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    if (event.which === 13) {
+      this._signUpUser();
+    }
+  };
+
+  _signUpUser = () => {
     const { signUpStart, clearReduxUserErrors } = this.props;
 
     const { contactEmail, password } = this.state;
@@ -82,14 +93,7 @@ class Signup extends Component {
       });
       signUpStart(contactEmail.trim(), password.trim());
     }
-  };
-
-  handleFormKeyPress = (event) => {
-    if (event.which === 13) {
-      event.preventDefault();
-      this.handleSubmit(event);
-    }
-  };
+  }
 
   _redirectUser = (basicArtistInfo) => {
     const { history } = this.props;
