@@ -5,7 +5,8 @@ import { Link, withRouter } from "react-router-dom";
 
 import { areUserFormFieldsValid } from "../../utils";
 import { clearUserError, signUpStart } from "../../redux/user/user.action";
-import { selectCurrentUser } from "../../redux/user/user.selector";
+import { selectUserAccount } from "../../redux/user/user.selector";
+import { selectArtistProfile } from "../../redux/artist/artist.selector";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
 import { ButtonMd } from "../Button/button.component";
@@ -37,20 +38,17 @@ class Signup extends Component {
     };
   }
 
+  // TODO: Handle error better when components are mounting
+
   componentDidMount() {
-    const { basicArtistInfo, clearReduxUserErrors } = this.props;
+    const { userAccount, artistProfile, clearReduxUserErrors } = this.props;
     clearReduxUserErrors();
-    if (basicArtistInfo) this._redirectUser(basicArtistInfo);
+    this._redirectUser(userAccount, artistProfile);
   }
 
   shouldComponentUpdate(nextProps) {
-    const { basicArtistInfo } = nextProps;
-    if (basicArtistInfo) {
-      this._redirectUser(basicArtistInfo);
-      return false;
-    } else {
-      return true;
-    }
+    const { userAccount, artistProfile } = nextProps;
+    return this._redirectUser(userAccount, artistProfile);
   }
 
   handleChange = (event) => {
@@ -72,9 +70,9 @@ class Signup extends Component {
   };
 
   _signUpUser = () => {
+    const { contactEmail, password } = this.state;
     const { signUpStart, clearReduxUserErrors } = this.props;
 
-    const { contactEmail, password } = this.state;
     const doesFromHaveErrors = areUserFormFieldsValid(contactEmail, password);
 
     clearReduxUserErrors();
@@ -93,21 +91,25 @@ class Signup extends Component {
       });
       signUpStart(contactEmail.trim(), password.trim());
     }
-  }
+  };
 
-  _redirectUser = (basicArtistInfo) => {
+  _redirectUser = (userAccount, artistProfile) => {
     const { history } = this.props;
-    if (!basicArtistInfo) {
-      return;
-    } else {
-      const { artistName, contactEmail } = basicArtistInfo;
-      if (!contactEmail) {
-        return;
-      } else if (contactEmail && artistName) {
+    const hasCreatedUserAccount =
+      userAccount && userAccount.contactEmail ? true : false;
+    const hasCreatedArtistProfile =
+      artistProfile && artistProfile.artistName ? true : false;
+
+    if (hasCreatedUserAccount) {
+      if (hasCreatedArtistProfile) {
         history.push("/artist/profile");
-      } else if (contactEmail && !artistName) {
+        return false;
+      } else {
         history.push("/artist/create");
+        return false;
       }
+    } else {
+      return true;
     }
   };
 
@@ -177,7 +179,8 @@ class Signup extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  basicArtistInfo: selectCurrentUser,
+  userAccount: selectUserAccount,
+  artistProfile: selectArtistProfile,
 });
 
 const mapDispatchToProps = (dispatch) => ({
