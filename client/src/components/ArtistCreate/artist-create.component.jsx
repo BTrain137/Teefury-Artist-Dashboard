@@ -71,8 +71,8 @@ class CreateArtist extends Component {
   }
 
   componentDidMount() {
-    const { clearArtistErrMsgs, userAccount, artistProfile } = this.props;
-    clearArtistErrMsgs();
+    const { clearReduxArtistErrors, userAccount, artistProfile } = this.props;
+    clearReduxArtistErrors();
     this._redirectUser(userAccount, artistProfile);
   }
 
@@ -133,6 +133,13 @@ class CreateArtist extends Component {
       hasAcceptTerms,
     } = this.state;
 
+    const {
+      createArtistProfile,
+      clearReduxArtistErrors,
+      artistErrorMsg,
+      token,
+    } = this.props;
+
     const reqBody = {
       artistName: artistName.trim(),
       firstName: firstName.trim(),
@@ -147,16 +154,9 @@ class CreateArtist extends Component {
       hasAcceptTerms,
     };
 
-    const {
-      createArtistProfile,
-      clearArtistErrMsgs,
-      artistErrorMsg,
-      token,
-    } = this.props;
-
     const doesFormHaveErrors = areArtistFormFieldsValid(reqBody);
 
-    clearArtistErrMsgs();
+    clearReduxArtistErrors();
 
     if (doesFormHaveErrors) {
       const { errorMessages } = doesFormHaveErrors;
@@ -371,7 +371,7 @@ const mapDispatchToProps = (dispatch) => ({
   deleteUser: (token) => dispatch(deleteUserStart({ token })),
   createArtistProfile: (reqBody, token) =>
     dispatch(createArtistProfileStart({ reqBody, token })),
-  clearArtistErrMsgs: () => dispatch(clearArtistErrors()),
+  clearReduxArtistErrors: () => dispatch(clearArtistErrors()),
   artistErrorMsg: (messages) => dispatch(artistProfileFailure({ messages })),
 });
 
