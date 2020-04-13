@@ -20,8 +20,8 @@ export const createArtistProfileSuccess = (artistProfile) => ({
 });
 
 /**
- * @param {Number} status  HTTP error status
- * @param {Array}  messages Error message in an array
+ * @param {Number}   status   HTTP error status
+ * @param {String[]} messages Error message in an array
  */
 export const artistProfileFailure = ({ status, messages }) => ({
   type: ArtistActionTypes.ARTIST_PROFILE_FAILURE,

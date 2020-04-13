@@ -6,6 +6,11 @@ import { selectArtistError } from "../../redux/artist/artist.selector";
 
 import { ErrorTitle, ErrorList } from "./artist-err-msg.styles";
 
+/**
+ * @param {Object} error          Error object
+ * @param {Number} error.status   HTTP error status
+ * @param {String[]}  error.messages Error message in an array
+ */
 const ArtistErrorMessages = ({ error }) => {
   if (error) {
     const { messages } = error;
