@@ -5,10 +5,7 @@ import { createStructuredSelector } from "reselect";
 
 import { areArtistFormFieldsValid } from "../../utils";
 import { deleteUserStart } from "../../redux/user/user.action";
-import {
-  selectUserAccount,
-  selectUserJWTToken,
-} from "../../redux/user/user.selector";
+import { selectUserAccount } from "../../redux/user/user.selector";
 import {
   createArtistProfileStart,
   clearArtistErrors,
@@ -61,7 +58,7 @@ class CreateArtist extends Component {
 
   // TODO: Handle component loading error
   // static getDerivedStateFromError() {
-  // componentDidCatch(error, errorInfo) 
+  // componentDidCatch(error, errorInfo)
 
   static getDerivedStateFromProps(props) {
     const { userAccount } = props;
@@ -100,8 +97,8 @@ class CreateArtist extends Component {
   };
 
   handleClick = () => {
-    const { deleteUser, token } = this.props;
-    deleteUser(token);
+    const { deleteUser } = this.props;
+    deleteUser();
   };
 
   handleCheckboxChange = (event) => {
@@ -137,7 +134,6 @@ class CreateArtist extends Component {
       createArtistProfile,
       clearReduxArtistErrors,
       artistErrorMsg,
-      token,
     } = this.props;
 
     const reqBody = {
@@ -166,7 +162,7 @@ class CreateArtist extends Component {
       artistErrorMsg(errorMessages);
     } else {
       this.setState({ isDisableSubmit: true });
-      createArtistProfile(reqBody, token);
+      createArtistProfile(reqBody);
     }
   }
 
@@ -368,9 +364,9 @@ class CreateArtist extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  deleteUser: (token) => dispatch(deleteUserStart({ token })),
-  createArtistProfile: (reqBody, token) =>
-    dispatch(createArtistProfileStart({ reqBody, token })),
+  deleteUser: () => dispatch(deleteUserStart()),
+  createArtistProfile: (reqBody) =>
+    dispatch(createArtistProfileStart({ reqBody })),
   clearReduxArtistErrors: () => dispatch(clearArtistErrors()),
   artistErrorMsg: (messages) => dispatch(artistProfileFailure({ messages })),
 });
@@ -378,7 +374,6 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = createStructuredSelector({
   userAccount: selectUserAccount,
   artistProfile: selectArtistProfile,
-  token: selectUserJWTToken,
 });
 
 export default withRouter(

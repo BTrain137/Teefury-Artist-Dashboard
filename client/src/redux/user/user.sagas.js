@@ -1,7 +1,8 @@
-import { all, call, put, takeLatest } from "redux-saga/effects";
+import { all, call, put, takeLatest, select } from "redux-saga/effects";
 import axios from "axios";
 import UserActionTypes from "./user.types";
 
+import { selectUserJWTToken } from "./user.selector";
 import {
   authorizedSuccess,
   authorizedFailure,
@@ -48,8 +49,9 @@ export function* signUp({ payload: { contactEmail, password } }) {
   }
 }
 
-export function* deleteUser({ payload: { token } }) {
+export function* deleteUser() {
   try {
+    const token = yield select(selectUserJWTToken)
     yield axios.delete("/api/delete-user", {
       headers: { Authorization: `JWT ${token}` },
     });

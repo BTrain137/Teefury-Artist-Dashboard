@@ -10,6 +10,8 @@ import {
   selectUserJWTToken,
 } from "../../redux/user/user.selector";
 import { setUserAccount, setUserJWTToken } from "../../redux/user/user.action";
+import { selectArtistProfile } from "../../redux/artist/artist.selector";
+import { getArtistProfileStart } from "../../redux/artist/artist.action";
 
 import { ButtonLgCenter, ButtonSm } from "../Button/button.component";
 import {
@@ -66,8 +68,11 @@ class ArtistProfile extends Component {
     };
   }
 
-  componentDidMount() {
-    this._loadBasicArtistInfo();
+  static getDerivedStateFromProps(props) {
+    const { artistProfile } = props;
+    return {
+      ...artistProfile,
+    };
   }
 
   handleChange = (event) => {
@@ -79,16 +84,7 @@ class ArtistProfile extends Component {
     });
   };
 
-  handleToggleCheckBox = (event) => {
-    const {
-      name,
-      dataset: { bool },
-    } = event.target;
-    const boolValue = bool.toLowerCase() === "true" ? true : false;
-    this.setState({ [name]: boolValue, hasArtistFromSaved: false });
-  };
-
-  handleSubmitArtistFrom = async (event) => {
+  handleSubmitArtistForm = async (event) => {
     event.preventDefault();
     const artistForm = this._validateArtistForm();
     if (artistForm.isArtistFormValid) {
@@ -130,14 +126,24 @@ class ArtistProfile extends Component {
     }
   };
 
-  handleClickOpenForm = async () => {
-    const artistDetails = await this._getArtistProfile();
-    this.setState({ ...artistDetails, isEditMode: true });
+  handleToggleCheckBox = (event) => {
+    const {
+      name,
+      dataset: { bool },
+    } = event.target;
+    const boolValue = bool.toLowerCase() === "true" ? true : false;
+    this.setState({ [name]: boolValue, hasArtistFromSaved: false });
+  };
+
+
+  handleClickOpenForm = () => {
+    const { getArtistProfileStart } = this.props;
+    getArtistProfileStart();
+    this.setState({ isEditMode: true });
   };
 
   handleClickCloseForm = (event) => {
     event.preventDefault();
-    this._loadBasicArtistInfo();
     this.setState({ isEditMode: false });
   };
 
@@ -145,12 +151,7 @@ class ArtistProfile extends Component {
     window.scrollTo(0, scrollTo);
   }
 
-  _loadBasicArtistInfo = () => {
-    const { basicArtistInfo } = this.props;
-    this.setState({ ...basicArtistInfo });
-  };
-
-  _getArtistProfile = async () => {
+  _getArtistProfileStart = async () => {
     try {
       const { token } = this.props;
       const { data } = await axios.get("/api/artist-profile-details", {
@@ -440,7 +441,7 @@ class ArtistProfile extends Component {
                 </>
               ) : (
                 <>
-                  <ButtonSm onClick={this.handleSubmitArtistFrom}>
+                  <ButtonSm onClick={this.handleSubmitArtistForm}>
                     Save Artist Profile
                   </ButtonSm>{" "}
                   <ButtonSm onClick={this.handleClickCloseForm}>X</ButtonSm>
@@ -519,13 +520,15 @@ class ArtistProfile extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  basicArtistInfo: selectUserAccount,
+  userAccount: selectUserAccount,
+  artistProfile: selectArtistProfile,
   token: selectUserJWTToken,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateArtistInfo: (basicInfo) => dispatch(setUserAccount(basicInfo)),
   setUserJWTToken: (token) => dispatch(setUserJWTToken(token)),
+  getArtistProfileStart: () => dispatch(getArtistProfileStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtistProfile);
