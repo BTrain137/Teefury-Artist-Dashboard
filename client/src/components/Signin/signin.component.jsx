@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { Link, withRouter } from "react-router-dom";
 
-import { areFormFieldsValid } from "../../utils";
+import { areUserFormFieldsValid } from "../../utils";
 import { clearUserError, signInStart } from "../../redux/user/user.action";
 import { selectCurrentUser } from "../../redux/user/user.selector";
 import { selectArtistProfile } from "../../redux/artist/artist.selector";
@@ -37,6 +37,8 @@ class Signin extends Component {
       componentHasError: false,
     };
   }
+
+  // TODO: Handle error better when components are mounting
 
   static getDerivedStateFromError() {
     return { componentHasError: true };
@@ -72,18 +74,18 @@ class Signin extends Component {
   };
 
   handleFormKeyPress = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
     if (event.which === 13) {
+      event.preventDefault();
+      event.stopPropagation();
       this._signInUser();
     }
   };
 
   _signInUser() {
+    const { contactEmail, password } = this.state;
     const { signInStart, clearReduxUserErrors } = this.props;
 
-    const { contactEmail, password } = this.state;
-    const doesFromHaveErrors = areFormFieldsValid(contactEmail, password);
+    const doesFromHaveErrors = areUserFormFieldsValid(contactEmail, password);
 
     clearReduxUserErrors();
 
@@ -115,11 +117,10 @@ class Signin extends Component {
         history.push("/artist/profile");
         return false;
       } else {
-        history.push("/artist/create"); 
+        history.push("/artist/create");
         return false;
       }
-    }
-    else {
+    } else {
       return true;
     }
   };

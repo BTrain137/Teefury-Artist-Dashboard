@@ -3,6 +3,6 @@ export {
   isEmailValid,
   isNameValid,
   doesPasswordMatch,
-  areFormFieldsValid,
+  areUserFormFieldsValid,
   areArtistFormFieldsValid
 } from "./validationUtils";

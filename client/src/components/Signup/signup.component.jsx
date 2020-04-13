@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { Link, withRouter } from "react-router-dom";
 
-import { areFormFieldsValid } from "../../utils";
+import { areUserFormFieldsValid } from "../../utils";
 import { clearUserError, signUpStart } from "../../redux/user/user.action";
 import { selectCurrentUser } from "../../redux/user/user.selector";
 
@@ -75,7 +75,7 @@ class Signup extends Component {
     const { signUpStart, clearReduxUserErrors } = this.props;
 
     const { contactEmail, password } = this.state;
-    const doesFromHaveErrors = areFormFieldsValid(contactEmail, password);
+    const doesFromHaveErrors = areUserFormFieldsValid(contactEmail, password);
 
     clearReduxUserErrors();
 

@@ -16,7 +16,7 @@ export const doesPasswordMatch = (oldString, newString) => {
   return oldString === newString ? true : false;
 };
 
-export const areFormFieldsValid = (contactEmail, password) => {
+export const areUserFormFieldsValid = (contactEmail, password) => {
   const error = {
     formPasswordError: "",
     formEmailError: "",
