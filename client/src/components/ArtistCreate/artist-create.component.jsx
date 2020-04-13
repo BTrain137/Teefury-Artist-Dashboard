@@ -85,6 +85,37 @@ class CreateArtist extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    this._createArtistProfile();
+  };
+
+  handleFormKeyPress = (event) => {
+    if (event.which === 13) {
+      event.preventDefault();
+      event.stopPropagation();
+      this._createArtistProfile();
+    }
+  };
+
+  handleClick = () => {
+    const { deleteUser, token } = this.props;
+    deleteUser(token);
+  };
+
+  handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    this.setState({ [name]: checked });
+  };
+
+  handleToggleCheckBox = (event) => {
+    const {
+      name,
+      dataset: { bool },
+    } = event.target;
+    const boolValue = bool.toLowerCase() === "true" ? true : false;
+    this.setState({ [name]: boolValue });
+  };
+
+  _createArtistProfile() {
     const {
       artistName,
       firstName,
@@ -134,32 +165,7 @@ class CreateArtist extends Component {
       this.setState({ isDisableSubmit: true });
       createArtistProfile(reqBody, token);
     }
-  };
-
-  handleFormKeyPress = (event) => {
-    if (event.which === 13) {
-      this.handleSubmit(event);
-    }
-  };
-
-  handleClick = () => {
-    const { deleteUser, token } = this.props;
-    deleteUser(token);
-  };
-
-  handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    this.setState({ [name]: checked });
-  };
-
-  handleToggleCheckBox = (event) => {
-    const {
-      name,
-      dataset: { bool },
-    } = event.target;
-    const boolValue = bool.toLowerCase() === "true" ? true : false;
-    this.setState({ [name]: boolValue });
-  };
+  }
 
   _redirectUser = (userAccount, artistProfile) => {
     const { history } = this.props;
