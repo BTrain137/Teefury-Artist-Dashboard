@@ -132,6 +132,7 @@ class Signup extends Component {
           {formEmailError ? (
             <ErrorMessages>{formEmailError}</ErrorMessages>
           ) : (
+            // TODO: possibly push error up to redux
             <SignInSignUpError />
           )}
           <FormInput
