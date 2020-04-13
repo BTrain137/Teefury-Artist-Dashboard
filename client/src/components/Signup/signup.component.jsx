@@ -64,9 +64,9 @@ class Signup extends Component {
   };
 
   handleFormKeyPress = (event) => {
-    event.stopPropagation();
-    event.preventDefault();
     if (event.which === 13) {
+      event.preventDefault();
+      event.stopPropagation();
       this._signUpUser();
     }
   };
