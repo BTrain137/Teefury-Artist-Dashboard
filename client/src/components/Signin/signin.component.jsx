@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 
 import { areUserFormFieldsValid } from "../../utils";
 import { clearUserError, signInStart } from "../../redux/user/user.action";
-import { selectCurrentUser } from "../../redux/user/user.selector";
+import { selectUserAccount } from "../../redux/user/user.selector";
 import { selectArtistProfile } from "../../redux/artist/artist.selector";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
@@ -201,7 +201,7 @@ class Signin extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  userAccount: selectCurrentUser,
+  userAccount: selectUserAccount,
   artistProfile: selectArtistProfile,
 });
 

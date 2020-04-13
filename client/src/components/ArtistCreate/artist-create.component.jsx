@@ -6,7 +6,7 @@ import { createStructuredSelector } from "reselect";
 import { areArtistFormFieldsValid } from "../../utils";
 import { deleteUserStart } from "../../redux/user/user.action";
 import {
-  selectCurrentUser,
+  selectUserAccount,
   selectUserJWTToken,
 } from "../../redux/user/user.selector";
 import {
@@ -376,7 +376,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = createStructuredSelector({
-  userAccount: selectCurrentUser,
+  userAccount: selectUserAccount,
   artistProfile: selectArtistProfile,
   token: selectUserJWTToken,
 });

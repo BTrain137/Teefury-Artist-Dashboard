@@ -2,9 +2,9 @@ import { createSelector } from "reselect";
 
 const selectUser = (state) => state.user;
 
-export const selectCurrentUser = createSelector(
+export const selectUserAccount = createSelector(
   [selectUser],
-  (user) => user.currentUser
+  (user) => user.userAccount
 );
 
 export const selectUserJWTToken = createSelector(

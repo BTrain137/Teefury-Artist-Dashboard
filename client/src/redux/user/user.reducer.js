@@ -1,7 +1,7 @@
 import UserActionTypes from "./user.types";
 
 const INITIAL_STATE = {
-  currentUser: null,
+  userAccount: null,
   JWTToken: null,
   error: null,
 };
@@ -11,7 +11,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case UserActionTypes.SET_CURRENT_USER:
       return {
         ...state,
-        currentUser: action.payload,
+        userAccount: action.payload,
         error: null,
       };
     case UserActionTypes.SET_USER_JWT_TOKEN:
@@ -23,7 +23,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case UserActionTypes.AUTHORIZED_FAILURE:
       return {
         ...state,
-        currentUser: null,
+        userAccount: null,
         JWTToken: null,
         error: action.payload,
       };

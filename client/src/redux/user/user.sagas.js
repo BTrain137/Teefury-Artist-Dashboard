@@ -9,7 +9,10 @@ import {
   setUserJWTToken,
   clearAllUserDetails,
 } from "./user.action";
-import { setArtistProfile } from "../artist/artist.action"
+import {
+  setArtistProfile,
+  clearAllArtistDetails,
+} from "../artist/artist.action";
 
 export function* unAuthorizedError(response) {
   response.data = {
@@ -61,14 +64,17 @@ export function* deleteUser({ payload: { token } }) {
   yield put(clearAllUserDetails());
 }
 
-export function* setUserAccountAfterAuth({ payload: { token, artistProfile, userAccount } }) {
+export function* setUserAccountAfterAuth({
+  payload: { token, artistProfile, userAccount },
+}) {
   yield put(setUserAccount(userAccount));
-  yield put(setArtistProfile(artistProfile))
+  yield put(setArtistProfile(artistProfile));
   yield put(setUserJWTToken(token));
 }
 
 export function* logout() {
   yield put(clearAllUserDetails());
+  yield put(clearAllArtistDetails());
 }
 
 export function* onSignInStart() {

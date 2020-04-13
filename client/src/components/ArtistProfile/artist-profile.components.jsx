@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { isNameValid, isEmailValid, doesPasswordMatch } from "../../utils";
 
 import {
-  selectCurrentUser,
+  selectUserAccount,
   selectUserJWTToken,
 } from "../../redux/user/user.selector";
 import { setUserAccount, setUserJWTToken } from "../../redux/user/user.action";
@@ -519,7 +519,7 @@ class ArtistProfile extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  basicArtistInfo: selectCurrentUser,
+  basicArtistInfo: selectUserAccount,
   token: selectUserJWTToken,
 });
 
