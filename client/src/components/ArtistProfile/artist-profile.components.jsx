@@ -99,13 +99,21 @@ class ArtistProfile extends Component {
 
   handleSubmitArtistForm = (event) => {
     event.preventDefault();
-    this._updateArtistProfile();
+    const { isDisableArtistSubmit } = this.state;
+    if (isDisableArtistSubmit) {
+      Swal.fire({
+        icon: "error",
+        text: "You didn't change anything...",
+      });
+    } else {
+      this._updateArtistProfile();
+    }
   };
 
   handleSubmitUserForm = (event) => {
     event.preventDefault();
-    const { newContactEmail, newPassword } = this.state;
-    if (!!newContactEmail && !newPassword) {
+    const { newContactEmail, newPassword, isDisableUserSubmit } = this.state;
+    if ((!!newContactEmail || !!newPassword) && !isDisableUserSubmit) {
       this._updateUserAccount();
     } else {
       Swal.fire({
@@ -148,7 +156,11 @@ class ArtistProfile extends Component {
       dataset: { bool },
     } = event.target;
     const boolValue = bool.toLowerCase() === "true" ? true : false;
-    this.setState({ [name]: boolValue, hasArtistFromSaved: false });
+    this.setState({
+      [name]: boolValue,
+      hasArtistFromSaved: false,
+      isDisableArtistSubmit: false,
+    });
   };
 
   handleScrollToElement(scrollTo) {
@@ -268,7 +280,6 @@ class ArtistProfile extends Component {
       // Boolean Modes
       isEditMode,
       hasArtistFromSaved,
-      isDisableArtistSubmit,
       hasUserFormSaved,
       isDisableUserSubmit,
     } = this.state;
@@ -386,11 +397,7 @@ class ArtistProfile extends Component {
                 </>
               ) : (
                 <>
-                  <ButtonSm
-                    type="submit"
-                    disabled={isDisableArtistSubmit}
-                    onClick={this.handleSubmitArtistForm}
-                  >
+                  <ButtonSm type="submit" onClick={this.handleSubmitArtistForm}>
                     Save Artist Profile
                   </ButtonSm>{" "}
                   <ButtonSm type="button" onClick={this.handleClickCloseForm}>
@@ -436,7 +443,6 @@ class ArtistProfile extends Component {
                 <>
                   <ButtonSm
                     type="submit"
-                    disabled={isDisableUserSubmit}
                     onClick={this.handleSubmitUserForm}
                   >
                     Save User Details
