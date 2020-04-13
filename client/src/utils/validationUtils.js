@@ -20,25 +20,73 @@ export const areFormFieldsValid = (contactEmail, password) => {
   const error = {
     formPasswordError: "",
     formEmailError: "",
-    formHasErrors: false,
+    _formHasErrors: false,
   };
 
   if (!isPasswordStrong(password)) {
     error.formPasswordError = "Password must be at least 5 characters long.";
-    error.formHasErrors = true;
+    error._formHasErrors = true;
   }
 
   if (!isEmailValid(contactEmail)) {
     error.formEmailError = "Please Enter A Valid Email";
-    error.formHasErrors = true;
+    error._formHasErrors = true;
   }
 
-  if (error.formHasErrors) {
+  if (error._formHasErrors) {
     const { formPasswordError, formEmailError } = error;
     return {
       formPasswordError,
       formEmailError,
     };
+  } else {
+    return false;
+  }
+};
+
+export const areArtistFormFieldsValid = ({
+  artistName,
+  firstName,
+  lastName,
+  paypalEmail,
+  hasAcceptTerms,
+}) => {
+  const error = {
+    errorMessages: [],
+    _formHasErrors: false,
+  };
+
+  // TODO: Validate artistName properly
+  if (artistName.length < 3) {
+    error.errorMessages.push("Artist name must be longer than 2 characters");
+    error._formHasErrors = true;
+  }
+
+  if (!isNameValid(lastName)) {
+    error.errorMessages.push("Please Enter A Valid Last Name.");
+    error._formHasErrors = true;
+  }
+
+  if (!isNameValid(firstName)) {
+    error.errorMessages.push("Please Enter A Valid First Name.");
+    error._formHasErrors = true;
+  }
+
+  if (!isEmailValid(paypalEmail)) {
+    error.errorMessages.push("Please Enter A Valid Email For Paypal Email.");
+    error._formHasErrors = true;
+  }
+
+  if (!hasAcceptTerms) {
+    error.errorMessages.push(
+      "Please read and agree to the terms and conditions."
+    );
+    error._formHasErrors = true;
+  }
+
+  if (error._formHasErrors) {
+    const { errorMessages } = error;
+    return { errorMessages };
   } else {
     return false;
   }
