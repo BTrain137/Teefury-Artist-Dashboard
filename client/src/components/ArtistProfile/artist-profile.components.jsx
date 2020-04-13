@@ -281,7 +281,6 @@ class ArtistProfile extends Component {
       isEditMode,
       hasArtistFromSaved,
       hasUserFormSaved,
-      isDisableUserSubmit,
     } = this.state;
 
     return (
