@@ -6,6 +6,7 @@ import { Link, withRouter } from "react-router-dom";
 import { areFormFieldsValid } from "../../utils";
 import { clearUserError, signInStart } from "../../redux/user/user.action";
 import { selectCurrentUser } from "../../redux/user/user.selector";
+import { selectArtistProfile } from "../../redux/artist/artist.selector";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
 import { ButtonMd } from "../Button/button.component";
@@ -33,23 +34,31 @@ class Signin extends Component {
       formEmailError: "",
       isDisableSubmit: false,
       isFormValid: true,
+      componentHasError: false,
     };
   }
 
+  static getDerivedStateFromError() {
+    return { componentHasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    console.log("++++++++++++++++++++++++++++++");
+    console.log({ error });
+    console.log({ errorInfo });
+    console.log("++++++++++++++++++++++++++++++");
+  }
+
   componentDidMount() {
-    const { basicArtistInfo, clearReduxUserErrors } = this.props;
+    const { userAccount, artistProfile, clearReduxUserErrors } = this.props;
     clearReduxUserErrors();
-    if (basicArtistInfo) this._redirectUser(basicArtistInfo);
+    this._redirectUser(userAccount, artistProfile);
   }
 
   shouldComponentUpdate(nextProps) {
-    const { basicArtistInfo } = nextProps;
-    if (basicArtistInfo) {
-      this._redirectUser(basicArtistInfo);
-      return false;
-    } else {
-      return true;
-    }
+    const { userAccount, artistProfile } = nextProps;
+    return this._redirectUser(userAccount, artistProfile);
   }
 
   handleChange = (event) => {
@@ -59,7 +68,18 @@ class Signin extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    this._signInUser();
+  };
 
+  handleFormKeyPress = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.which === 13) {
+      this._signInUser();
+    }
+  };
+
+  _signInUser() {
     const { signInStart, clearReduxUserErrors } = this.props;
 
     const { contactEmail, password } = this.state;
@@ -81,29 +101,26 @@ class Signin extends Component {
       });
       signInStart(contactEmail.trim(), password.trim());
     }
-  };
+  }
 
-  handleFormKeyPress = (event) => {
-    if (event.which === 13) {
-      event.preventDefault();
-      this.handleSubmit(event);
-    }
-  };
-
-  _redirectUser = (basicArtistInfo) => {
+  _redirectUser = (userAccount, artistProfile) => {
     const { history } = this.props;
-    // Component did mount will execute this immediately
-    if (!basicArtistInfo) {
-      return;
-    } else {
-      const { artistName, contactEmail } = basicArtistInfo;
-      if (!contactEmail) {
-        return;
-      } else if (contactEmail && artistName) {
+    const hasCreatedUserAccount =
+      userAccount && userAccount.contactEmail ? true : false;
+    const hasCreatedArtistProfile =
+      artistProfile && artistProfile.artistName ? true : false;
+
+    if (hasCreatedUserAccount) {
+      if (hasCreatedArtistProfile) {
         history.push("/artist/profile");
-      } else if (contactEmail && !artistName) {
-        history.push("/artist/create");
+        return false;
+      } else {
+        history.push("/artist/create"); 
+        return false;
       }
+    }
+    else {
+      return true;
     }
   };
 
@@ -114,66 +131,77 @@ class Signin extends Component {
       formEmailError,
       formPasswordError,
       isDisableSubmit,
+      componentHasError,
     } = this.state;
 
-    return (
-      <SignUpContainer>
-        <H1>Welcome!</H1>
-        <H2>
-          <Img src={logo} alt="Teefury Logo" />
-          Tee<b>Fury</b>
-        </H2>
-        <H3>Dashboard</H3>
+    // TODO: handle error better
+    if (componentHasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    } else {
+      return (
+        <SignUpContainer>
+          <H1>Welcome!</H1>
+          <H2>
+            <Img src={logo} alt="Teefury Logo" />
+            Tee<b>Fury</b>
+          </H2>
+          <H3>Dashboard</H3>
 
-        <Form onSubmit={this.handleSubmit} onKeyPress={this.handleFormKeyPress}>
-          {formEmailError ? (
-            <ErrorMessages>{formEmailError}</ErrorMessages>
-          ) : (
-            <SignInSignUpError />
-          )}
-          <FormInput
-            type="email"
-            name="contactEmail"
-            label="contact_email"
-            placeholder="Contact Email"
-            style={{ fontSize: "16px", marginBottom: "10px" }}
-            handleChange={this.handleChange}
-            value={contactEmail}
-            required
-          />
-          {formPasswordError ? (
-            <ErrorMessages>{formPasswordError}</ErrorMessages>
-          ) : (
-            <SpaceHolder />
-          )}
-          <FormInput
-            type="password"
-            name="password"
-            label="password"
-            placeholder="Password"
-            style={{ fontSize: "16px", marginBottom: "10px" }}
-            handleChange={this.handleChange}
-            value={password}
-            required
-          />
-          <ButtonMd
-            type="submit"
-            disabled={isDisableSubmit}
-            style={{ width: "110px" }}
+          <Form
+            onSubmit={this.handleSubmit}
+            onKeyPress={this.handleFormKeyPress}
           >
-            Sign In
-          </ButtonMd>
-        </Form>
-        <div style={{ marginTop: "20px" }}>
-          <Link to="/signup">Don't have an account? Sign Up!</Link>
-        </div>
-      </SignUpContainer>
-    );
+            {formEmailError ? (
+              <ErrorMessages>{formEmailError}</ErrorMessages>
+            ) : (
+              <SignInSignUpError />
+            )}
+            <FormInput
+              type="email"
+              name="contactEmail"
+              label="contact_email"
+              placeholder="Contact Email"
+              style={{ fontSize: "16px", marginBottom: "10px" }}
+              handleChange={this.handleChange}
+              value={contactEmail}
+              required
+            />
+            {formPasswordError ? (
+              <ErrorMessages>{formPasswordError}</ErrorMessages>
+            ) : (
+              <SpaceHolder />
+            )}
+            <FormInput
+              type="password"
+              name="password"
+              label="password"
+              placeholder="Password"
+              style={{ fontSize: "16px", marginBottom: "10px" }}
+              handleChange={this.handleChange}
+              value={password}
+              required
+            />
+            <ButtonMd
+              type="submit"
+              disabled={isDisableSubmit}
+              style={{ width: "110px" }}
+            >
+              Sign In
+            </ButtonMd>
+          </Form>
+          <div style={{ marginTop: "20px" }}>
+            <Link to="/signup">Don't have an account? Sign Up!</Link>
+          </div>
+        </SignUpContainer>
+      );
+    }
   }
 }
 
 const mapStateToProps = createStructuredSelector({
-  basicArtistInfo: selectCurrentUser,
+  userAccount: selectCurrentUser,
+  artistProfile: selectArtistProfile,
 });
 
 const mapDispatchToProps = (dispatch) => ({
