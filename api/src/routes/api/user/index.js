@@ -29,7 +29,7 @@ import { secret, BCRYPT_SALT_ROUNDS } from "../../../services/jwtConfig.js";
  *
  */
 
- const router = express.Router();
+const router = express.Router();
 
 /**
  * Login and Register share the same req.login strategies
@@ -81,12 +81,12 @@ const reqLogin = (req, user, next) => {
             );
             conn.end();
 
-            artistProfile.isInternational = artistProfile.international
-              ? true
-              : false;
-            delete artistProfile.international;
-
             if (artistProfile) {
+              artistProfile.isInternational = artistProfile.international
+                ? true
+                : false;
+              delete artistProfile.international;
+
               userProfile.artistProfile = artistProfile;
             }
           } catch (error) {
