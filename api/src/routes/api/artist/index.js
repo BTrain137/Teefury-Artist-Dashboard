@@ -5,7 +5,7 @@ import passport from "passport";
 const router = express.Router();
 
 /**
- * Basic user information sent to the client after server logs user in.
+ * Complete Artist Profile
  * @typedef {{
  *    artistName:String,
  *    firstName:String,

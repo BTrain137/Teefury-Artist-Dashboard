@@ -5,17 +5,31 @@ import bcrypt from "bcrypt";
 import pool from "../../../database/connection";
 import { secret, BCRYPT_SALT_ROUNDS } from "../../../services/jwtConfig.js";
 
-const router = express.Router();
-
 /**
- * Basic user information sent to the client after server logs user in.
+ * Complete Artist Profile
  * @typedef {{
  *    artistName:String,
  *    firstName:String,
  *    lastName:String,
  *    contactEmail:String,
- *  }} BasicUserInfo
+ *    paypalEmail:String,
+ *    phoneNumber:String,
+ *    social_facebook:String,
+ *    social_instagram:String,
+ *    social_twitter:String,
+ *    isInternational:Boolean,
+ *  }} ArtistProfile
  */
+
+/**
+ * @typedef {{
+ *   contactEmail:String,
+ *   isAdmin:Boolean,
+ * }} UserAccount
+ *
+ */
+
+ const router = express.Router();
 
 /**
  * Login and Register share the same req.login strategies
@@ -26,57 +40,66 @@ const router = express.Router();
  * @param  {Object} req   The request object from express
  * @param  {Object} user  The user object from passport
  * @param  {Object} next  The next function to move along errors for express
- * @return {Promise<{token:String, currentUser:BasicUserInfo }>}
+ * @return {Promise<{token:String, artistProfile:ArtistProfile, userAccount:UserAccount }>}
  */
 
-const reqLogin = function (req, user, next) {
-  return new Promise(async function (resolve) {
+const reqLogin = (req, user, next) => {
+  return new Promise(async (resolve) => {
     try {
       req.login(user, async (error) => {
         if (error) return next(error);
         const { contactEmail, id, is_admin } = user;
-        let currentUser;
+
+        const userProfile = {
+          userAccount: {
+            contactEmail,
+            isAdmin: is_admin,
+          },
+          artistProfile: null,
+        };
 
         if (!is_admin) {
           let conn;
           try {
             conn = await pool.getConnection();
-            // TODO: Change up artist to full artist profile. No more basic 
+            // TODO: Change up artist to full artist profile. No more basic
             const [
-              artist,
+              artistProfile,
             ] = await pool.query(
               "SELECT `artist_name` AS `artistName`, " +
                 "`first_name` AS `firstName`, " +
                 "`last_name` AS `lastName`, " +
-                "`username_contact_email` AS `contactEmail` " +
-                "FROM `artist_profile` " +
+                "`username_contact_email` AS `contactEmail`, " +
+                "`paypal_email` AS `paypalEmail`, " +
+                "`phone` AS `phoneNumber`, " +
+                "`social_facebook` AS `socialFacebook`, " +
+                "`social_instagram` AS `socialInstagram`, " +
+                "`social_twitter` AS `socialTwitter`, " +
+                "`international` FROM `artist_profile` " +
                 "WHERE `username_contact_email`=?",
               [contactEmail]
             );
             conn.end();
-            if (artist) {
-              currentUser = artist;
-            }
-            // If user signed up but did not create artist profile
-            else {
-              currentUser = {
-                contactEmail,
-              };
+
+            artistProfile.isInternational = artistProfile.international
+              ? true
+              : false;
+            delete artistProfile.international;
+
+            if (artistProfile) {
+              userProfile.artistProfile = artistProfile;
             }
           } catch (error) {
             conn.end();
             return next(error);
           }
-        } else {
-          // TODO: Set up admin
-          currentUser = user;
         }
 
         const token = jwt.sign({ id, contactEmail, is_admin }, secret, {
           expiresIn: 60 * 60 * 24 * 90,
         });
 
-        resolve({ token, currentUser });
+        resolve({ token, ...userProfile });
       });
     } catch (error) {
       next(error);
@@ -88,13 +111,13 @@ router.post("/register-user", (req, res, next) => {
   passport.authenticate("register", async (err, user, info) => {
     if (err) return next(err);
 
-    const { token, currentUser } = await reqLogin(req, user, next);
+    const { token, ...userProfile } = await reqLogin(req, user, next);
 
     res.status(200).json({
       auth: true,
       message: "User Created & Logged In",
       token,
-      currentUser,
+      ...userProfile,
     });
   })(req, res, next);
 });
@@ -108,13 +131,13 @@ router.post("/signin-user", (req, res, next) => {
       return res.status(status || 401).json({ status, message });
     }
 
-    const { token, currentUser } = await reqLogin(req, user, next);
+    const { token, ...userProfile } = await reqLogin(req, user, next);
 
     res.status(200).send({
       auth: true,
       message: "User Found & Logged In",
       token,
-      currentUser,
+      ...userProfile,
     });
   })(req, res, next);
 });
@@ -195,13 +218,13 @@ router.put(
       }
       conn.end();
 
-      const { token, currentUser } = await reqLogin(req, user, next);
+      const { token, ...userProfile } = await reqLogin(req, user, next);
 
       res.status(200).json({
         auth: true,
         message: "User Updated & Logged In",
         token,
-        currentUser,
+        ...userProfile,
       });
     } catch (error) {
       conn.end();
