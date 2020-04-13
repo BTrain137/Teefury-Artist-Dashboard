@@ -9,7 +9,7 @@ import {
   selectCurrentUser,
   selectUserJWTToken,
 } from "../../redux/user/user.selector";
-import { setCurrentUser, setUserJWTToken } from "../../redux/user/user.action";
+import { setUserAccount, setUserJWTToken } from "../../redux/user/user.action";
 
 import { ButtonLgCenter, ButtonSm } from "../Button/button.component";
 import {
@@ -524,7 +524,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateArtistInfo: (basicInfo) => dispatch(setCurrentUser(basicInfo)),
+  updateArtistInfo: (basicInfo) => dispatch(setUserAccount(basicInfo)),
   setUserJWTToken: (token) => dispatch(setUserJWTToken(token)),
 });
 
