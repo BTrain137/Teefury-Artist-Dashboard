@@ -5,10 +5,11 @@ import UserActionTypes from "./user.types";
 import {
   authorizedSuccess,
   authorizedFailure,
-  setCurrentUser,
+  setUserAccount,
   setUserJWTToken,
   clearAllUserDetails,
 } from "./user.action";
+import { setArtistProfile } from "../artist/artist.action"
 
 export function* unAuthorizedError(response) {
   response.data = {
@@ -49,20 +50,20 @@ export function* deleteUser({ payload: { token } }) {
     yield axios.delete("/api/delete-user", {
       headers: { Authorization: `JWT ${token}` },
     });
-    yield put(clearAllUserDetails());
   } catch (error) {
     const { status } = error.response;
     if (status === 401) {
       yield unAuthorizedError(error.response);
     } else {
       yield put(authorizedFailure(error.response));
-      yield put(clearAllUserDetails());
     }
   }
+  yield put(clearAllUserDetails());
 }
 
-export function* setCurrentUserAfterAuth({ payload: { token, currentUser } }) {
-  yield put(setCurrentUser(currentUser));
+export function* setUserAccountAfterAuth({ payload: { token, artistProfile, userAccount } }) {
+  yield put(setUserAccount(userAccount));
+  yield put(setArtistProfile(artistProfile))
   yield put(setUserJWTToken(token));
 }
 
@@ -79,7 +80,7 @@ export function* onSignUpStart() {
 }
 
 export function* onAuthorizedSuccess() {
-  yield takeLatest(UserActionTypes.AUTHORIZED_SUCCESS, setCurrentUserAfterAuth);
+  yield takeLatest(UserActionTypes.AUTHORIZED_SUCCESS, setUserAccountAfterAuth);
 }
 
 export function* onDeleteUserStart() {
