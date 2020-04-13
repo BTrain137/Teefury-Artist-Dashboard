@@ -147,7 +147,7 @@ router.put(
   passport.authenticate("jwt"),
   async (req, res, next) => {
     const { id, contactEmail: oldContactEmail } = req.user;
-    const { password: newPassword, contactEmail: newContactEmail } = req.body;
+    const { newPassword, newContactEmail } = req.body;
     let conn;
 
     // TODO: rewrite this.
