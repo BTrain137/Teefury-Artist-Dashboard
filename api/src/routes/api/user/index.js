@@ -41,6 +41,7 @@ const reqLogin = function (req, user, next) {
           let conn;
           try {
             conn = await pool.getConnection();
+            // TODO: Change up artist to full artist profile. No more basic 
             const [
               artist,
             ] = await pool.query(
