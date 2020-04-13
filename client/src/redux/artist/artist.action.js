@@ -32,27 +32,31 @@ export const getArtistProfileStart = () => ({
   type: ArtistActionTypes.GET_ARTIST_PROFILE_START,
 });
 
-/**
- * @param {ArtistProfile} artistProfile Detailed user account information
- */
 export const getArtistProfileSuccess = (artistProfile) => ({
   type: ArtistActionTypes.GET_ARTIST_PROFILE_SUCCESS,
   payload: artistProfile,
 });
 
 /**
- * @param {ArtistProfile} artistProfile Detailed user account information
+ * @param {ArtistProfile} reqBody Request body object containing artist profile
  */
-export const createArtistProfileStart = (artistProfile) => ({
-  type: ArtistActionTypes.CREATE_PROFILE_START,
+export const createArtistProfileStart = (reqBody) => ({
+  type: ArtistActionTypes.CREATE_ARTIST_PROFILE_START,
+  payload: reqBody,
+});
+
+export const createArtistProfileSuccess = (artistProfile) => ({
+  type: ArtistActionTypes.CREATE_ARTIST_PROFILE_SUCCESS,
   payload: artistProfile,
 });
 
-/**
- * @param {ArtistProfile} artistProfile Detailed user account information
- */
-export const createArtistProfileSuccess = (artistProfile) => ({
-  type: ArtistActionTypes.CREATE_PROFILE_SUCCESS,
+export const updateArtistProfileStart = (reqBody) => ({
+  type: ArtistActionTypes.UPDATE_ARTIST_PROFILE_START,
+  payload: reqBody,
+});
+
+export const updateArtistProfileSuccess = (artistProfile) => ({
+  type: ArtistActionTypes.UPDATE_ARTIST_PROFILE_SUCCESS,
   payload: artistProfile,
 });
 

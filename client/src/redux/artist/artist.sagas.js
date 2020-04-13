@@ -7,6 +7,7 @@ import {
   artistProfileFailure,
   createArtistProfileSuccess,
   getArtistProfileSuccess,
+  updateArtistProfileSuccess,
 } from "./artist.action";
 import { selectUserJWTToken } from "../user/user.selector";
 
@@ -40,17 +41,35 @@ export function* getArtistProfile() {
   }
 }
 
+export function* updateArtistProfile({ payload: { reqBody } }) {
+  try {
+    const token = yield select(selectUserJWTToken);
+    const {
+      data: { artistProfile },
+    } = yield axios.put("/api/artist-profile-details", reqBody, {
+      headers: { Authorization: `JWT ${token}` },
+    });
+    yield put(updateArtistProfileSuccess({ artistProfile }))
+  } catch (error) {
+    const { status, message } = error.response.data;
+    yield put(artistProfileFailure({ status, messages: [message] }));
+  }
+}
+
 export function* setArtistProfileWithDetails({ payload: { artistProfile } }) {
   yield put(setArtistProfile(artistProfile));
 }
 
 export function* onCreateProfileStart() {
-  yield takeLatest(ArtistActionTypes.CREATE_PROFILE_START, createArtistProfile);
+  yield takeLatest(
+    ArtistActionTypes.CREATE_ARTIST_PROFILE_START,
+    createArtistProfile
+  );
 }
 
 export function* onCreateProfileSuccess() {
   yield takeLatest(
-    ArtistActionTypes.CREATE_PROFILE_SUCCESS,
+    ArtistActionTypes.CREATE_ARTIST_PROFILE_SUCCESS,
     setArtistProfileWithDetails
   );
 }
@@ -69,11 +88,27 @@ export function* onGetArtistProfileSuccess() {
   );
 }
 
+export function* onUpdateArtistProfileStart() {
+  yield takeLatest(
+    ArtistActionTypes.UPDATE_ARTIST_PROFILE_START,
+    updateArtistProfile
+  );
+}
+
+export function* onUpdateArtistProfileSuccess() {
+  yield takeLatest(
+    ArtistActionTypes.UPDATE_ARTIST_PROFILE_SUCCESS,
+    setArtistProfileWithDetails
+  );
+}
+
 export function* artistSaga() {
   yield all([
     call(onCreateProfileStart),
     call(onCreateProfileSuccess),
     call(onGetArtistProfileStart),
     call(onGetArtistProfileSuccess),
+    call(onUpdateArtistProfileStart),
+    call(onUpdateArtistProfileSuccess),
   ]);
 }

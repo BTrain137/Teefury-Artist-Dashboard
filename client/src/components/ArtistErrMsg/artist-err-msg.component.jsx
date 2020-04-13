@@ -4,14 +4,14 @@ import { createStructuredSelector } from "reselect";
 
 import { selectArtistError } from "../../redux/artist/artist.selector";
 
-import { ErrorTitle, ErrorList } from "./artist-err-msg.styles";
+import { ErrorTitle, ErrorList, FormTitle } from "./artist-err-msg.styles";
 
 /**
  * @param {Object} error          Error object
  * @param {Number} error.status   HTTP error status
  * @param {String[]}  error.messages Error message in an array
  */
-const ArtistErrorMessages = ({ error }) => {
+const ArtistErrorMessages = ({ error, children }) => {
   if (error) {
     const { messages } = error;
     console.log("ArtistErrorMessages", { messages });
@@ -24,7 +24,15 @@ const ArtistErrorMessages = ({ error }) => {
       </ErrorList>
     );
   } else {
-    return <div style={{ height: "85px" }} />;
+    return (
+      <>
+        {children ? (
+          <FormTitle>{children}</FormTitle>
+        ) : (
+          <div style={{ height: "85px" }} />
+        )}
+      </>
+    );
   }
 };
 

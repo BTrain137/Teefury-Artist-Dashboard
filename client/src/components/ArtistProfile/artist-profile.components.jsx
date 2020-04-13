@@ -3,15 +3,24 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { isNameValid, isEmailValid, doesPasswordMatch } from "../../utils";
 
+import {
+  areArtistFormFieldsValid,
+  isEmailValid,
+  doesPasswordMatch,
+} from "../../utils";
 import {
   selectUserAccount,
   selectUserJWTToken,
 } from "../../redux/user/user.selector";
 import { setUserAccount, setUserJWTToken } from "../../redux/user/user.action";
 import { selectArtistProfile } from "../../redux/artist/artist.selector";
-import { getArtistProfileStart } from "../../redux/artist/artist.action";
+import {
+  getArtistProfileStart,
+  updateArtistProfileStart,
+  clearArtistErrors,
+  artistProfileFailure,
+} from "../../redux/artist/artist.action";
 
 import { ButtonLgCenter, ButtonSm } from "../Button/button.component";
 import {
@@ -20,6 +29,7 @@ import {
   CheckboxesContainer,
 } from "../CheckBox/checkbox.component";
 import { ReactComponent as EnvelopIcon } from "../../assets/envelope.svg";
+import ArtistErrMsg from "../ArtistErrMsg";
 
 import {
   ArtistProfileContainer,
@@ -59,20 +69,18 @@ class ArtistProfile extends Component {
       // Errors
       errorMessages: [],
       errorStatus: null,
-      isArtistFormValid: true,
       isUserFormValid: true,
       // Boolean Modes
       isEditMode: false,
       hasArtistFromSaved: false,
+      isDisableArtistSubmit: false,
       hasUserFormSaved: false,
     };
   }
 
-  static getDerivedStateFromProps(props) {
-    const { artistProfile } = props;
-    return {
-      ...artistProfile,
-    };
+  componentDidMount() {
+    const { artistProfile } = this.props;
+    this.setState({ ...artistProfile });
   }
 
   handleChange = (event) => {
@@ -80,26 +88,14 @@ class ArtistProfile extends Component {
     this.setState({
       [name]: value,
       hasArtistFromSaved: false,
+      isDisableArtistSubmit: false,
       hasUserFormSaved: false,
     });
   };
 
-  handleSubmitArtistForm = async (event) => {
+  handleSubmitArtistForm = (event) => {
     event.preventDefault();
-    const artistForm = this._validateArtistForm();
-    if (artistForm.isArtistFormValid) {
-      const hasUpdatedSuccess = await this._updateArtistProfile();
-      if (hasUpdatedSuccess) {
-        Swal.fire({
-          icon: "success",
-          title: "Your profile has been updated!",
-        });
-        this.setState({ hasArtistFromSaved: true });
-      }
-    } else {
-      this.handleScrollToElement(this.artistProfileForm.current.offsetTop);
-      this.setState({ ...artistForm });
-    }
+    this._updateArtistProfile();
   };
 
   handleSubmitUserForm = async (event) => {
@@ -126,6 +122,23 @@ class ArtistProfile extends Component {
     }
   };
 
+  handleClickOpenForm = () => {
+    const { getArtistProfileStart } = this.props;
+    getArtistProfileStart();
+    this.setState({ isEditMode: true });
+  };
+
+  handleClickCloseForm = (event) => {
+    event.preventDefault();
+    const { artistProfile } = this.props;
+    this.setState({
+      ...artistProfile,
+      hasArtistFromSaved: false,
+      isDisableArtistSubmit: false,
+      isEditMode: false,
+    });
+  };
+
   handleToggleCheckBox = (event) => {
     const {
       name,
@@ -135,74 +148,60 @@ class ArtistProfile extends Component {
     this.setState({ [name]: boolValue, hasArtistFromSaved: false });
   };
 
-
-  handleClickOpenForm = () => {
-    const { getArtistProfileStart } = this.props;
-    getArtistProfileStart();
-    this.setState({ isEditMode: true });
-  };
-
-  handleClickCloseForm = (event) => {
-    event.preventDefault();
-    this.setState({ isEditMode: false });
-  };
-
   handleScrollToElement(scrollTo) {
     window.scrollTo(0, scrollTo);
   }
 
-  _getArtistProfileStart = async () => {
-    try {
-      const { token } = this.props;
-      const { data } = await axios.get("/api/artist-profile-details", {
-        headers: { Authorization: `JWT ${token}` },
+  _updateArtistProfile = () => {
+    const {
+      artistName,
+      firstName,
+      lastName,
+      paypalEmail,
+      phoneNumber,
+      socialFacebook,
+      socialInstagram,
+      socialTwitter,
+      isInternational,
+    } = this.state;
+
+    const {
+      updateArtistProfileStart,
+      clearReduxArtistErrors,
+      artistErrorMsg,
+    } = this.props;
+
+    const reqBody = {
+      artistName: artistName.trim(),
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      paypalEmail: paypalEmail.trim(),
+      phoneNumber: phoneNumber.trim(),
+      socialFacebook: socialFacebook.trim(),
+      socialInstagram: socialInstagram.trim(),
+      socialTwitter: socialTwitter.trim(),
+      isInternational,
+      hasAcceptTerms: true,
+    };
+
+    const doesFormHaveErrors = areArtistFormFieldsValid(reqBody);
+
+    clearReduxArtistErrors();
+
+    if (doesFormHaveErrors) {
+      const { errorMessages } = doesFormHaveErrors;
+      this.setState({
+        isDisableArtistSubmit: true,
       });
-
-      return data;
-    } catch (error) {
-      this._handleHttpErrors(error);
-      return false;
-    }
-  };
-
-  _updateArtistProfile = async () => {
-    try {
-      const { token, updateArtistInfo } = this.props;
-      const {
-        artistName,
-        firstName,
-        lastName,
-        paypalEmail,
-        phoneNumber,
-        socialFacebook,
-        socialInstagram,
-        socialTwitter,
-        isInternational,
-      } = this.state;
-
-      const reqBody = {
-        artistName: artistName.trim(),
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        paypalEmail: paypalEmail.trim(),
-        phoneNumber: phoneNumber.trim(),
-        socialFacebook: socialFacebook.trim(),
-        socialInstagram: socialInstagram.trim(),
-        socialTwitter: socialTwitter.trim(),
-        isInternational,
-      };
-
-      const {
-        data: { currentUser },
-      } = await axios.put("/api/artist-profile-details", reqBody, {
-        headers: { Authorization: `JWT ${token}` },
+      artistErrorMsg(errorMessages);
+      this.handleScrollToElement(this.artistProfileForm.current.offsetTop);
+    } else {
+      this.setState({ hasArtistFromSaved: true });
+      updateArtistProfileStart(reqBody);
+      Swal.fire({
+        icon: "success",
+        title: "Your profile has been updated!",
       });
-
-      updateArtistInfo({ ...currentUser });
-      return true;
-    } catch (error) {
-      this._handleHttpErrors(error);
-      return false;
     }
   };
 
@@ -229,30 +228,6 @@ class ArtistProfile extends Component {
       this._handleHttpErrors(error);
       return false;
     }
-  };
-
-  _validateArtistForm = () => {
-    const { firstName, lastName, paypalEmail } = this.state;
-    const errorObj = {
-      errorMessages: [],
-      isArtistFormValid: true,
-    };
-
-    if (!isNameValid(firstName)) {
-      errorObj.errorMessages.push("Please Enter A Valid First Name.");
-      errorObj.isArtistFormValid = false;
-    }
-
-    if (!isNameValid(lastName)) {
-      errorObj.errorMessages.push("Please Enter A Valid Last Name.");
-      errorObj.isArtistFormValid = false;
-    }
-
-    if (!isEmailValid(paypalEmail)) {
-      errorObj.errorMessages.push("Please Enter A Valid Email For Paypal.");
-      errorObj.isArtistFormValid = false;
-    }
-    return errorObj;
   };
 
   _validateUserForm = () => {
@@ -311,11 +286,11 @@ class ArtistProfile extends Component {
       confirmPassword,
       // Errors
       errorMessages,
-      isArtistFormValid,
       isUserFormValid,
       // Boolean Modes
       isEditMode,
       hasArtistFromSaved,
+      isDisableArtistSubmit,
       hasUserFormSaved,
     } = this.state;
 
@@ -326,17 +301,11 @@ class ArtistProfile extends Component {
         />
         {isEditMode ? (
           <>
-            <ProfileForm ref={this.artistProfileForm}>
-              {!isArtistFormValid && errorMessages.length > 0 ? (
-                <ErrorList>
-                  <ErrorTitle>Please Correct Error(s)</ErrorTitle>
-                  {errorMessages.map((errMsg, i) => (
-                    <li key={i}>{errMsg}</li>
-                  ))}
-                </ErrorList>
-              ) : (
-                <FormTitle>Artist Profile</FormTitle>
-              )}
+            <ProfileForm
+              ref={this.artistProfileForm}
+              onSubmit={this.handleSubmitArtistForm}
+            >
+              <ArtistErrMsg>Artist Profile</ArtistErrMsg>
               <FormInputStyled
                 type="text"
                 name="artistName"
@@ -441,10 +410,16 @@ class ArtistProfile extends Component {
                 </>
               ) : (
                 <>
-                  <ButtonSm onClick={this.handleSubmitArtistForm}>
+                  <ButtonSm
+                    type="submit"
+                    disabled={isDisableArtistSubmit}
+                    onClick={this.handleSubmitArtistForm}
+                  >
                     Save Artist Profile
                   </ButtonSm>{" "}
-                  <ButtonSm onClick={this.handleClickCloseForm}>X</ButtonSm>
+                  <ButtonSm type="button" onClick={this.handleClickCloseForm}>
+                    X
+                  </ButtonSm>
                 </>
               )}
             </ProfileForm>
@@ -529,6 +504,10 @@ const mapDispatchToProps = (dispatch) => ({
   updateArtistInfo: (basicInfo) => dispatch(setUserAccount(basicInfo)),
   setUserJWTToken: (token) => dispatch(setUserJWTToken(token)),
   getArtistProfileStart: () => dispatch(getArtistProfileStart()),
+  updateArtistProfileStart: (reqBody) =>
+    dispatch(updateArtistProfileStart({ reqBody })),
+  clearReduxArtistErrors: () => dispatch(clearArtistErrors()),
+  artistErrorMsg: (messages) => dispatch(artistProfileFailure({ messages })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtistProfile);

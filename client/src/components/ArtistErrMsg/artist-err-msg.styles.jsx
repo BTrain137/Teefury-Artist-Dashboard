@@ -12,3 +12,7 @@ export const ErrorTitle = styled.h4`
   margin-bottom: 10px;
   font-weight: normal;
 `;
+
+export const FormTitle = styled.h2`
+  color: white;
+`
