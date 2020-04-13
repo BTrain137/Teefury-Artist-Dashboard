@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { clearAllUserDetails } from "../../redux/user/user.action";
+import { logoutStart } from "../../redux/user/user.action";
 
 import { SignOutStyled } from "./signout.styles";
 
@@ -19,7 +19,7 @@ class SignOut extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  logOut: () => dispatch(clearAllUserDetails()),
+  logOut: () => dispatch(logoutStart()),
 });
 
 export default withRouter(connect(null, mapDispatchToProps)(SignOut));
