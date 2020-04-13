@@ -1,14 +1,20 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
-import { setCurrentUser, deleteUserStart } from "../../redux/user/user.action";
+import { areArtistFormFieldsValid } from "../../utils";
+import { deleteUserStart } from "../../redux/user/user.action";
 import {
   selectCurrentUser,
   selectUserJWTToken,
 } from "../../redux/user/user.selector";
+import {
+  createArtistProfileStart,
+  clearArtistErrors,
+  artistProfileFailure,
+} from "../../redux/artist/artist.action";
+import { selectArtistProfile } from "../../redux/artist/artist.selector";
 
 import { Form, FormInput } from "../FormInput/form-input.component";
 import { ButtonMd } from "../Button/button.component";
@@ -17,6 +23,7 @@ import {
   Checkbox,
   Label,
 } from "../CheckBox/checkbox.component";
+import ArtistErrMsg from "../ArtistErrMsg";
 
 import {
   SignUpContainer,
@@ -28,8 +35,6 @@ import {
   Img,
   Terms,
   LinkToTerm,
-  ErrorTitle,
-  ErrorList,
 } from "./artist-create.styles.jsx";
 import logo from "../../assets/logo.png";
 
@@ -55,40 +60,91 @@ class CreateArtist extends Component {
     };
   }
 
+  static getDerivedStateFromProps(props) {
+    const { userAccount } = props;
+    return userAccount && userAccount.contactEmail
+      ? { contactEmail: userAccount.contactEmail }
+      : { contactEmail: "" };
+  }
+
   componentDidMount() {
-    const { basicArtistInfo } = this.props;
-    this._loadBasicArtistInfo(basicArtistInfo);
-    this._redirectUser(basicArtistInfo);
+    const { clearArtistErrMsgs, userAccount, artistProfile } = this.props;
+    clearArtistErrMsgs();
+    this._redirectUser(userAccount, artistProfile);
   }
 
   shouldComponentUpdate(nextProps) {
-    const { basicArtistInfo } = nextProps;
-    return this._redirectUser(basicArtistInfo);
+    const { userAccount, artistProfile } = nextProps;
+    return this._redirectUser(userAccount, artistProfile);
   }
 
   handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, isDisableSubmit: false });
   };
 
-  handleSubmit = async (event) => {
-    // TODO: Move submit into saga and fixed redirecting here
-    // Possibly as simple as removing it.
+  handleSubmit = (event) => {
     event.preventDefault();
-    await this._createArtistAccount();
-    this._redirectUser();
+    const {
+      artistName,
+      firstName,
+      lastName,
+      contactEmail,
+      paypalEmail,
+      phoneNumber,
+      socialFacebook,
+      socialInstagram,
+      socialTwitter,
+      isInternational,
+      hasAcceptTerms,
+    } = this.state;
+
+    const reqBody = {
+      artistName: artistName.trim(),
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      contactEmail: contactEmail.trim(),
+      paypalEmail: paypalEmail.trim(),
+      phoneNumber: phoneNumber.trim(),
+      socialFacebook: socialFacebook.trim(),
+      socialInstagram: socialInstagram.trim(),
+      socialTwitter: socialTwitter.trim(),
+      isInternational,
+      hasAcceptTerms,
+    };
+
+    const {
+      createArtistProfile,
+      clearArtistErrMsgs,
+      artistErrorMsg,
+      token,
+    } = this.props;
+
+    const doesFormHaveErrors = areArtistFormFieldsValid(reqBody);
+
+    clearArtistErrMsgs();
+
+    if (doesFormHaveErrors) {
+      const { errorMessages } = doesFormHaveErrors;
+      this.setState({
+        isDisableSubmit: true,
+      });
+      artistErrorMsg(errorMessages);
+    } else {
+      this.setState({ isDisableSubmit: true });
+      createArtistProfile(reqBody, token);
+    }
   };
 
   handleFormKeyPress = (event) => {
     if (event.which === 13) {
-      event.preventDefault();
       this.handleSubmit(event);
     }
   };
 
   handleClick = () => {
-    const { deleteUserStart, token } = this.props;
-    deleteUserStart(token);
+    const { deleteUser, token } = this.props;
+    deleteUser(token);
   };
 
   handleCheckboxChange = (event) => {
@@ -105,141 +161,15 @@ class CreateArtist extends Component {
     this.setState({ [name]: boolValue });
   };
 
-  _loadBasicArtistInfo = (basicArtistInfo) => {
-    if (basicArtistInfo) {
-      const { contactEmail } = basicArtistInfo;
-      if (contactEmail) {
-        this.setState({ contactEmail });
-      }
-    }
-  };
-
-  _createArtistAccount = async () => {
-    const {
-      artistName,
-      firstName,
-      lastName,
-      contactEmail,
-      paypalEmail,
-      phoneNumber,
-      socialFacebook,
-      socialInstagram,
-      socialTwitter,
-      isInternational,
-      hasAcceptTerms,
-    } = this.state;
-
-    const { token, updateArtistInfo } = this.props;
-
-    try {
-      const reqBody = {
-        artistName,
-        firstName,
-        lastName,
-        contactEmail,
-        paypalEmail,
-        phoneNumber,
-        socialFacebook,
-        socialInstagram,
-        socialTwitter,
-        isInternational,
-        hasAcceptTerms,
-      };
-
-      if (
-        this._areFormFieldsValid(
-          artistName,
-          firstName,
-          lastName,
-          paypalEmail,
-          hasAcceptTerms
-        )
-      ) {
-        const {
-          data: { currentUser },
-        } = await axios.post("/api/artist-profile-create", reqBody, {
-          headers: { Authorization: `JWT ${token}` },
-        });
-        updateArtistInfo({ ...currentUser });
-      }
-    } catch (error) {
-      const { status, message } = error.response.data;
-      this.setState({
-        errorMessages: [message],
-        errorStatus: status,
-        isDisableSubmit: true,
-      });
-    }
-  };
-
-  _areFormFieldsValid = (
-    artistName,
-    firstName,
-    lastName,
-    paypalEmail,
-    hasAcceptTerms
-  ) => {
-    const errorObj = {
-      errorMessages: [],
-      _isFormValid: true,
-    };
-
-    // TODO: Validate artistName properly
-    console.log(artistName.length);
-    if (artistName.length < 3) {
-      errorObj.errorMessages.push(
-        "Artist name must be longer than 2 characters"
-      );
-      errorObj._isFormValid = false;
-    }
-
-    if (!this._isNameValid(lastName)) {
-      errorObj.errorMessages.push("Please Enter A Valid Last Name.");
-      errorObj._isFormValid = false;
-    }
-
-    if (!this._isNameValid(firstName)) {
-      errorObj.errorMessages.push("Please Enter A Valid First Name.");
-      errorObj._isFormValid = false;
-    }
-
-    if (!this._isEmailValid(paypalEmail)) {
-      errorObj.errorMessages.push(
-        "Please Enter A Valid Email For Paypal Email."
-      );
-      errorObj._isFormValid = false;
-    }
-
-    if (!hasAcceptTerms) {
-      errorObj.errorMessages.push(
-        "Please read and agree to the terms and conditions."
-      );
-      errorObj._isFormValid = false;
-    }
-
-    if (!errorObj._isFormValid) {
-      this.setState(errorObj);
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  _isEmailValid = (email) => {
-    const valid_email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return valid_email.test(email);
-  };
-
-  _isNameValid = (name) => {
-    var valid_name = /^[a-zA-Z_\- ]+$/;
-    return valid_name.test(name);
-  };
-
-  _redirectUser = (basicArtistInfo) => {
+  _redirectUser = (userAccount, artistProfile) => {
     const { history } = this.props;
-    if (basicArtistInfo) {
-      const { artistName } = basicArtistInfo;
-      if (artistName) {
+    const hasCreatedUserAccount =
+      userAccount && userAccount.contactEmail ? true : false;
+    const hasCreatedArtistProfile =
+      artistProfile && artistProfile.artistName ? true : false;
+
+    if (hasCreatedUserAccount) {
+      if (hasCreatedArtistProfile) {
         history.push("/artist/profile");
         return false;
       } else {
@@ -276,16 +206,7 @@ class CreateArtist extends Component {
           Tee<b>Fury</b>
         </H2>
         <H3>Dashboard</H3>
-        {errorMessages.length > 0 ? (
-          <ErrorList>
-            <ErrorTitle>Please Correct Error(s)</ErrorTitle>
-            {errorMessages.map((errMsg, i) => (
-              <li key={i} dangerouslySetInnerHTML={{ __html: errMsg }} />
-            ))}
-          </ErrorList>
-        ) : (
-          <div style={{ height: "85px" }} />
-        )}
+        <ArtistErrMsg />
         <Form
           onSubmit={this.handleSubmit}
           style={{ display: "flex", marginTop: "0" }}
@@ -351,7 +272,6 @@ class CreateArtist extends Component {
               style={{ fontSize: "15px" }}
               handleChange={this.handleChange}
               value={phoneNumber}
-              required
             />
             <FormInput
               type="text"
@@ -441,12 +361,16 @@ class CreateArtist extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  updateArtistInfo: (basicInfo) => dispatch(setCurrentUser(basicInfo)),
-  deleteUserStart: (token) => dispatch(deleteUserStart({ token })),
+  deleteUser: (token) => dispatch(deleteUserStart({ token })),
+  createArtistProfile: (reqBody, token) =>
+    dispatch(createArtistProfileStart({ reqBody, token })),
+  clearArtistErrMsgs: () => dispatch(clearArtistErrors()),
+  artistErrorMsg: (messages) => dispatch(artistProfileFailure({ messages })),
 });
 
 const mapStateToProps = createStructuredSelector({
-  basicArtistInfo: selectCurrentUser,
+  userAccount: selectCurrentUser,
+  artistProfile: selectArtistProfile,
   token: selectUserJWTToken,
 });
 
