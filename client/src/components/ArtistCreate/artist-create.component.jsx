@@ -54,11 +54,14 @@ class CreateArtist extends Component {
       socialTwitter: "",
       isInternational: true,
       hasAcceptTerms: false,
-      errorMessages: [],
       errorStatus: "",
       isDisableSubmit: false,
     };
   }
+
+  // TODO: Handle component loading error
+  // static getDerivedStateFromError() {
+  // componentDidCatch(error, errorInfo) 
 
   static getDerivedStateFromProps(props) {
     const { userAccount } = props;
@@ -200,7 +203,6 @@ class CreateArtist extends Component {
       socialTwitter,
       isInternational,
       hasAcceptTerms,
-      errorMessages,
       isDisableSubmit,
     } = this.state;
 
@@ -255,7 +257,6 @@ class CreateArtist extends Component {
               label="contact_email"
               placeholder="Contact Email"
               style={{ fontSize: "15px" }}
-              // handleChange={this.handleChange}
               value={contactEmail}
               required
               disabled
