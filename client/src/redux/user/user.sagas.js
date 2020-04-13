@@ -9,6 +9,8 @@ import {
   setUserAccount,
   setUserJWTToken,
   clearAllUserDetails,
+  updateUserFailure,
+  updateUserSuccess,
 } from "./user.action";
 import {
   setArtistProfile,
@@ -49,9 +51,33 @@ export function* signUp({ payload: { contactEmail, password } }) {
   }
 }
 
+export function* setUserAccountAfterAuth({
+  payload: { token, artistProfile, userAccount },
+}) {
+  yield put(setUserAccount(userAccount));
+  yield put(setArtistProfile(artistProfile));
+  yield put(setUserJWTToken(token));
+}
+
+export function* updateUserAccount({ payload: { reqBody } }) {
+  try {
+    const token = yield select(selectUserJWTToken);
+    const {
+      data: { userAccount, artistProfile, token: newToken },
+    } = yield axios.put("/api/update-user", reqBody, {
+      headers: { Authorization: `JWT ${token}` },
+    });
+    yield put(
+      updateUserSuccess({ userAccount, artistProfile, token: newToken })
+    );
+  } catch (error) {
+    yield put(updateUserFailure(error.response));
+  }
+}
+
 export function* deleteUser() {
   try {
-    const token = yield select(selectUserJWTToken)
+    const token = yield select(selectUserJWTToken);
     yield axios.delete("/api/delete-user", {
       headers: { Authorization: `JWT ${token}` },
     });
@@ -64,14 +90,6 @@ export function* deleteUser() {
     }
   }
   yield put(clearAllUserDetails());
-}
-
-export function* setUserAccountAfterAuth({
-  payload: { token, artistProfile, userAccount },
-}) {
-  yield put(setUserAccount(userAccount));
-  yield put(setArtistProfile(artistProfile));
-  yield put(setUserJWTToken(token));
 }
 
 export function* logout() {
@@ -91,6 +109,14 @@ export function* onAuthorizedSuccess() {
   yield takeLatest(UserActionTypes.AUTHORIZED_SUCCESS, setUserAccountAfterAuth);
 }
 
+export function* onUpdateUserStart() {
+  yield takeLatest(UserActionTypes.UPDATE_USER_ACC_START, updateUserAccount);
+}
+
+export function* onUpdateUserSuccess() {
+  yield takeLatest(UserActionTypes.UPDATE_USER_ACC_SUCCESS, setUserAccountAfterAuth);
+}
+
 export function* onDeleteUserStart() {
   yield takeLatest(UserActionTypes.DELETE_USER_START, deleteUser);
 }
@@ -104,6 +130,8 @@ export function* userSaga() {
     call(onSignInStart),
     call(onSignUpStart),
     call(onAuthorizedSuccess),
+    call(onUpdateUserStart),
+    call(onUpdateUserSuccess),
     call(onDeleteUserStart),
     call(onLogoutStart),
   ]);

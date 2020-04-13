@@ -32,6 +32,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         error: null,
       };
+    case UserActionTypes.UPDATE_USER_ACC_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+      };
     case UserActionTypes.CLEAR_ALL_USER_DETAILS:
       return {
         ...state,

@@ -61,7 +61,7 @@ export const updateArtistProfileSuccess = (artistProfile) => ({
 });
 
 /**
- * @param {Number}   status   HTTP error status
+ * @param {Number}   [status]   HTTP error status
  * @param {String[]} messages Error message in an array
  */
 export const artistProfileFailure = ({ status, messages }) => ({
