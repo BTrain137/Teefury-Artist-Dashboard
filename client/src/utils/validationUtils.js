@@ -44,6 +44,43 @@ export const areUserFormFieldsValid = (contactEmail, password) => {
   }
 };
 
+export const areUserUpdateFormFieldsValid = ({
+  newContactEmail,
+  newPassword,
+  confirmPassword,
+}) => {
+  const error = {
+    errorMessages: [],
+    _formHasErrors: false,
+  };
+
+  if(!!newPassword) {
+    if (!isPasswordStrong(newPassword)) {
+      error.errorMessages.push("Password must be at least 5 characters long.");
+      error._formHasErrors = true;
+    }
+    
+    if (!doesPasswordMatch(newPassword, confirmPassword)) {
+      error.errorMessages.push("Passwords Must Match.");
+      error._formHasErrors = true;
+    }
+  }
+
+  if(!!newContactEmail){
+    if (!isEmailValid(newContactEmail)) {
+      error.errorMessages.push("Please Enter A Valid Email.");
+      error._formHasErrors = true;
+    }
+  }
+
+  if (error._formHasErrors) {
+    const { errorMessages } = error;
+    return { errorMessages };
+  } else {
+    return false;
+  }
+};
+
 export const areArtistFormFieldsValid = ({
   artistName,
   firstName,

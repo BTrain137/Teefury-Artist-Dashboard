@@ -4,5 +4,6 @@ export {
   isNameValid,
   doesPasswordMatch,
   areUserFormFieldsValid,
+  areUserUpdateFormFieldsValid,
   areArtistFormFieldsValid
 } from "./validationUtils";
