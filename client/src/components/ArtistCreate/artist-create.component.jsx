@@ -131,7 +131,7 @@ class CreateArtist extends Component {
     } = this.state;
 
     const {
-      createArtistProfile,
+      createArtistProfileStart,
       clearReduxArtistErrors,
       artistErrorMsg,
     } = this.props;
@@ -159,10 +159,10 @@ class CreateArtist extends Component {
       this.setState({
         isDisableSubmit: true,
       });
-      artistErrorMsg(errorMessages);
+      artistErrorMsg({ messages: errorMessages });
     } else {
       this.setState({ isDisableSubmit: true });
-      createArtistProfile(reqBody);
+      createArtistProfileStart(reqBody);
     }
   }
 
@@ -365,10 +365,10 @@ class CreateArtist extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   deleteUser: () => dispatch(deleteUserStart()),
-  createArtistProfile: (reqBody) =>
+  createArtistProfileStart: (reqBody) =>
     dispatch(createArtistProfileStart({ reqBody })),
   clearReduxArtistErrors: () => dispatch(clearArtistErrors()),
-  artistErrorMsg: (messages) => dispatch(artistProfileFailure({ messages })),
+  artistErrorMsg: ({ ...errObj }) => dispatch(artistProfileFailure({ ...errObj })),
 });
 
 const mapStateToProps = createStructuredSelector({
