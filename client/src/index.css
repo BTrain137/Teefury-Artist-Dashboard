@@ -11,6 +11,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:focus {
+  outline: none;
+}
+
 .bg-primary {
   background-color: #50B8BD;
 }

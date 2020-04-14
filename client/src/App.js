@@ -7,6 +7,7 @@ import {
   CreateArtistPage,
 } from "./pages/SigninSignupPage/signin-signup-page.component";
 import ArtistProfilePage from "./pages/ArtistProfilePage/artist-profile-page.component";
+import ArtistSubmissionPage from "./pages/ArtistSubmissionPage";
 
 import "./App.css";
 
@@ -17,8 +18,8 @@ function App() {
       <Route exact path="/signup" component={SignUpPage} />
       <Route exact path="/artist/create" component={CreateArtistPage} />
       <Route exact path="/artist/profile" component={ArtistProfilePage} />
-      <Route exact path="/artist/submission" component={ArtistProfilePage} />
-      <Route exact path="/artist/commission" component={ArtistProfilePage} />
+      <Route path="/artist/submissions" component={ArtistSubmissionPage} />
+      <Route exact path="/artist/commissions" component={ArtistProfilePage} />
       <Route exact path="/artist/notifications" component={ArtistProfilePage} />
     </Switch>
   );

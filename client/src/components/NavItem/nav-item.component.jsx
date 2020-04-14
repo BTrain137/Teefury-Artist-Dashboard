@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouteMatch } from "react-router-dom";
 
 import {
   LinkWrapperSelected,
@@ -6,33 +7,51 @@ import {
   LinkWrapper,
   LinkAnchor,
   AnchorStyle,
+  LogoWrapper,
 } from "./nav-item.styles";
 
-export const NavItemLink = ({ children, to, currentPath, Icon, ...otherProps }) => (
-  <>
-    {currentPath === to ? (
-      <LinkWrapperSelected {...otherProps}>
-        <LinkAnchorSelected to={to}>
-          <Icon />
-          {children}
-        </LinkAnchorSelected>
-      </LinkWrapperSelected>
-    ) : (
-      <LinkWrapper {...otherProps}>
-        <LinkAnchor to={to}>
-          <Icon />
-          {children}
-        </LinkAnchor>
-      </LinkWrapper>
-    )}
-  </>
-);
+export const NavItemLink = ({
+  children,
+  to,
+  pathToMatch,
+  Icon,
+  ...otherProps
+}) => {
+  const { path } = useRouteMatch();
+  return (
+    <>
+      {path.includes(pathToMatch) ? (
+        <LinkWrapperSelected {...otherProps}>
+          <LinkAnchorSelected to={to}>
+            <LogoWrapper>
+              <Icon />
+            </LogoWrapper>
+            {children}
+          </LinkAnchorSelected>
+        </LinkWrapperSelected>
+      ) : (
+        <LinkWrapper {...otherProps}>
+          <LinkAnchor to={to}>
+            <LogoWrapper>
+              <Icon />
+            </LogoWrapper>
+            {children}
+          </LinkAnchor>
+        </LinkWrapper>
+      )}
+    </>
+  );
+};
 
 // Style of a NavItem without being a link
 export const NavItemStyle = ({ children, Icon, ...otherProps }) => (
   <LinkWrapper {...otherProps}>
     <AnchorStyle>
-      {Icon ? <Icon /> : null}
+      {Icon ? (
+        <LogoWrapper>
+          <Icon />
+        </LogoWrapper>
+      ) : null}
       {children}
     </AnchorStyle>
   </LinkWrapper>

@@ -1,5 +1,4 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
 
 import { ReactComponent as BellIcon } from "../../assets/bell.svg";
 import { ReactComponent as CogIcon } from "../../assets/cog.svg";
@@ -8,10 +7,16 @@ import { ReactComponent as HouseIcon } from "../../assets/house.svg";
 import { NavItemLink, NavItemStyle } from "../NavItem/nav-item.component";
 import SignOut from "../Signout/signout.component";
 
-import { NavHeader, NavWrapper, Title, LogoImg, Subtitle } from "./nav.styles";
+import {
+  NavHeader,
+  NavWrapper,
+  Title,
+  LogoImg,
+  Subtitle,
+} from "./nav.styles";
 import logo from "../../assets/logo.png";
 
-const Nav = ({ location: { pathname } }) => (
+const Nav = () => (
   <NavHeader>
     <Title>
       <LogoImg src={logo} alt="Teefury Logo" />
@@ -19,22 +24,26 @@ const Nav = ({ location: { pathname } }) => (
     </Title>
     <Subtitle>Dashboard</Subtitle>
     <NavWrapper>
-      <NavItemLink to="/artist/profile" currentPath={pathname} Icon={HouseIcon}>
+      <NavItemLink to="/artist/profile" pathToMatch="/profile" Icon={HouseIcon}>
         Home
       </NavItemLink>
       <NavItemLink
-        to="/artist/submission"
-        currentPath={pathname}
+        to="/artist/submissions"
+        pathToMatch="/submissions"
         Icon={ComputerIcon}
       >
         Submissions
       </NavItemLink>
-      <NavItemLink to="/artist/commission" currentPath={pathname} Icon={CogIcon}>
-        Commission
+      <NavItemLink
+        to="/artist/commissions"
+        pathToMatch="/commissions"
+        Icon={CogIcon}
+      >
+        Commissions
       </NavItemLink>
       <NavItemLink
         to="/artist/notifications"
-        currentPath={pathname}
+        pathToMatch="/notifications"
         Icon={BellIcon}
       >
         Notifications
@@ -46,4 +55,4 @@ const Nav = ({ location: { pathname } }) => (
   </NavHeader>
 );
 
-export default withRouter(Nav);
+export default Nav;

@@ -4,9 +4,9 @@ const buttonStyle = css`
   border-radius: 15px;
   font-size: 17px;
   font-weight: bold;
-  background-color: #50B8BD;
+  background-color: #50b8bd;
   border: none;
-  color: #0B7C80;
+  color: #0b7c80;
   cursor: pointer;
 `;
 
@@ -29,10 +29,18 @@ export const ButtonMdStyled = styled.button`
   width: 100%;
   font-size: 19px;
   font-weight: bold;
-  background-color: #50B8BD;
+  background-color: #50b8bd;
   color: white;
 `;
 
+export const BtnArtSubmitStyled = styled.button`
+  padding: 13px 22px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #50b8bd;
+  color: white;
+`;
 
 export const ButtonSmStyled = styled.button`
   ${buttonStyle}

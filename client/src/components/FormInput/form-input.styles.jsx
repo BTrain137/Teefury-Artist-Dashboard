@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const FormStyled = styled.form`
   margin-top: 84px;
@@ -13,8 +13,8 @@ export const FormInputContainer = styled.div`
   }
 `;
 
-export const InputStyled = styled.input`
-  background-color: #F4F2F2;
+const inputStyled = css`
+  background-color: #f4f2f2;
   border: none;
   padding: 16px;
   font-weight: bold;
@@ -25,7 +25,14 @@ export const InputStyled = styled.input`
   min-width: 250px;
 
   &::placeholder {
-    color: #B5B4B4;
+    color: #b5b4b4;
   }
 `;
 
+export const InputStyled = styled.input`
+  ${inputStyled}
+`;
+
+export const TextAreaStyled = styled.textarea`
+  ${inputStyled}
+`;

@@ -21,7 +21,7 @@ import {
   artistProfileFailure,
 } from "../../redux/artist/artist.action";
 
-import { ButtonLgCenter, ButtonSm } from "../Button/button.component";
+import { ButtonLgCenter, ButtonSm } from "../Button";
 import {
   Checkbox,
   Label,
@@ -281,7 +281,6 @@ class ArtistProfile extends Component {
       isEditMode,
       hasArtistFromSaved,
       hasUserFormSaved,
-      isDisableUserSubmit,
     } = this.state;
 
     return (
