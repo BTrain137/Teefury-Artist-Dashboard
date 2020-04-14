@@ -103,6 +103,7 @@ class ArtistSubmitArt extends Component {
                   label="artist_name"
                   data-lpignore="true"
                   value={`@${artistName}`}
+                  readOnly
                 />
                 <FormInputTitleStyled
                   type="text"

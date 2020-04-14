@@ -5,6 +5,7 @@ export const NavHeader = styled.header`
   min-height: 100vh;
   flex-basis: 20%;
   border-radius: 0px 70px 0px 0px;
+  max-width: 300px;
 `;
 
 export const Title = styled.h2`

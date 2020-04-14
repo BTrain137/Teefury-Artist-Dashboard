@@ -10,6 +10,8 @@ export const Form = ({ children, ...props }) => (
   <FormStyled {...props}>{children}</FormStyled>
 );
 
+export const Input = ({ ...props }) => <InputStyled {...props} />;
+
 export const FormInput = ({
   handleChange,
   label,
@@ -29,7 +31,6 @@ export const FormInput = ({
     />
   </FormInputContainer>
 );
-
 
 export const TextArea = ({
   handleChange,

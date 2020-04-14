@@ -1,1 +1,1 @@
-export { Form, FormInput, TextArea } from "./form-input.component";
+export { Form, Input, FormInput, TextArea } from "./form-input.component";

@@ -7,6 +7,7 @@ export const ArtistProfileContainer = styled.section`
   background-color: #0B7C80;
   border-radius: 70px 0 0 0;
   padding-bottom: 10px;
+  max-width: 300px;
 `;
 
 export const ProfileImg = styled.div`

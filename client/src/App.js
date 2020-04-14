@@ -19,7 +19,7 @@ function App() {
       <Route exact path="/artist/create" component={CreateArtistPage} />
       <Route exact path="/artist/profile" component={ArtistProfilePage} />
       <Route path="/artist/submissions" component={ArtistSubmissionPage} />
-      <Route exact path="/artist/commission" component={ArtistProfilePage} />
+      <Route exact path="/artist/commissions" component={ArtistProfilePage} />
       <Route exact path="/artist/notifications" component={ArtistProfilePage} />
     </Switch>
   );
