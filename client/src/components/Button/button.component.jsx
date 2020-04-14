@@ -5,6 +5,7 @@ import {
   ButtonMdContainer,
   ButtonMdStyled,
   ButtonSmStyled,
+  BtnArtSubmitStyled,
 } from "./button.styles";
 
 export const ButtonLgCenter = ({ children, ...props }) => (
@@ -25,4 +26,11 @@ export const ButtonMd = ({ children, ...props }) => (
 
 export const ButtonSm = ({ children, ...props }) => (
   <ButtonSmStyled {...props}>{children}</ButtonSmStyled>
+  );
+  
+  
+export const BtnArtSubmit = ({ children, textAlign, ...props }) => (
+  <ButtonMdContainer style={{ textAlign }}>
+    <BtnArtSubmitStyled {...props}>{children}</BtnArtSubmitStyled>
+  </ButtonMdContainer>
 );
