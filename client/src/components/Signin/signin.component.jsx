@@ -8,8 +8,8 @@ import { clearUserError, signInStart } from "../../redux/user/user.action";
 import { selectUserAccount } from "../../redux/user/user.selector";
 import { selectArtistProfile } from "../../redux/artist/artist.selector";
 
-import { Form, FormInput } from "../FormInput/form-input.component";
-import { ButtonMd } from "../Button/button.component";
+import { Form, FormInput } from "../FormInput";
+import { ButtonMd } from "../Button";
 import SignInSignUpError from "../SigninSignUpError";
 
 import {

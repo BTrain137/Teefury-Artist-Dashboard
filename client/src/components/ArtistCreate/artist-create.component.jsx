@@ -13,8 +13,8 @@ import {
 } from "../../redux/artist/artist.action";
 import { selectArtistProfile } from "../../redux/artist/artist.selector";
 
-import { Form, FormInput } from "../FormInput/form-input.component";
-import { ButtonMd } from "../Button/button.component";
+import { Form, FormInput } from "../FormInput";
+import { ButtonMd } from "../Button";
 import {
   CheckboxesContainer,
   Checkbox,

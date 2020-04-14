@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { FormInput } from "../FormInput/form-input.component";
+import { FormInput } from "../FormInput";
 
 export const ArtistProfileContainer = styled.section`
   flex-basis: 25%;
@@ -7,6 +7,7 @@ export const ArtistProfileContainer = styled.section`
   background-color: #0B7C80;
   border-radius: 70px 0 0 0;
   padding-bottom: 10px;
+  max-width: 300px;
 `;
 
 export const ProfileImg = styled.div`
