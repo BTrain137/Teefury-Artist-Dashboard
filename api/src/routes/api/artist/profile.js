@@ -20,127 +20,41 @@ const router = express.Router();
  *  }} artistProfile
  */
 
-router.get(
-  "/artist-profile-details",
-  passport.authenticate("jwt"),
-  async (req, res, next) => {
-    const { contactEmail } = req.user;
-    let conn;
-    try {
+router.get("/profile", passport.authenticate("jwt"), async (req, res, next) => {
+  const { contactEmail } = req.user;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const [
+      artistProfile,
+    ] = await pool.query(
+      "SELECT `artist_name` AS `artistName`, " +
+        "`first_name` AS `firstName`, " +
+        "`last_name` AS `lastName`, " +
+        "`username_contact_email` AS `contactEmail`, " +
+        "`paypal_email` AS `paypalEmail`, " +
+        "`phone` AS `phoneNumber`, " +
+        "`social_facebook` AS `socialFacebook`, " +
+        "`social_instagram` AS `socialInstagram`, " +
+        "`social_twitter` AS `socialTwitter`, " +
+        "`international` FROM `artist_profile` " +
+        "WHERE `username_contact_email`=?",
+      [contactEmail]
+    );
+    conn.end();
 
-      conn = await pool.getConnection();
-      const [
-        artistProfile,
-      ] = await pool.query(
-        "SELECT `artist_name` AS `artistName`, " +
-          "`first_name` AS `firstName`, " +
-          "`last_name` AS `lastName`, " +
-          "`username_contact_email` AS `contactEmail`, " +
-          "`paypal_email` AS `paypalEmail`, " +
-          "`phone` AS `phoneNumber`, " +
-          "`social_facebook` AS `socialFacebook`, " +
-          "`social_instagram` AS `socialInstagram`, " +
-          "`social_twitter` AS `socialTwitter`, " +
-          "`international` FROM `artist_profile` " +
-          "WHERE `username_contact_email`=?",
-        [contactEmail]
-      );
-      conn.end();
+    artistProfile.isInternational = artistProfile.international ? true : false;
+    delete artistProfile.international;
 
-      artistProfile.isInternational = artistProfile.international
-        ? true
-        : false;
-      delete artistProfile.international;
-
-      res.status(200).json({ artistProfile });
-    } catch (error) {
-      conn.end();
-      return next(error);
-    }
+    res.status(200).json({ artistProfile });
+  } catch (error) {
+    conn.end();
+    return next(error);
   }
-);
-
-router.put(
-  "/artist-profile-details",
-  passport.authenticate("jwt"),
-  async (req, res, next) => {
-    let conn;
-    const {
-      artistName,
-      firstName,
-      lastName,
-      paypalEmail,
-      phoneNumber,
-      socialFacebook,
-      socialInstagram,
-      socialTwitter,
-      isInternational,
-    } = req.body;
-
-    const { contactEmail } = req.user;
-
-    try {
-      conn = await pool.getConnection();
-      const {
-        affectedRows,
-      } = await pool.query(
-        "UPDATE `artist_profile` SET `first_name`=?, `last_name`=?, " +
-          "`paypal_email`=?, `phone`=?, `social_facebook`=?, `social_instagram`=?, " +
-          "`social_twitter`=?, `international`=? WHERE `artist_name`=?",
-        [
-          firstName,
-          lastName,
-          paypalEmail,
-          phoneNumber,
-          socialFacebook,
-          socialInstagram,
-          socialTwitter,
-          isInternational,
-          artistName,
-        ]
-      );
-
-      if (affectedRows > 1) {
-        // TODO: If more than 1 row is affected do something
-        console.log(artistName, req.user);
-      }
-
-      const [
-        artistProfile,
-      ] = await pool.query(
-        "SELECT `artist_name` AS `artistName`, " +
-          "`first_name` AS `firstName`, " +
-          "`last_name` AS `lastName`, " +
-          "`username_contact_email` AS `contactEmail`, " +
-          "`paypal_email` AS `paypalEmail`, " +
-          "`phone` AS `phoneNumber`, " +
-          "`social_facebook` AS `socialFacebook`, " +
-          "`social_instagram` AS `socialInstagram`, " +
-          "`social_twitter` AS `socialTwitter`, " +
-          "`international` FROM `artist_profile` " +
-          "WHERE `username_contact_email`=?",
-        [contactEmail]
-      );
-      conn.end();
-
-      artistProfile.isInternational = artistProfile.international
-        ? true
-        : false;
-      delete artistProfile.international;
-
-      res.status(200).json({
-        message: "Artist Profile Updated.",
-        artistProfile,
-      });
-    } catch (error) {
-      conn.end();
-      next(error);
-    }
-  }
-);
+});
 
 router.post(
-  "/artist-profile-create",
+  "/profile",
   passport.authenticate("jwt"),
   async (req, res, next) => {
     let conn;
@@ -223,6 +137,107 @@ router.post(
         console.log("error.message: ", error.message);
         error.status = 500;
       }
+      next(error);
+    }
+  }
+);
+
+router.put("/profile", passport.authenticate("jwt"), async (req, res, next) => {
+  let conn;
+  const {
+    artistName,
+    firstName,
+    lastName,
+    paypalEmail,
+    phoneNumber,
+    socialFacebook,
+    socialInstagram,
+    socialTwitter,
+    isInternational,
+  } = req.body;
+
+  const { contactEmail } = req.user;
+
+  try {
+    conn = await pool.getConnection();
+    const {
+      affectedRows,
+    } = await pool.query(
+      "UPDATE `artist_profile` SET `first_name`=?, `last_name`=?, " +
+        "`paypal_email`=?, `phone`=?, `social_facebook`=?, `social_instagram`=?, " +
+        "`social_twitter`=?, `international`=? WHERE `artist_name`=?",
+      [
+        firstName,
+        lastName,
+        paypalEmail,
+        phoneNumber,
+        socialFacebook,
+        socialInstagram,
+        socialTwitter,
+        isInternational,
+        artistName,
+      ]
+    );
+
+    if (affectedRows > 1) {
+      // TODO: If more than 1 row is affected do something
+      console.log(artistName, req.user);
+    }
+
+    const [
+      artistProfile,
+    ] = await pool.query(
+      "SELECT `artist_name` AS `artistName`, " +
+        "`first_name` AS `firstName`, " +
+        "`last_name` AS `lastName`, " +
+        "`username_contact_email` AS `contactEmail`, " +
+        "`paypal_email` AS `paypalEmail`, " +
+        "`phone` AS `phoneNumber`, " +
+        "`social_facebook` AS `socialFacebook`, " +
+        "`social_instagram` AS `socialInstagram`, " +
+        "`social_twitter` AS `socialTwitter`, " +
+        "`international` FROM `artist_profile` " +
+        "WHERE `username_contact_email`=?",
+      [contactEmail]
+    );
+    conn.end();
+
+    artistProfile.isInternational = artistProfile.international ? true : false;
+    delete artistProfile.international;
+
+    res.status(200).json({
+      message: "Artist Profile Updated.",
+      artistProfile,
+    });
+  } catch (error) {
+    conn.end();
+    next(error);
+  }
+});
+
+router.delete(
+  "/profile",
+  passport.authenticate("jwt"),
+  async (req, res, next) => {
+    const { id, contactEmail } = req.user;
+    try {
+      let conn;
+      conn = await pool.getConnection();
+      const {
+        affectedRows,
+      } = await pool.query(
+        "DELETE FROM `artist_profile` WHERE `username_contact_email`=?",
+        [contactEmail]
+      );
+      conn.end();
+
+      if (affectedRows > 1) {
+        // TODO: Report why there are more than 1 items deleted
+        console.log({ user_id: id, contactEmail });
+      }
+
+      res.sendStatus(200);
+    } catch (error) {
       next(error);
     }
   }

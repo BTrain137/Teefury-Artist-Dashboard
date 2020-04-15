@@ -16,7 +16,7 @@ export function* createArtistProfile({ payload: { reqBody } }) {
     const token = yield select(selectUserJWTToken);
     const {
       data: { artistProfile },
-    } = yield axios.post("/api/artist-profile-create", reqBody, {
+    } = yield axios.post("/api/artist/profile", reqBody, {
       headers: { Authorization: `JWT ${token}` },
     });
     yield put(createArtistProfileSuccess({ artistProfile }));
@@ -31,7 +31,7 @@ export function* getArtistProfile() {
     const token = yield select(selectUserJWTToken);
     const {
       data: { artistProfile },
-    } = yield axios.get("/api/artist-profile-details", {
+    } = yield axios.get("/api/artist/profile", {
       headers: { Authorization: `JWT ${token}` },
     });
     yield put(getArtistProfileSuccess({ artistProfile }));
@@ -46,7 +46,7 @@ export function* updateArtistProfile({ payload: { reqBody } }) {
     const token = yield select(selectUserJWTToken);
     const {
       data: { artistProfile },
-    } = yield axios.put("/api/artist-profile-details", reqBody, {
+    } = yield axios.put("/api/artist/profile", reqBody, {
       headers: { Authorization: `JWT ${token}` },
     });
     yield put(updateArtistProfileSuccess({ artistProfile }))

@@ -107,7 +107,7 @@ const reqLogin = (req, user, next) => {
   });
 };
 
-router.post("/register-user", (req, res, next) => {
+router.post("/register", (req, res, next) => {
   passport.authenticate("register", async (err, user, info) => {
     if (err) return next(err);
 
@@ -122,7 +122,7 @@ router.post("/register-user", (req, res, next) => {
   })(req, res, next);
 });
 
-router.post("/signin-user", (req, res, next) => {
+router.post("/signin", (req, res, next) => {
   passport.authenticate("signin", async (err, user, info) => {
     if (err) return next(err);
 
@@ -143,7 +143,7 @@ router.post("/signin-user", (req, res, next) => {
 });
 
 router.put(
-  "/update-user",
+  "/account",
   passport.authenticate("jwt"),
   async (req, res, next) => {
     const { id, contactEmail: oldContactEmail } = req.user;
@@ -234,7 +234,7 @@ router.put(
 );
 
 router.delete(
-  "/delete-user",
+  "/account",
   passport.authenticate("jwt"),
   async (req, res, next) => {
     const { id, contactEmail } = req.user;

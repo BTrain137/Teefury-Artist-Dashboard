@@ -3,8 +3,8 @@ const router = Router();
 import userRoutes from "./user";
 import artistRoutes from "./artist";
 
-router.use(userRoutes);
+router.use("/user", userRoutes);
 
-router.use(artistRoutes);
+router.use("/artist", artistRoutes);
 
 export default router;

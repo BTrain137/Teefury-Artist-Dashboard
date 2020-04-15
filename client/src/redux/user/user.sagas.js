@@ -29,7 +29,7 @@ export function* unAuthorizedError(response) {
 export function* signIn({ payload: { contactEmail, password } }) {
   try {
     // const { token, currentUser } = data;
-    const { data } = yield axios.post("/api/signin-user", {
+    const { data } = yield axios.post("/api/user/signin", {
       contactEmail,
       password,
     });
@@ -41,7 +41,7 @@ export function* signIn({ payload: { contactEmail, password } }) {
 
 export function* signUp({ payload: { contactEmail, password } }) {
   try {
-    const { data } = yield axios.post("/api/register-user", {
+    const { data } = yield axios.post("/api/user/register", {
       contactEmail,
       password,
     });
@@ -64,7 +64,7 @@ export function* updateUserAccount({ payload: { reqBody } }) {
     const token = yield select(selectUserJWTToken);
     const {
       data: { userAccount, artistProfile, token: newToken },
-    } = yield axios.put("/api/update-user", reqBody, {
+    } = yield axios.put("/api/user/account", reqBody, {
       headers: { Authorization: `JWT ${token}` },
     });
     yield put(
@@ -78,7 +78,7 @@ export function* updateUserAccount({ payload: { reqBody } }) {
 export function* deleteUser() {
   try {
     const token = yield select(selectUserJWTToken);
-    yield axios.delete("/api/delete-user", {
+    yield axios.delete("/api/user/account", {
       headers: { Authorization: `JWT ${token}` },
     });
   } catch (error) {
