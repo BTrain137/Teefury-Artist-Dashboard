@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
 import Swal from "sweetalert2";
 
@@ -73,17 +74,23 @@ class ArtistProfile extends Component {
   }
 
   static getDerivedStateFromProps(props) {
-    const {
-      userAccount: { contactEmail },
-    } = props;
+    const { userAccount } = props;
     return {
-      contactEmail,
+      contactEmail:
+        userAccount && userAccount.contactEmail ? userAccount.contactEmail : "",
     };
   }
 
   componentDidMount() {
-    const { artistProfile } = this.props;
-    this.setState({ ...artistProfile });
+    const { userAccount, artistProfile } = this.props;
+    if(this._redirectUser(userAccount, artistProfile)) {
+      this.setState({ ...artistProfile });
+    }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const { userAccount, artistProfile } = nextProps;
+    return this._redirectUser(userAccount, artistProfile);
   }
 
   handleChange = (event) => {
@@ -257,6 +264,26 @@ class ArtistProfile extends Component {
         icon: "success",
         title: "Your Account has been updated!",
       });
+    }
+  };
+
+  _redirectUser = (userAccount, artistProfile) => {
+    const { history } = this.props;
+    const hasCreatedUserAccount =
+      userAccount && userAccount.contactEmail ? true : false;
+    const hasCreatedArtistProfile =
+      artistProfile && artistProfile.artistName ? true : false;
+
+    if (hasCreatedUserAccount) {
+      if (hasCreatedArtistProfile) {
+        return true;
+      } else {
+        history.push("/artist/create");
+        return false;
+      }
+    } else {
+      history.push("/");
+      return false;
     }
   };
 
@@ -440,10 +467,7 @@ class ArtistProfile extends Component {
                 </>
               ) : (
                 <>
-                  <ButtonSm
-                    type="submit"
-                    onClick={this.handleSubmitUserForm}
-                  >
+                  <ButtonSm type="submit" onClick={this.handleSubmitUserForm}>
                     Save User Details
                   </ButtonSm>{" "}
                   <ButtonSm type="button" onClick={this.handleClickCloseForm}>
@@ -490,4 +514,6 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(artistProfileFailure({ ...errObj })),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ArtistProfile);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ArtistProfile)
+);
