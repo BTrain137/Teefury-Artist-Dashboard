@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import Swal from "sweetalert2";
 
-import { selectArtistSuccessAlert } from "../../redux/artist/artist.selector";
-import { artistSuccessAlertClear } from "../../redux/artist/artist.action";
+import { selectSubmissionsSuccessAlert } from "../../redux/submissions/submissions.selector";
+import { submissionSuccessAlertClear } from "../../redux/submissions/submissions.action";
 
-const ArtistSuccessAlert = ({ message, clearMsg }) => {
+const SubmissionsSuccessAlert = ({ message, clearMsg }) => {
   if (message) {
     Swal.fire({
       icon: "success",
@@ -22,11 +22,11 @@ const ArtistSuccessAlert = ({ message, clearMsg }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-  message: selectArtistSuccessAlert,
+  message: selectSubmissionsSuccessAlert,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  clearMsg: () => dispatch(artistSuccessAlertClear()),
+  clearMsg: () => dispatch(submissionSuccessAlertClear()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ArtistSuccessAlert);
+export default connect(mapStateToProps, mapDispatchToProps)(SubmissionsSuccessAlert);

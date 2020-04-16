@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import Swal from "sweetalert2";
 
-import { selectArtistErrorAlert } from "../../redux/artist/artist.selector";
-import { artistErrorAlertClear } from "../../redux/artist/artist.action";
+import { selectSubmissionsErrorAlert } from "../../redux/submissions/submissions.selector";
+import { submissionErrorAlertClear } from "../../redux/submissions/submissions.action";
 
-const ArtistErrorAlert = ({ message, clearMsg }) => {
+const SubmissionsErrorAlert = ({ message, clearMsg }) => {
   if (message) {
     const msg = message;
     Swal.fire({
@@ -16,17 +16,17 @@ const ArtistErrorAlert = ({ message, clearMsg }) => {
     });
     setTimeout(() => {
       clearMsg();
-    }, 1500);
+    }, 2000);
   }
   return <></>;
 };
 
 const mapStateToProps = createStructuredSelector({
-  message: selectArtistErrorAlert,
+  message: selectSubmissionsErrorAlert,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  clearMsg: () => dispatch(artistErrorAlertClear("")),
+  clearMsg: () => dispatch(submissionErrorAlertClear()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ArtistErrorAlert);
+export default connect(mapStateToProps, mapDispatchToProps)(SubmissionsErrorAlert);

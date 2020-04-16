@@ -2,7 +2,6 @@ import ArtistActionTypes from "./artist.types";
 
 const INITIAL_STATE = {
   artistProfile: null,
-  artSubs: [],
   artistSuccessAlert: "",
   artistErrorAlert: "",
   error: null,
@@ -22,20 +21,25 @@ const artistReducer = (state = INITIAL_STATE, action) => {
         ...state,
         error: action.payload,
       };
-    case ArtistActionTypes.ARTWORK_SUBMISSIONS_ADD:
-      return {
-        ...state,
-        artSubs: [...state.artSubs, action.payload],
-      };
     case ArtistActionTypes.ARTIST_SUCCESS_ALERT:
       return {
         ...state,
         artistSuccessAlert: action.payload,
       };
+    case ArtistActionTypes.ARTIST_SUCCESS_ALERT_CLEAR:
+      return {
+        ...state,
+        artistSuccessAlert: "",
+      };
     case ArtistActionTypes.ARTIST_ERROR_ALERT:
       return {
         ...state,
         artistErrorAlert: action.payload,
+      };
+    case ArtistActionTypes.ARTIST_ERROR_ALERT_CLEAR:
+      return {
+        ...state,
+        artistErrorAlert: "",
       };
     case ArtistActionTypes.CLEAR_ARTIST_ERROR:
       return {

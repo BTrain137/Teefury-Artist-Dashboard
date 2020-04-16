@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { cleanFileName } from "../../utils";
-import { artworkSubmitStart } from "../../redux/artist/artist.action";
-import { ArtistSuccessAlert, ArtistFailureAlert } from "../ArtistAlerts";
+import { submissionStart } from "../../redux/submissions/submissions.action";
+import { SubmissionsErrorAlert, SubmissionsSuccessAlert } from "../SubmissionsAlerts";
 
 import { ReactComponent as Upload } from "../../assets/upload.svg";
 import { InputArtFile, BtnArtSubmit, InputArtPreview } from "../Button";
@@ -48,7 +48,7 @@ class ArtistSubmitArt extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { artworkSubmitStart } = this.props;
+    const { submissionStart } = this.props;
     const { elements } = event.target;
     const inputsDOM = Array.from(elements);
 
@@ -68,7 +68,7 @@ class ArtistSubmitArt extends Component {
       console.log(formData.get(key));
     }
 
-    artworkSubmitStart(formData);
+    submissionStart(formData);
   };
 
   onChangeArtPreview = async (event) => {
@@ -128,8 +128,8 @@ class ArtistSubmitArt extends Component {
 
     return (
       <SubmissionContainer>
-        <ArtistSuccessAlert />
-        <ArtistFailureAlert />
+        <SubmissionsErrorAlert />
+        <SubmissionsSuccessAlert />
         <TabHeader>
           <TabTitle>Submit Artwork</TabTitle>
           <TabSubTitle>
@@ -235,7 +235,7 @@ class ArtistSubmitArt extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  artworkSubmitStart: (formData) => dispatch(artworkSubmitStart({ formData })),
+  submissionStart: (formData) => dispatch(submissionStart({ formData })),
 });
 
 export default connect(null, mapDispatchToProps)(ArtistSubmitArt);

@@ -50,7 +50,7 @@ router.post("/submit-artwork", cpUpload, async (req, res, next) => {
     previewArt.originalname
   )}`;
 
-  const artWorkObj = {
+  const submissionDetails = {
     artistName,
     title,
     description,
@@ -58,18 +58,11 @@ router.post("/submit-artwork", cpUpload, async (req, res, next) => {
     previewArt: previewArtNewPath,
   };
 
-  console.log(artWorkObj);
-
   try {
     fs.renameSync(artFile.path, artFileNewPath);
     fs.renameSync(previewArt.path, previewArtNewPath);
 
-    res.status(200).json({
-      // body: req.body,
-      // files: req.files,
-      artFileNewPath,
-      previewArtNewPath,
-    });
+    res.status(200).json({ submissionDetails });
   } catch (error) {
     next(error);
   }
