@@ -243,7 +243,7 @@ router.delete(
   }
 );
 
-router.get("/test-artist-profile", passport.authenticate("jwt"), (req, res) => {
+router.get("/test-artist-profile", passport.authenticate("jwt-submissions"), (req, res) => {
   res.status(200).send({
     message: "artist found in db",
     isAuth: req.isAuthenticated(),
