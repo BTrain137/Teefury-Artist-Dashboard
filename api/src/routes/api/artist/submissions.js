@@ -4,8 +4,9 @@ import multer from "multer";
 import { cleanFileName } from "../../../utils/cleanData";
 
 const router = express.Router();
+const FILE_DIRECTORY = "public/artist/submissions";
 const upload = multer({
-  dest: "public/artist/submissions",
+  dest: FILE_DIRECTORY,
 });
 
 // Single File
@@ -14,7 +15,7 @@ router.post(
   upload.single("artFile"),
   async (req, res, next) => {
     const { originalname, path: oldSubmissionPath } = req.file;
-    const newPath = `public/artist/submissions/${Date.now()}_${cleanFileName(
+    const newPath = `${FILE_DIRECTORY}/${Date.now()}_${cleanFileName(
       originalname
     )}`;
 
@@ -42,10 +43,10 @@ router.post("/submit-artwork", cpUpload, async (req, res, next) => {
   const [artFile] = req.files["artFile"];
   const [previewArt] = req.files["previewArt"];
 
-  const artFileNewPath = `public/artist/submissions/${Date.now()}_${cleanFileName(
+  const artFileNewPath = `${FILE_DIRECTORY}/${Date.now()}_${cleanFileName(
     artFile.originalname
   )}`;
-  const previewArtNewPath = `public/artist/submissions/${Date.now()}_${cleanFileName(
+  const previewArtNewPath = `${FILE_DIRECTORY}/${Date.now()}_${cleanFileName(
     previewArt.originalname
   )}`;
 
@@ -55,7 +56,7 @@ router.post("/submit-artwork", cpUpload, async (req, res, next) => {
     description,
     artFile: artFileNewPath,
     previewArt: previewArtNewPath,
-  }
+  };
 
   console.log(artWorkObj);
 

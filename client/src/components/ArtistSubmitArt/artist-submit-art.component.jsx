@@ -1,6 +1,9 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { connect } from "react-redux";
+
 import { cleanFileName } from "../../utils";
+import { artworkSubmitStart } from "../../redux/artist/artist.action";
+import { ArtistSuccessAlert, ArtistFailureAlert } from "../ArtistAlerts";
 
 import { ReactComponent as Upload } from "../../assets/upload.svg";
 import { InputArtFile, BtnArtSubmit, InputArtPreview } from "../Button";
@@ -45,15 +48,18 @@ class ArtistSubmitArt extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const allItems = Array.from(event.target.elements);
+    const { artworkSubmitStart } = this.props;
+    const { elements } = event.target;
+    const inputsDOM = Array.from(elements);
 
     const formData = new FormData();
 
-    allItems.forEach((el) => {
-      if (el.files) {
-        formData.append(el.name, el.files[0]);
-      } else if (el.value) {
-        formData.append(el.name, el.value);
+    inputsDOM.forEach((el) => {
+      const { files, name, value } = el;
+      if (files) {
+        formData.append(name, files[0]);
+      } else if (value) {
+        formData.append(name, value);
       }
     });
 
@@ -62,14 +68,7 @@ class ArtistSubmitArt extends Component {
       console.log(formData.get(key));
     }
 
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    };
-    axios.post("/api/artist/submit-artwork", formData, config).then((resp) => {
-      console.log(resp.data);
-    });
+    artworkSubmitStart(formData);
   };
 
   onChangeArtPreview = async (event) => {
@@ -129,6 +128,8 @@ class ArtistSubmitArt extends Component {
 
     return (
       <SubmissionContainer>
+        <ArtistSuccessAlert />
+        <ArtistFailureAlert />
         <TabHeader>
           <TabTitle>Submit Artwork</TabTitle>
           <TabSubTitle>
@@ -233,4 +234,8 @@ class ArtistSubmitArt extends Component {
   }
 }
 
-export default ArtistSubmitArt;
+const mapDispatchToProps = (dispatch) => ({
+  artworkSubmitStart: (formData) => dispatch(artworkSubmitStart({ formData })),
+});
+
+export default connect(null, mapDispatchToProps)(ArtistSubmitArt);

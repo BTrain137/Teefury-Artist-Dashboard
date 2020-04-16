@@ -14,6 +14,32 @@ import ArtistActionTypes from "./artist.types";
  *    social_twitter:String,
  *    isInternational:Boolean,
  *  }} ArtistProfile
+ *
+ * DOM file input structure
+ * @typedef {{
+ *    lastModified:Number,
+ *    lastModifiedDate:Date
+ *    name:String,
+ *    size:Number,
+ *    type:String,
+ * }} InputFile
+ *
+ * Error message parsed by saga sent to reducer
+ * @typedef {{
+ *  status?:Number,
+ *  messages:Sting[],
+ *}} ErrorMsg
+ *
+ * The detailed information about the artwork
+ * @typedef {{
+ *   artistName:String
+ *   title:String,
+ *   description:String,
+ *   artFile:String,
+ *   previewArt:String,
+ *   status:String,
+ * }} ArtworkDetails
+ *
  */
 
 /**
@@ -71,4 +97,57 @@ export const artistProfileFailure = ({ status, messages }) => ({
 
 export const clearArtistErrors = () => ({
   type: ArtistActionTypes.CLEAR_ARTIST_ERROR,
+});
+
+/**
+ * @param {FormData}  formData             form data object.
+ * @param {String}    formData.artistName  Artist Name associated to the artwork
+ * @param {String }   formData.title       Title of the art piece
+ * @param {String}    formData.description Art work description
+ * @param {InputFile} formData.previewArt  The preview artwork in jpg or png
+ * @param {InputFile} formData.artFile     The psd file of the artwork
+ */
+export const artworkSubmitStart = (formData) => ({
+  type: ArtistActionTypes.ARTWORK_SUBMIT_START,
+  payload: formData,
+});
+
+/**
+ * @param {ArtworkDetails} artworkDetails
+ */
+export const artworkSubmitSuccess = (artworkDetails) => ({
+  type: ArtistActionTypes.ARTWORK_SUBMIT_SUCCESS,
+  payload: artworkDetails,
+});
+
+/**
+ * @param {ArtworkDetails} artworkDetails
+ */
+export const artworkSubmitAdd = (artworkDetails) => ({
+  type: ArtistActionTypes.ARTWORK_SUBMIT_ADD,
+  payload: artworkDetails,
+});
+
+/**
+ * @param {ErrorMsg} error
+ */
+export const artworkSubmitFailed = (error) => ({
+  type: ArtistActionTypes.ARTWORK_SUBMIT_FAILURE,
+  payload: error,
+});
+
+/**
+ * @param {String} successMsg
+ */
+export const artistSuccessAlert = (successMsg) => ({
+  type: ArtistActionTypes.ARTIST_SUCCESS_ALERT,
+  payload: successMsg,
+});
+
+/**
+ * @param {String} failureMsg
+ */
+export const artistErrorAlert = (failureMsg) => ({
+  type: ArtistActionTypes.ARTIST_ERROR_ALERT,
+  payload: failureMsg,
 });

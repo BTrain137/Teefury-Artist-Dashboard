@@ -8,8 +8,17 @@ import {
   createArtistProfileSuccess,
   getArtistProfileSuccess,
   updateArtistProfileSuccess,
+  artworkSubmitAdd,
+  artworkSubmitFailed,
+  artistErrorAlert,
+  artistSuccessAlert,
+  artworkSubmitSuccess,
 } from "./artist.action";
 import { selectUserJWTToken } from "../user/user.selector";
+
+export function* setArtistProfileWithDetails({ payload: { artistProfile } }) {
+  yield put(setArtistProfile(artistProfile));
+}
 
 export function* createArtistProfile({ payload: { reqBody } }) {
   try {
@@ -49,15 +58,39 @@ export function* updateArtistProfile({ payload: { reqBody } }) {
     } = yield axios.put("/api/artist/profile", reqBody, {
       headers: { Authorization: `JWT ${token}` },
     });
-    yield put(updateArtistProfileSuccess({ artistProfile }))
+    yield put(updateArtistProfileSuccess({ artistProfile }));
   } catch (error) {
     const { status, message } = error.response.data;
     yield put(artistProfileFailure({ status, messages: [message] }));
   }
 }
 
-export function* setArtistProfileWithDetails({ payload: { artistProfile } }) {
-  yield put(setArtistProfile(artistProfile));
+export function* artworkSubmit({ payload: { formData } }) {
+  try {
+    console.log(formData);
+    const token = yield select(selectUserJWTToken);
+    const {
+      data: { artworkDetails },
+    } = yield axios.post("/api/artist/submit-artwork", formData, {
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `JWT ${token}`,
+      },
+    });
+    yield put(artworkSubmitSuccess({ artworkDetails }));
+  } catch (error) {
+    const { status, message } = error.response.data;
+    yield put(artworkSubmitFailed({ status, messages: [message] }));
+    yield put(artistErrorAlert("Sorry Your Artwork was not loaded."));
+  }
+}
+
+// start and stop spinners
+export function* artSubmitSuccess({ payload: { artworkDetails } }) {
+  yield put(artworkSubmitAdd({ artworkDetails }));
+  yield put(
+    artistSuccessAlert("YAY your master piece has been added. Thank you!")
+  );
 }
 
 export function* onCreateProfileStart() {
@@ -102,6 +135,14 @@ export function* onUpdateArtistProfileSuccess() {
   );
 }
 
+export function* onArtworkSubmitStart() {
+  yield takeLatest(ArtistActionTypes.ARTWORK_SUBMIT_START, artworkSubmit);
+}
+
+export function* onArtworkSubmitSuccess() {
+  yield takeLatest(ArtistActionTypes.ARTWORK_SUBMIT_SUCCESS, artSubmitSuccess);
+}
+
 export function* artistSaga() {
   yield all([
     call(onCreateProfileStart),
@@ -110,5 +151,7 @@ export function* artistSaga() {
     call(onGetArtistProfileSuccess),
     call(onUpdateArtistProfileStart),
     call(onUpdateArtistProfileSuccess),
+    call(onArtworkSubmitStart),
+    call(onArtworkSubmitSuccess),
   ]);
 }

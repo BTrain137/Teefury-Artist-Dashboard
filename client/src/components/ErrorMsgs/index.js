@@ -1,1 +1,1 @@
-export { UserErrorMessages } from "./user-error-msgs.component";
+export * from "./user-error-msgs.component";
