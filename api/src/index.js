@@ -23,6 +23,12 @@ if (NODE_ENV === "development") app.use(logger("dev"));
 // API Routes
 app.use(routes);
 
+// 
+app.use("/api/submissions", [
+  passport.authenticate("jwt-submissions"),
+ express.static(path.join(__dirname, "../../submissions"))
+]);
+
 app.use((error, req, res, next) => {
   if (NODE_ENV === "development") {
     console.log("-----------------------------------------------");
