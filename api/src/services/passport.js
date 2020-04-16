@@ -151,3 +151,52 @@ passport.use(
     }
   })
 );
+
+const JWTSubmissions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
+  secretOrKey: secret,
+  passReqToCallback: true,
+};
+
+passport.use(
+  "jwt-submissions",
+  new JWTStrategy(JWTSubmissions, async (req, jwt_payload, done) => {
+    const { id, artistName, is_admin } = jwt_payload;
+    const { originalUrl } = req;
+    let conn;
+
+    if (!is_admin && !originalUrl.includes(artistName)) {
+      return done(null, false, {
+        message: "Unauthorized for this Image",
+        status: 401,
+      });
+    }
+
+    try {
+      conn = await pool.getConnection();
+
+      const [user] = await pool.query(
+        "SELECT `id`, `is_admin`, " +
+          "`username_contact_email` AS `contactEmail` " +
+          "FROM `users` WHERE `id`=?",
+        [id]
+      );
+
+      if (user) {
+        conn.end();
+        user.artistName = artistName;
+        return done(null, { ...user });
+      } else {
+        // 401 Unauthorized would be sent to user
+        conn.end();
+        return done(null, false, {
+          message: "Unable To Locate User.",
+          status: 401,
+        });
+      }
+    } catch (error) {
+      conn.end();
+      done(error);
+    }
+  })
+);
