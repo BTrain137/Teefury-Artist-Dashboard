@@ -26,7 +26,7 @@ export function* submissionSubmit({ payload: { formData } }) {
   } catch (error) {
     const { status, message } = error.response.data;
     yield put(submissionFailed({ status, messages: [message] }));
-    yield put(submissionErrorAlert("Sorry Your Artwork was not loaded."));
+    yield put(submissionErrorAlert(message));
   }
 }
 
