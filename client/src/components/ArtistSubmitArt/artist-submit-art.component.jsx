@@ -116,11 +116,6 @@ class ArtistSubmitArt extends Component {
       }
     });
 
-    for (let key of formData.keys()) {
-      console.log(key);
-      console.log(formData.get(key));
-    }
-
     submissionStart(formData);
   };
 
