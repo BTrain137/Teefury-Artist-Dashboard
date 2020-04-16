@@ -1,7 +1,1 @@
-export {
-  ButtonLgCenter,
-  ButtonLg,
-  ButtonMd,
-  ButtonSm,
-  BtnArtSubmit,
-} from "./button.component";
+export * from "./button.component";

@@ -2,8 +2,6 @@ import express from "express";
 import pool from "../../../database/connection";
 import passport from "passport";
 
-const router = express.Router();
-
 /**
  * Complete Artist Profile
  * @typedef {{
@@ -19,6 +17,8 @@ const router = express.Router();
  *    isInternational:Boolean,
  *  }} artistProfile
  */
+
+const router = express.Router();
 
 router.get("/profile", passport.authenticate("jwt"), async (req, res, next) => {
   const { contactEmail } = req.user;

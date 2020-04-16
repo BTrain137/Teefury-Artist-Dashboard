@@ -6,6 +6,8 @@ import {
   ButtonMdStyled,
   ButtonSmStyled,
   BtnArtSubmitStyled,
+  InputArtFileStyled,
+  SpanStyled,
 } from "./button.styles";
 
 export const ButtonLgCenter = ({ children, ...props }) => (
@@ -26,11 +28,24 @@ export const ButtonMd = ({ children, ...props }) => (
 
 export const ButtonSm = ({ children, ...props }) => (
   <ButtonSmStyled {...props}>{children}</ButtonSmStyled>
-  );
-  
-  
+);
+
 export const BtnArtSubmit = ({ children, textAlign, ...props }) => (
   <ButtonMdContainer style={{ textAlign }}>
     <BtnArtSubmitStyled {...props}>{children}</BtnArtSubmitStyled>
   </ButtonMdContainer>
+);
+
+export const InputArtFile = ({ children, textAlign, ...props }) => (
+  <ButtonMdContainer style={{ textAlign }}>
+    <InputArtFileStyled {...props} />
+    <SpanStyled>{children}</SpanStyled>
+  </ButtonMdContainer>
+);
+
+export const InputArtPreview = ({ children, ...props }) => (
+  <>
+    {children}
+    <InputArtFileStyled {...props} />
+  </>
 );

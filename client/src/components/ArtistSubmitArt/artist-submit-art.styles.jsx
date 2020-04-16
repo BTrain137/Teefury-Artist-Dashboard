@@ -30,7 +30,7 @@ export const TabTitle = styled.h1`
   margin-right: 33px;
   // box-shadow: 0px -10px 26px 2px rgba(0,0,0,0.2);
   box-shadow: 0px -7px 17px 0px rgba(0, 0, 0, 0.2);
-  color: #6A6A6A;
+  color: #6a6a6a;
 `;
 
 export const TabSubTitle = styled.h2`
@@ -59,7 +59,7 @@ export const SubTitle = styled.h3`
   font-family: sans-serif;
 `;
 
-export const SubmitCartContainer = styled.div`
+export const FormArtistSubmit = styled.form`
   display: flex;
   justify-content: center;
 `;
@@ -81,6 +81,8 @@ export const ArtPreview = styled.div`
   flex-direction: column;
   padding: 50px 15px 85px;
   position: relative;
+  cursor: pointer;
+  min-width: 250px;
 `;
 
 const previewTxt = css`
@@ -103,6 +105,13 @@ export const IconBottomSubtitle = styled.span`
   font-size: 9px;
 `;
 
+export const PreviewImage = styled.img`
+  box-shadow: -3px 4px 24px -1px rgba(0, 0, 0, 0.2);
+  max-width: 290px;
+  border-radius: 15px;
+  cursor: pointer;
+`;
+
 export const FormStyled = styled(Form)`
   margin-top: 0;
 `;
@@ -112,7 +121,7 @@ export const FormInputArtistStyled = styled(FormInput)`
   margin-bottom: 15px;
   border-radius: 20px;
   cursor: not-allowed;
-  color: #6A6A6A;
+  color: #6a6a6a;
 `;
 
 const formInputStyle = css`
@@ -127,6 +136,7 @@ export const FormInputTitleStyled = styled(FormInput)`
 
 export const TextAreaStyled = styled(TextArea)`
   ${formInputStyle}
+  min-height: 75px;
 `;
 
 export const Terms = styled.span`

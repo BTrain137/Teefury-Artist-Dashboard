@@ -33,13 +33,28 @@ export const ButtonMdStyled = styled.button`
   color: white;
 `;
 
-export const BtnArtSubmitStyled = styled.button`
+const artSubmitCTA = css`
   padding: 13px 22px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: bold;
   background-color: #50b8bd;
   color: white;
+`;
+export const BtnArtSubmitStyled = styled.button`
+  ${artSubmitCTA}
+`;
+
+export const InputArtFileStyled = styled.input`
+  width: 1px;
+  height: 1px;
+`;
+
+export const SpanStyled = styled.span`
+  ${artSubmitCTA}
+  cursor: pointer;
+  max-width: 170px;
+  display: inline-block;
 `;
 
 export const ButtonSmStyled = styled.button`
