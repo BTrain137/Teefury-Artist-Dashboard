@@ -1,9 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import Swal from "sweetalert2";
 
 import { cleanFileName } from "../../utils";
-import { submissionStart } from "../../redux/submissions/submissions.action";
-import { SubmissionsErrorAlert, SubmissionsSuccessAlert } from "../SubmissionsAlerts";
+import { selectArtistProfile } from "../../redux/artist/artist.selector";
+import {
+  selectSubmissionsErrorAlert,
+  selectSubmissionsSuccessAlert,
+} from "../../redux/submissions/submissions.selector";
+import {
+  submissionStart,
+  submissionErrorAlertClear,
+  submissionSuccessAlertClear,
+} from "../../redux/submissions/submissions.action";
 
 import { ReactComponent as Upload } from "../../assets/upload.svg";
 import { InputArtFile, BtnArtSubmit, InputArtPreview } from "../Button";
@@ -32,24 +42,67 @@ class ArtistSubmitArt extends Component {
   constructor(props) {
     super(props);
 
+    this.artworkSubmissionForm = React.createRef();
+
     this.state = {
-      artistName: "BeastWreck",
+      artistName: "",
       title: "",
       description: "",
-      isDisableSubmit: false,
       artFileName: "ART FILE",
+      artPreviewImg: "",
+      isDisableSubmit: false,
     };
+  }
+
+  static getDerivedStateFromProps(props) {
+    const {
+      artistProfile: { artistName },
+    } = props;
+
+    return {
+      artistName,
+    };
+  }
+
+  componentDidUpdate() {
+    this._submissionMessages();
   }
 
   handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, isDisableSubmit: false });
   };
 
   handleSubmit = (event) => {
     event.preventDefault();
+    this._submitArtwork();
+    this.setState({
+      isDisableSubmit: true,
+    });
+  };
+
+  onChangeArtPreview = async (event) => {
+    const [file] = event.target.files;
+
+    if (!file) return;
+    // Make sure `file.name` matches our extensions criteria
+    if (!/\.(jpe?g|png)$/i.test(file.name)) return;
+
+    const artPreviewImg = await this._generatePreviewImg(file);
+    this.setState({ artPreviewImg, isDisableSubmit: false });
+  };
+
+  onChangeArtFile = (event) => {
+    let [file] = event.target.files;
+    if (!file) return;
+
+    const { name } = file;
+    this.setState({ artFileName: cleanFileName(name), isDisableSubmit: false });
+  };
+
+  _submitArtwork = () => {
     const { submissionStart } = this.props;
-    const { elements } = event.target;
+    const { elements } = this.artworkSubmissionForm.current;
     const inputsDOM = Array.from(elements);
 
     const formData = new FormData();
@@ -71,31 +124,7 @@ class ArtistSubmitArt extends Component {
     submissionStart(formData);
   };
 
-  onChangeArtPreview = async (event) => {
-    const [file] = event.target.files;
-
-    if (!file) return;
-    // Make sure `file.name` matches our extensions criteria
-    if (!/\.(jpe?g|png)$/i.test(file.name)) return;
-
-    const artPreviewImg = await this.generatePreviewImg(file);
-    this.setState({ artPreviewImg });
-  };
-
-  onChangeArtPSD = (event) => {
-    let [file] = event.target.files;
-    if (!file) return;
-
-    const { name } = file;
-    this.setState({ artFileName: cleanFileName(name) });
-  };
-
-  handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    this.setState({ [name]: checked });
-  };
-
-  generatePreviewImg = (file) => {
+  _generatePreviewImg = (file) => {
     return new Promise((resolve, reject) => {
       const loadImg = () => {
         reader.removeEventListener("load", loadImg);
@@ -116,6 +145,57 @@ class ArtistSubmitArt extends Component {
     });
   };
 
+  _resetForm = () => {
+    const {
+      artistProfile: { artistName },
+    } = this.props;
+
+    this.artworkSubmissionForm.current.reset();
+
+    this.setState({
+      artistName,
+      title: "",
+      description: "",
+      artFileName: "ART FILE",
+      artPreviewImg: "",
+      isDisableSubmit: false,
+    });
+  };
+
+  _submissionMessages() {
+    // Check Redux for messages
+
+    const {
+      submissionSuccessMsg,
+      submissionSuccessAlertClear,
+      submissionErrorMsg,
+      submissionErrorAlertClear,
+    } = this.props;
+
+    if (!!submissionSuccessMsg) {
+      Swal.fire({
+        icon: "success",
+        text: submissionSuccessMsg,
+        showConfirmButton: false,
+      });
+
+      setTimeout(() => {
+        submissionSuccessAlertClear();
+        this._resetForm();
+      }, 2000);
+    } else if (!!submissionErrorMsg) {
+      Swal.fire({
+        icon: "error",
+        text: submissionErrorMsg,
+        showConfirmButton: false,
+      });
+
+      setTimeout(() => {
+        submissionErrorAlertClear();
+      }, 2000);
+    }
+  }
+
   render() {
     const {
       artistName,
@@ -128,8 +208,6 @@ class ArtistSubmitArt extends Component {
 
     return (
       <SubmissionContainer>
-        <SubmissionsErrorAlert />
-        <SubmissionsSuccessAlert />
         <TabHeader>
           <TabTitle>Submit Artwork</TabTitle>
           <TabSubTitle>
@@ -138,7 +216,10 @@ class ArtistSubmitArt extends Component {
         </TabHeader>
         <TabArea>
           <SubTitle>Create New Submission</SubTitle>
-          <FormArtistSubmit onSubmit={this.handleSubmit}>
+          <FormArtistSubmit
+            onSubmit={this.handleSubmit}
+            ref={this.artworkSubmissionForm}
+          >
             <SubmitCard>
               <h4 style={{ color: "#6A6A6A" }}>Preview Image</h4>
               <label htmlFor="preview-art">
@@ -173,7 +254,7 @@ class ArtistSubmitArt extends Component {
                   id="art-file"
                   type="file"
                   name="artFile"
-                  onChange={this.onChangeArtPSD}
+                  onChange={this.onChangeArtFile}
                   textAlign="center"
                   required
                 >
@@ -192,7 +273,7 @@ class ArtistSubmitArt extends Component {
                   name="artistName"
                   label="artist_name"
                   data-lpignore="true"
-                  value={`@${artistName}`}
+                  value={artistName}
                   readOnly
                 />
                 <FormInputTitleStyled
@@ -234,8 +315,16 @@ class ArtistSubmitArt extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  submissionStart: (formData) => dispatch(submissionStart({ formData })),
+const mapStateToProps = createStructuredSelector({
+  artistProfile: selectArtistProfile,
+  submissionErrorMsg: selectSubmissionsErrorAlert,
+  submissionSuccessMsg: selectSubmissionsSuccessAlert,
 });
 
-export default connect(null, mapDispatchToProps)(ArtistSubmitArt);
+const mapDispatchToProps = (dispatch) => ({
+  submissionStart: (formData) => dispatch(submissionStart({ formData })),
+  submissionErrorAlertClear: () => dispatch(submissionErrorAlertClear()),
+  submissionSuccessAlertClear: () => dispatch(submissionSuccessAlertClear()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArtistSubmitArt);
