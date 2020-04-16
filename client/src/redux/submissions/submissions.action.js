@@ -19,6 +19,10 @@ import SubmissionActionTypes from "./submissions.types";
  *
  */
 
+export const clearAllSubmissionsDetails = () => ({
+  type: SubmissionActionTypes.CLEAR_ALL_SUBMISSIONS_DETAILS,
+});
+
 /**
  * @param {FormData}  formData             form data object.
  * @param {String}    formData.artistName  Artist Name associated to the artwork

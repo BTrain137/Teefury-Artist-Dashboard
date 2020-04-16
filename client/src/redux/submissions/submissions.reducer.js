@@ -9,6 +9,11 @@ const INITIAL_STATE = {
 
 const submissionReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case SubmissionActionTypes.CLEAR_ALL_SUBMISSIONS_DETAILS:
+      return {
+        ...state,
+        ...INITIAL_STATE,
+      };
     case SubmissionActionTypes.SUBMISSION_FAILURE:
       return {
         ...state,

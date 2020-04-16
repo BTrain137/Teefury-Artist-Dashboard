@@ -16,6 +16,7 @@ import {
   setArtistProfile,
   clearAllArtistDetails,
 } from "../artist/artist.action";
+import { clearAllSubmissionsDetails } from "../submissions/submissions.action";
 
 export function* unAuthorizedError(response) {
   response.data = {
@@ -95,6 +96,7 @@ export function* deleteUser() {
 export function* logout() {
   yield put(clearAllUserDetails());
   yield put(clearAllArtistDetails());
+  yield put(clearAllSubmissionsDetails());
 }
 
 export function* onSignInStart() {
@@ -114,7 +116,10 @@ export function* onUpdateUserStart() {
 }
 
 export function* onUpdateUserSuccess() {
-  yield takeLatest(UserActionTypes.UPDATE_USER_ACC_SUCCESS, setUserAccountAfterAuth);
+  yield takeLatest(
+    UserActionTypes.UPDATE_USER_ACC_SUCCESS,
+    setUserAccountAfterAuth
+  );
 }
 
 export function* onDeleteUserStart() {
