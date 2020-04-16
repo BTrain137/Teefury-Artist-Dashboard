@@ -58,6 +58,12 @@ const reqLogin = (req, user, next) => {
           artistProfile: null,
         };
 
+        const jwtToken = {
+          id,
+          contactEmail,
+          is_admin,
+        };
+
         if (!is_admin) {
           let conn;
           try {
@@ -88,6 +94,7 @@ const reqLogin = (req, user, next) => {
               delete artistProfile.international;
 
               userProfile.artistProfile = artistProfile;
+              jwtToken.artistName = artistProfile.artistName;
             }
           } catch (error) {
             conn.end();
@@ -95,7 +102,7 @@ const reqLogin = (req, user, next) => {
           }
         }
 
-        const token = jwt.sign({ id, contactEmail, is_admin }, secret, {
+        const token = jwt.sign(jwtToken, secret, {
           expiresIn: 60 * 60 * 24 * 90,
         });
 
@@ -142,96 +149,89 @@ router.post("/signin", (req, res, next) => {
   })(req, res, next);
 });
 
-router.put(
-  "/account",
-  passport.authenticate("jwt"),
-  async (req, res, next) => {
-    const { id, contactEmail: oldContactEmail } = req.user;
-    const { newPassword, newContactEmail } = req.body;
-    let conn;
+router.put("/account", passport.authenticate("jwt"), async (req, res, next) => {
+  const { id, contactEmail: oldContactEmail } = req.user;
+  const { newPassword, newContactEmail } = req.body;
+  let conn;
 
-    // TODO: rewrite this.
-    // Rewrite may possibly be switching into Graphql
-    try {
-      conn = await pool.getConnection();
+  // TODO: rewrite this.
+  // Rewrite may possibly be switching into Graphql
+  try {
+    conn = await pool.getConnection();
 
-      // queryString will update for password and/or username
-      let queryString = "UPDATE `users` SET";
-      const insertArray = [];
-      let hasContactEmailChanged =
-        newContactEmail && newContactEmail !== oldContactEmail ? true : false;
+    // queryString will update for password and/or username
+    let queryString = "UPDATE `users` SET";
+    const insertArray = [];
+    let hasContactEmailChanged =
+      newContactEmail && newContactEmail !== oldContactEmail ? true : false;
 
-      // If user POST but nothing to change
-      if (!newPassword && !hasContactEmailChanged) {
-        return res.sendStatus(304);
-      }
+    // If user POST but nothing to change
+    if (!newPassword && !hasContactEmailChanged) {
+      return res.sendStatus(304);
+    }
 
-      if (!!newPassword) {
-        const hashedPassword = await bcrypt.hash(
-          newPassword,
-          BCRYPT_SALT_ROUNDS
-        );
-        queryString += " `password`=?";
-        insertArray.push(hashedPassword);
-      }
+    if (!!newPassword) {
+      const hashedPassword = await bcrypt.hash(newPassword, BCRYPT_SALT_ROUNDS);
+      queryString += " `password`=?";
+      insertArray.push(hashedPassword);
+    }
 
-      queryString += !!newPassword && hasContactEmailChanged ? ", " : " ";
+    queryString += !!newPassword && hasContactEmailChanged ? ", " : " ";
 
-      if (hasContactEmailChanged) {
-        queryString += "`username_contact_email`=? ";
-        insertArray.push(newContactEmail);
-      }
+    if (hasContactEmailChanged) {
+      queryString += "`username_contact_email`=? ";
+      insertArray.push(newContactEmail);
+    }
 
-      queryString += "WHERE `id`=?";
-      insertArray.push(id);
+    queryString += "WHERE `id`=?";
+    insertArray.push(id);
 
-      // "UPDATE `users` SET `password`=? WHERE `id`=?"
-      // "UPDATE `users` SET `username_contact_email`=? WHERE `id`=?"
-      // "UPDATE `users` SET `password`=?, `username_contact_email`=? WHERE `id`=?"
-      const { affectedRows } = await pool.query(queryString, insertArray);
+    // "UPDATE `users` SET `password`=? WHERE `id`=?"
+    // "UPDATE `users` SET `username_contact_email`=? WHERE `id`=?"
+    // "UPDATE `users` SET `password`=?, `username_contact_email`=? WHERE `id`=?"
+    const { affectedRows } = await pool.query(queryString, insertArray);
+
+    if (affectedRows > 1) {
+      console.log(artistName, req.user);
+    }
+
+    // Once updated is complete need to query the database for the user
+    const [user] = await pool.query(
+      "SELECT `id`, `is_admin`, " +
+        "`username_contact_email` AS `contactEmail` " +
+        "FROM `users` WHERE `id`=?",
+      [id]
+    );
+
+    // Update the artist table if contract email was changed
+    if (!!newContactEmail) {
+      const {
+        affectedRows,
+      } = await pool.query(
+        "UPDATE `artist_profile` SET `username_contact_email`=?" +
+          "WHERE `username_contact_email`=?",
+        [newContactEmail, oldContactEmail]
+      );
 
       if (affectedRows > 1) {
         console.log(artistName, req.user);
       }
-
-      // Once updated is complete need to query the database for the user
-      const [user] = await pool.query(
-        "SELECT `id`, `is_admin`, " +
-          "`username_contact_email` AS `contactEmail` " +
-          "FROM `users` WHERE `id`=?",
-        [id]
-      );
-
-      // Update the artist table if contract email was changed
-      if (!!newContactEmail) {
-        const {
-          affectedRows,
-        } = await pool.query(
-          "UPDATE `artist_profile` SET `username_contact_email`=?" +
-            "WHERE `username_contact_email`=?",
-          [newContactEmail, oldContactEmail]
-        );
-
-        if (affectedRows > 1) {
-          console.log(artistName, req.user);
-        }
-      }
-      conn.end();
-
-      const { token, ...userProfile } = await reqLogin(req, user, next);
-
-      res.status(200).json({
-        auth: true,
-        message: "User Updated & Logged In",
-        token,
-        ...userProfile,
-      });
-    } catch (error) {
-      conn.end();
-      next(error);
     }
+    conn.end();
+
+    const { token, ...userProfile } = await reqLogin(req, user, next);
+
+    res.status(200).json({
+      auth: true,
+      message: "User Updated & Logged In",
+      token,
+      ...userProfile,
+    });
+  } catch (error) {
+    conn.end();
+    next(error);
   }
-);
+});
 
 router.delete(
   "/account",
