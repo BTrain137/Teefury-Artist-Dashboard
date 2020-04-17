@@ -45,6 +45,11 @@ export const BtnArtSubmitStyled = styled.button`
   ${artSubmitCTA}
 `;
 
+export const InputArtPreviewWrapper = styled.div`
+  // min-width: 290px;
+  // min-height: 290px;
+`;
+
 export const InputArtFileStyled = styled.input`
   width: 1px;
   height: 1px;

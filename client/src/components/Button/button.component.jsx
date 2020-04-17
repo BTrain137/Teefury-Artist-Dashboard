@@ -8,6 +8,7 @@ import {
   BtnArtSubmitStyled,
   InputArtFileStyled,
   SpanStyled,
+  InputArtPreviewWrapper,
 } from "./button.styles";
 
 export const ButtonLgCenter = ({ children, ...props }) => (
@@ -44,8 +45,8 @@ export const InputArtFile = ({ children, textAlign, ...props }) => (
 );
 
 export const InputArtPreview = ({ children, ...props }) => (
-  <>
+  <InputArtPreviewWrapper>
     {children}
     <InputArtFileStyled {...props} />
-  </>
+  </InputArtPreviewWrapper>
 );

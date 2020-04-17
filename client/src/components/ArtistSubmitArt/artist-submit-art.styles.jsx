@@ -83,6 +83,8 @@ export const ArtPreview = styled.div`
   position: relative;
   cursor: pointer;
   min-width: 250px;
+  // min-width: 290px;
+  // min-height: 310px;
 `;
 
 const previewTxt = css`
@@ -137,6 +139,7 @@ export const FormInputTitleStyled = styled(FormInput)`
 export const TextAreaStyled = styled(TextArea)`
   ${formInputStyle}
   min-height: 75px;
+  // min-height: 265px;
 `;
 
 export const Terms = styled.span`
