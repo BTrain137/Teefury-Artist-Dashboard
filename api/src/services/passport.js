@@ -5,6 +5,29 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import pool from "../database/connection.js";
 
+/**
+ * req.user for JWT token
+ * @typedef {{ 
+ *   id:Number,
+ *   is_admin:Boolean,
+ *   contactEmail:String,
+ *   cleanArtistName:String
+ *   artistName:String,
+ * }}JWTReqUser
+ * 
+ * Values inside of the JWT token
+ * @typedef {{
+ *   id:Number,
+ *   contactEmail:String,
+ *   is_admin:Boolean,
+ *   cleanArtistName:String,
+ *   artistName:String,
+ *   iat:UTCTime
+ *   exp:UTCTime
+ * }} JWTToken
+ *
+ */
+
 passport.serializeUser((user, done) => {
   done(null, user);
 });
@@ -119,11 +142,15 @@ const JWTOpts = {
   secretOrKey: secret,
 };
 
+/**
+ * @param {JWTToken} jwt_payload
+ */
 passport.use(
   "jwt",
   new JWTStrategy(JWTOpts, async (jwt_payload, done) => {
     const { id, cleanArtistName, artistName } = jwt_payload;
     let conn;
+
     try {
       conn = await pool.getConnection();
 
@@ -138,6 +165,9 @@ passport.use(
       if (user) {
         user.cleanArtistName = cleanArtistName;
         user.artistName = artistName;
+        /**
+         * @return {JWTReqUser}
+         */
         return done(null, { ...user });
       } else {
         // 401 Unauthorized would be sent to user
@@ -159,6 +189,9 @@ const JWTSubmissions = {
   passReqToCallback: true,
 };
 
+/**
+ * @param {JWTToken} jwt_payload
+ */
 passport.use(
   "jwt-submissions",
   new JWTStrategy(JWTSubmissions, async (req, jwt_payload, done) => {
@@ -187,6 +220,9 @@ passport.use(
       if (user) {
         user.cleanArtistName = cleanArtistName;
         user.artistName = artistName;
+        /**
+         * @return {JWTReqUser}
+         */
         return done(null, { ...user });
       } else {
         // 401 Unauthorized would be sent to user
