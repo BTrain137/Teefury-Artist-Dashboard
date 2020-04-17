@@ -122,7 +122,7 @@ const JWTOpts = {
 passport.use(
   "jwt",
   new JWTStrategy(JWTOpts, async (jwt_payload, done) => {
-    const { id } = jwt_payload;
+    const { id, cleanArtistName, artistName } = jwt_payload;
     let conn;
     try {
       conn = await pool.getConnection();
@@ -133,13 +133,14 @@ passport.use(
           "FROM `users` WHERE `id`=?",
         [id]
       );
+      conn.end();
 
       if (user) {
-        conn.end();
+        user.cleanArtistName = cleanArtistName;
+        user.artistName = artistName;
         return done(null, { ...user });
       } else {
         // 401 Unauthorized would be sent to user
-        conn.end();
         return done(null, false, {
           message: "Unable To Locate User.",
           status: 401,
@@ -161,11 +162,11 @@ const JWTSubmissions = {
 passport.use(
   "jwt-submissions",
   new JWTStrategy(JWTSubmissions, async (req, jwt_payload, done) => {
-    const { id, artistName, is_admin } = jwt_payload;
+    const { id, cleanArtistName, artistName, is_admin } = jwt_payload;
     const { originalUrl } = req;
     let conn;
 
-    if (!is_admin && !originalUrl.includes(artistName)) {
+    if (!is_admin && !originalUrl.includes(cleanArtistName)) {
       return done(null, false, {
         message: "Unauthorized for this Image",
         status: 401,
@@ -181,14 +182,14 @@ passport.use(
           "FROM `users` WHERE `id`=?",
         [id]
       );
+      conn.end();
 
       if (user) {
-        conn.end();
+        user.cleanArtistName = cleanArtistName;
         user.artistName = artistName;
         return done(null, { ...user });
       } else {
         // 401 Unauthorized would be sent to user
-        conn.end();
         return done(null, false, {
           message: "Unable To Locate User.",
           status: 401,
