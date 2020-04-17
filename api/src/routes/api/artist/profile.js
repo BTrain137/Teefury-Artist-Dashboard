@@ -15,7 +15,7 @@ import passport from "passport";
  *    social_instagram:String,
  *    social_twitter:String,
  *    isInternational:Boolean,
- *  }} artistProfile
+ *  }} ArtistProfile
  */
 
 const router = express.Router();
@@ -46,6 +46,9 @@ router.get("/profile", passport.authenticate("jwt"), async (req, res, next) => {
     artistProfile.isInternational = artistProfile.international ? true : false;
     delete artistProfile.international;
 
+    /**
+     * @return {ArtistProfile}
+     */
     res.status(200).json({ artistProfile });
   } catch (error) {
     conn.end();
@@ -123,6 +126,9 @@ router.post(
         : false;
       delete artistProfile.international;
 
+      /**
+       * @return {message:String, artistProfile:ArtistProfile}
+       */
       res.status(200).json({
         message: "Artist Created",
         artistProfile,
@@ -243,7 +249,8 @@ router.delete(
   }
 );
 
-router.get("/test-artist-profile", passport.authenticate("jwt-submissions"), (req, res) => {
+router.get("/test-artist-profile", passport.authenticate("jwt"), (req, res) => {
+  console.log(req.user);
   res.status(200).send({
     message: "artist found in db",
     isAuth: req.isAuthenticated(),
