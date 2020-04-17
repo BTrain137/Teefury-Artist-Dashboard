@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import pool from "../../../database/connection";
 import { secret, BCRYPT_SALT_ROUNDS } from "../../../services/jwtConfig.js";
+import { cleanStringShopify } from "../../../utils/cleanData";
 
 /**
  * Complete Artist Profile
@@ -94,6 +95,7 @@ const reqLogin = (req, user, next) => {
               delete artistProfile.international;
 
               userProfile.artistProfile = artistProfile;
+              jwtToken.cleanArtistName =  cleanStringShopify(artistProfile.artistName);
               jwtToken.artistName = artistProfile.artistName;
             }
           } catch (error) {
@@ -192,7 +194,7 @@ router.put("/account", passport.authenticate("jwt"), async (req, res, next) => {
     const { affectedRows } = await pool.query(queryString, insertArray);
 
     if (affectedRows > 1) {
-      console.log(artistName, req.user);
+      console.log(oldContactEmail, req.user);
     }
 
     // Once updated is complete need to query the database for the user
