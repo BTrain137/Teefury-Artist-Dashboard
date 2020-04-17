@@ -11,10 +11,10 @@ import SubmissionActionTypes from "./submissions.types";
  *   status:String,
  * }} SubmissionDetails
  *
- * Error message parsed by saga sent to reducer
+ * Error response, Status is https status code
  * @typedef {{
- *   status?:Number,
- *   messages:Sting[],
+ *   status:Number,
+ *   messages:String,
  * }} ErrorMsg
  *
  */
@@ -45,6 +45,7 @@ export const submissionSuccess = (submissionDetails) => ({
 });
 
 /**
+ * Add submissions into submissions array.
  * @param {SubmissionDetails} submissionDetails
  */
 export const submissionAdd = (submissionDetails) => ({
@@ -82,4 +83,24 @@ export const submissionErrorAlert = (failureMsg) => ({
 
 export const submissionErrorAlertClear = () => ({
   type: SubmissionActionTypes.SUBMISSIONS_ERROR_ALERT_CLEAR,
+});
+
+export const submissionsGetAllStart = () => ({
+  type: SubmissionActionTypes.SUBMISSIONS_GET_ALL_START,
+});
+
+/**
+ * @param {SubmissionDetails[]} submissionsDetailsArr
+ */
+export const submissionsGetAllSuccess = (submissionsDetailsArr) => ({
+  type: SubmissionActionTypes.SUBMISSIONS_GET_ALL_SUCCESS,
+  payload: submissionsDetailsArr,
+});
+
+/**
+ * @param {ErrorMsg} error
+ */
+export const submissionsGetAllFailure = (error) => ({
+  type: SubmissionActionTypes.SUBMISSIONS_GET_ALL_FAILURE,
+  payload: error,
 });

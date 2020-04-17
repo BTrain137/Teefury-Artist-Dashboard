@@ -19,7 +19,7 @@ const selectSubmissions = (state) => state.submissions;
  */
 export const selectAllSubmissions = createSelector(
   [selectSubmissions],
-  (submissions) => submissions.submissions
+  (submissions) => submissions.allSubmissions
 );
 
 /**

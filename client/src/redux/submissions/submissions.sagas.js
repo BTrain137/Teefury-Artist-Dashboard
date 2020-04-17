@@ -8,6 +8,8 @@ import {
   submissionFailed,
   submissionErrorAlert,
   submissionSuccessAlert,
+  submissionsGetAllSuccess,
+  submissionsGetAllFailure,
 } from "./submissions.action";
 import { selectUserJWTToken } from "../user/user.selector";
 
@@ -23,9 +25,10 @@ export function* submissionSubmit({ payload: { formData } }) {
       },
     });
     yield put(submissionSuccess({ submissionDetails }));
-  } catch (error) {
-    const { status, message } = error.response.data;
-    yield put(submissionFailed({ status, messages: [message] }));
+  } catch ({ response }) {
+    const { status, data } = response;
+    const { message } = data;
+    yield put(submissionFailed({ status, message }));
     yield put(submissionErrorAlert(message));
   }
 }
@@ -36,6 +39,23 @@ export function* submissionComplete({ payload: { submissionDetails } }) {
   yield put(
     submissionSuccessAlert("YAY your master piece has been added. Thank you!")
   );
+}
+
+export function* getAllSubmissions() {
+  try {
+    const token = yield select(selectUserJWTToken);
+    const {
+      data: { submissionsDetailsArr },
+    } = yield axios.get("/api/artist/submissions", {
+      headers: { Authorization: `JWT ${token}` },
+    });
+
+    yield put(submissionsGetAllSuccess(submissionsDetailsArr));
+  } catch ({ response }) {
+    const { status, data } = response;
+    const { message } = data;
+    yield put(submissionsGetAllFailure({ status, message }));
+  }
 }
 
 export function* onSubmissionsStart() {
@@ -49,6 +69,17 @@ export function* onSubmissionsSuccess() {
   );
 }
 
+export function* submissionsGetAllStart() {
+  yield takeLatest(
+    SubmissionActionTypes.SUBMISSIONS_GET_ALL_START,
+    getAllSubmissions
+  );
+}
+
 export function* submissionsSaga() {
-  yield all([call(onSubmissionsStart), call(onSubmissionsSuccess)]);
+  yield all([
+    call(onSubmissionsStart),
+    call(onSubmissionsSuccess),
+    call(submissionsGetAllStart),
+  ]);
 }

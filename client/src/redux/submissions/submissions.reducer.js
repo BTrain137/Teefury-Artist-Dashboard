@@ -1,7 +1,7 @@
 import SubmissionActionTypes from "./submissions.types";
 
 const INITIAL_STATE = {
-  submissions: [],
+  allSubmissions: [],
   submissionSuccessAlert: "",
   submissionErrorAlert: "",
   error: null,
@@ -22,7 +22,7 @@ const submissionReducer = (state = INITIAL_STATE, action) => {
     case SubmissionActionTypes.SUBMISSION_ADD:
       return {
         ...state,
-        submissions: [...state.submissions, action.payload],
+        allSubmissions: [action.payload, ...state.submissions],
       };
     case SubmissionActionTypes.SUBMISSIONS_SUCCESS_ALERT:
       return {
@@ -43,6 +43,18 @@ const submissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         submissionErrorAlert: "",
+      };
+    case SubmissionActionTypes.SUBMISSIONS_GET_ALL_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        allSubmissions: [...action.payload],
+      };
+    case SubmissionActionTypes.SUBMISSIONS_GET_ALL_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        allSubmissions: [],
       };
     default:
       return state;
