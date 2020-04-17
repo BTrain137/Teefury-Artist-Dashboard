@@ -23,10 +23,11 @@ if (NODE_ENV === "development") app.use(logger("dev"));
 // API Routes
 app.use(routes);
 
-// 
-app.use("/api/submissions", [
+// Art files submitted by artist
+// /api/art-submissions/<ArtistName>/imageFile.psd
+app.use("/api/art-submissions", [
   passport.authenticate("jwt-submissions"),
- express.static(path.join(__dirname, "../../submissions"))
+ express.static(path.join(__dirname, "../../art-submissions"))
 ]);
 
 app.use((error, req, res, next) => {
