@@ -1,8 +1,21 @@
 import fs from "fs";
 import express from "express";
 import multer from "multer";
-import { cleanFileName } from "../../../utils/cleanData";
+import { cleanFileName, cleanStringShopify } from "../../../utils/cleanData";
 import passport from "passport";
+import pool from "../../../database/connection";
+
+/**
+ *
+ * @typedef {{
+ *   artFile:String,
+ *   artistName:String,
+ *   description:String,
+ *   previewArt:String,
+ *   status:String,
+ *   title:String,
+ * }} SubmissionDetails
+ */
 
 const router = express.Router();
 const FILE_DIRECTORY = "submissions";
@@ -47,11 +60,13 @@ router.post(
   passport.authenticate("jwt"),
   cpUpload,
   async (req, res, next) => {
-    const { artistName, title, description } = req.body;
+    const { title, description } = req.body;
+    const { contactEmail, cleanArtistName, artistName } = req.user;
     const [artFile] = req.files["artFile"];
     const [previewArt] = req.files["previewArt"];
-    const artistDirectory = `${FILE_DIRECTORY}/${artistName}`
-    
+    const artistDirectory = `${FILE_DIRECTORY}/${cleanArtistName}`;
+    let conn;
+
     // Create Artist Directory if not exist
     !fs.existsSync(artistDirectory) && fs.mkdirSync(artistDirectory);
 
@@ -62,20 +77,41 @@ router.post(
       previewArt.originalname
     )}`;
 
-    const submissionDetails = {
-      artistName,
-      title,
-      description,
-      artFile: artFileNewPath,
-      previewArt: previewArtNewPath,
-    };
-
     try {
+      conn = await pool.getConnection();
+
       fs.renameSync(artFile.path, artFileNewPath);
       fs.renameSync(previewArt.path, previewArtNewPath);
 
+      const insertQueryString =
+        "INSERT INTO `submissions` (`artist_name`, `username_contact_email`, " +
+        "`title`, `description`, `art_file`, `preview_art`) VALUES (?,?,?,?,?,?)";
+
+      const insertValues = [
+        artistName,
+        contactEmail,
+        title,
+        description,
+        `/${artFileNewPath}`,
+        `/${previewArtNewPath}`,
+      ];
+
+      // { affectedRows: 1, insertId: 2, warningStatus: 0 }
+      const { insertId } = await pool.query(insertQueryString, insertValues);
+
+      const selectQueryString =
+        "SELECT `artist_name` AS `artistName`, `title`, `description`, " +
+        "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status` " +
+        "FROM `submissions` WHERE `id`=?";
+      const submissionDetails = await pool.query(selectQueryString, [insertId]);
+
+      conn.end();
+      /**
+       * @returns {SubmissionDetails}
+       */
       res.status(200).json({ submissionDetails });
     } catch (error) {
+      conn.end();
       next(error);
     }
   }
