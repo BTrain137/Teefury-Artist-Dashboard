@@ -280,6 +280,7 @@ class ArtistSubmitArt extends Component {
                   autoComplete="off"
                   handleChange={this.handleChange}
                   value={title}
+                  maxlength="180"
                   required
                 />
                 <TextAreaStyled
@@ -291,6 +292,7 @@ class ArtistSubmitArt extends Component {
                   autoComplete="off"
                   handleChange={this.handleChange}
                   value={description}
+                  maxlength="255"
                   required
                 />
                 <BtnArtSubmit
