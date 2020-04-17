@@ -22,13 +22,28 @@ CREATE TABLE `artist_profile` (
   `artist_name` VARCHAR(30) NOT NULL UNIQUE,
   `first_name` VARCHAR(30) NOT NULL,
   `last_name` VARCHAR(30) NOT NULL,
-  `username_contact_email` VARCHAR(255) UNIQUE,
+  `username_contact_email` VARCHAR(180) UNIQUE,
   `paypal_email` VARCHAR(255),
   `phone` VARCHAR(20),
   `social_facebook` TEXT,
   `social_instagram` TEXT,
   `social_twitter` TEXT,
   `international` BOOLEAN,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`)
+);
+
+DROP TABLE IF EXISTS `submissions`;
+CREATE TABLE `submissions` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `artist_name` VARCHAR(30) NOT NULL,
+  `username_contact_email` VARCHAR(180),
+  `title` VARCHAR(180),
+  `description` VARCHAR(255), 
+  `art_file` VARCHAR(200),
+  `preview_art` VARCHAR(200),
+  `status` VARCHAR(20) NOT NULL DEFAULT "PENDING",
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`)
