@@ -32,7 +32,7 @@ export function* submissionSubmit({ payload: { formData } }) {
 
 // start and stop spinners
 export function* submissionComplete({ payload: { submissionDetails } }) {
-  yield put(submissionAdd({ ...submissionDetails }));
+  yield put(submissionAdd(submissionDetails));
   yield put(
     submissionSuccessAlert("YAY your master piece has been added. Thank you!")
   );

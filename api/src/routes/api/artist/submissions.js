@@ -6,7 +6,7 @@ import passport from "passport";
 import pool from "../../../database/connection";
 
 /**
- * Each submission's detail viewed for the client
+ * Database quires return an array. Even if 1 item exist.
  * @typedef {{
  *   artFile:String,
  *   artistName:String,
@@ -16,7 +16,7 @@ import pool from "../../../database/connection";
  *   title:String,
  * }} SubmissionDetails
  *
- *
+ * The response object after inserting into database
  * @typedef {{
  *   affectedRows:Number,
  *   insertId:Number,
@@ -146,13 +146,15 @@ router.post(
       /**
        * @return {SubmissionDetails}
        */
-      const submissionDetails = await pool.query(selectQueryString, [insertId]);
+      const [submissionDetails] = await pool.query(selectQueryString, [
+        insertId,
+      ]);
 
       conn.end();
       /**
-       * @returns {SubmissionDetails}
+       * @returns {SubmissionDetails[]}
        */
-      res.status(200).json(submissionDetails);
+      res.status(200).json({ submissionDetails });
     } catch (error) {
       conn.end();
       next(error);
