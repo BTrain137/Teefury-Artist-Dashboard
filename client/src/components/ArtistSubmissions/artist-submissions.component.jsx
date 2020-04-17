@@ -88,9 +88,9 @@ class ArtistSubmissions extends Component {
     return (
       <SubmissionContainer>
         <TabHeader>
-          <TabSubTitle>
-            <TabSubLink to={`/artist/submissions`}>Submit Artwork</TabSubLink>
-          </TabSubTitle>
+          <TabSubLink to={`/artist/submissions`}>
+            <TabSubTitle>Submit Artwork</TabSubTitle>
+          </TabSubLink>
           <TabTitle>Submissions</TabTitle>
         </TabHeader>
         <TabArea>
@@ -157,7 +157,7 @@ class ArtistSubmissions extends Component {
               ? allSubmissions.map((submissionDetails, i) => {
                   return <ArtCard key={i} {...submissionDetails} delay={i} />;
                 })
-              : null}
+              : <h2>Hey Do you don't have any artwork Submit some!</h2>}
           </ArtCardContainer>
         </TabArea>
       </SubmissionContainer>
