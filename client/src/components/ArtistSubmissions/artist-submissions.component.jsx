@@ -1,6 +1,19 @@
 import React, { Component } from "react";
-import { Form, Input } from "../FormInput";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
+import axios from "axios";
+
+import { selectUserJWTToken } from "../../redux/user/user.selector";
+import {
+  selectAllSubmissions,
+  selectSubmissionsError,
+} from "../../redux/submissions/submissions.selector";
+import { submissionsGetAllStart } from "../../redux/submissions/submissions.action";
+
+import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
+import { ArtistArtCard as ArtCard } from "../ArtCards";
+import { Form, Input } from "../FormInput";
 import { ReactComponent as MagnifyGlassIcon } from "../../assets/magnify-glass.svg";
 import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
 
@@ -17,6 +30,7 @@ import {
   AdjustableIconWrapper,
   FilterContainer,
   FilterBtn,
+  ArtCardContainer,
 } from "./artist-submissions.styles";
 
 class ArtistSubmissions extends Component {
@@ -27,7 +41,13 @@ class ArtistSubmissions extends Component {
       search: "",
       isShowingFilter: false,
       filterBy: "new",
+      imageSrc: teefuryBirdLogo,
+      allSubmissions: [],
     };
+  }
+
+  componentDidMount() {
+    this._displayAllSubmissions();
   }
 
   handleChange = (event) => {
@@ -47,8 +67,24 @@ class ArtistSubmissions extends Component {
     this.setState({ isShowingFilter: !isShowingFilter });
   };
 
+  _getAllSubmissions = async () => {
+    const { token } = this.props;
+    const {
+      data: { submissionsDetailsArr },
+    } = await axios.get("/api/artist/submissions", {
+      headers: { Authorization: `JWT ${token}` },
+    });
+
+    console.log(submissionsDetailsArr);
+  };
+
+  _displayAllSubmissions = () => {
+    const { allSubmissions } = this.props;
+    this.setState({ allSubmissions });
+  };
+
   render() {
-    const { search, isShowingFilter, filterBy } = this.state;
+    const { search, isShowingFilter, filterBy, allSubmissions } = this.state;
     return (
       <SubmissionContainer>
         <TabHeader>
@@ -116,10 +152,27 @@ class ArtistSubmissions extends Component {
               </FilterContainer>
             ) : null}
           </FilterHeader>
+          <ArtCardContainer>
+            {allSubmissions.length > 0
+              ? allSubmissions.map((submissionDetails, i) => {
+                  return <ArtCard key={i} {...submissionDetails} delay={i} />;
+                })
+              : null}
+          </ArtCardContainer>
         </TabArea>
       </SubmissionContainer>
     );
   }
 }
 
-export default ArtistSubmissions;
+const mapStateToProps = createStructuredSelector({
+  token: selectUserJWTToken,
+  allSubmissions: selectAllSubmissions,
+  submissionsError: selectSubmissionsError,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  submissionsGetAllStart: () => dispatch(submissionsGetAllStart()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArtistSubmissions);

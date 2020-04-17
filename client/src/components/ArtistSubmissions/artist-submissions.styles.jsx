@@ -90,10 +90,10 @@ export const FilterContainer = styled.div`
   padding: 18px 20px 18px 0;
   border-radius: 12px;
   box-shadow: 0px 3px 11px 1px rgba(0, 0, 0, 0.2);
-  
+
   .selected {
-    background-color: #DEDDDD;
-    border-left: 5px solid #6A6A6A;
+    background-color: #dedddd;
+    border-left: 5px solid #6a6a6a;
     border-radius: 0 12px 12px 0;
     padding-left: 30px;
     box-shadow: 0px 3px 11px 1px rgba(0, 0, 0, 0.2);
@@ -111,4 +111,10 @@ export const FilterBtn = styled.button`
   padding-left: 35px;
   width: 100%;
   text-align: left;
+`;
+
+export const ArtCardContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 `;
