@@ -5,11 +5,7 @@ import { createStructuredSelector } from "reselect";
 import axios from "axios";
 
 import { selectUserJWTToken } from "../../redux/user/user.selector";
-import {
-  selectAllSubmissions,
-  selectSubmissionsError,
-} from "../../redux/submissions/submissions.selector";
-import { submissionsGetAllStart } from "../../redux/submissions/submissions.action";
+import { selectSubmissionsError } from "../../redux/submissions/submissions.selector";
 
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 import { ArtistArtCard as ArtCard } from "../ArtCards";
@@ -47,7 +43,7 @@ class ArtistSubmissions extends Component {
   }
 
   componentDidMount() {
-    this._displayAllSubmissions();
+    this._getAllSubmissions();
   }
 
   handleChange = (event) => {
@@ -75,12 +71,7 @@ class ArtistSubmissions extends Component {
       headers: { Authorization: `JWT ${token}` },
     });
 
-    console.log(submissionsDetailsArr);
-  };
-
-  _displayAllSubmissions = () => {
-    const { allSubmissions } = this.props;
-    this.setState({ allSubmissions });
+    this.setState({ allSubmissions: submissionsDetailsArr });
   };
 
   render() {
@@ -153,11 +144,13 @@ class ArtistSubmissions extends Component {
             ) : null}
           </FilterHeader>
           <ArtCardContainer>
-            {allSubmissions.length > 0
-              ? allSubmissions.map((submissionDetails, i) => {
-                  return <ArtCard key={i} {...submissionDetails} delay={i} />;
-                })
-              : <h2>Hey Do you don't have any artwork Submit some!</h2>}
+            {allSubmissions.length > 0 ? (
+              allSubmissions.map((submissionDetails, i) => {
+                return <ArtCard key={i} {...submissionDetails} delay={i} />;
+              })
+            ) : (
+              <h2>Hey Do you don't have any artwork Submit some!</h2>
+            )}
           </ArtCardContainer>
         </TabArea>
       </SubmissionContainer>
@@ -167,12 +160,7 @@ class ArtistSubmissions extends Component {
 
 const mapStateToProps = createStructuredSelector({
   token: selectUserJWTToken,
-  allSubmissions: selectAllSubmissions,
   submissionsError: selectSubmissionsError,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  submissionsGetAllStart: () => dispatch(submissionsGetAllStart()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ArtistSubmissions);
+export default connect(mapStateToProps)(ArtistSubmissions);
