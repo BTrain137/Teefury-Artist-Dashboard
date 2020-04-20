@@ -24,6 +24,14 @@ export const clearAllSubmissionsDetails = () => ({
 });
 
 /**
+ * @param {SubmissionDetails[]} submissionsDetailsArr
+ */
+export const setAllSubmissionsDetails = (submissionsDetailsArr) => ({
+  type: SubmissionActionTypes.SET_ALL_SUBMISSION_DETAILS,
+  payload: submissionsDetailsArr,
+});
+
+/**
  * @param {FormData}  formData             form data object.
  * @param {String}    formData.artistName  Artist Name associated to the artwork
  * @param {String }   formData.title       Title of the art piece
@@ -103,4 +111,20 @@ export const submissionsGetAllSuccess = (submissionsDetailsArr) => ({
 export const submissionsGetAllFailure = (error) => ({
   type: SubmissionActionTypes.SUBMISSIONS_GET_ALL_FAILURE,
   payload: error,
+});
+
+/**
+ * @param {SubmissionDetails[]} submissionsDetailsArr
+ */
+export const submissionsCreateBlobStart = (submissionsDetailsArr) => ({
+  type: SubmissionActionTypes.SUBMISSIONS_CREATE_BLOB_START,
+  payload: submissionsDetailsArr,
+});
+
+/**
+ * @param {SubmissionDetails[]} submissionsDetailsArr
+ */
+export const submissionsCreateBlobSuccess = (submissionsDetailsArr) => ({
+  type: SubmissionActionTypes.SUBMISSIONS_CREATE_BLOB_SUCCESS,
+  payload: submissionsDetailsArr,
 });

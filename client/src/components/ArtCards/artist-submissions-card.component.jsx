@@ -22,6 +22,11 @@ class ArtistArtCard extends Component {
     };
   }
 
+  // static getDerivedStateFromProps(props, state) {
+  //   const { imageSrc } = props;
+  //   return { imageSrc }
+  // }
+
   componentDidMount() {
     this._getImageFetch();
   }

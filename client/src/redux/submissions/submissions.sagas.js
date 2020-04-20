@@ -2,6 +2,7 @@ import { all, call, put, takeLatest, select } from "redux-saga/effects";
 import axios from "axios";
 import SubmissionActionTypes from "./submissions.types";
 
+import { selectAllSubmissions } from "./submissions.selector";
 import {
   submissionSuccess,
   submissionAdd,
@@ -10,8 +11,11 @@ import {
   submissionSuccessAlert,
   submissionsGetAllSuccess,
   submissionsGetAllFailure,
+  submissionsCreateBlobStart,
+  submissionsCreateBlobSuccess,
 } from "./submissions.action";
 import { selectUserJWTToken } from "../user/user.selector";
+import { createOnlyNewBlobs, createAllBlobs } from "./submissions.utils";
 
 export function* submissionSubmit({ payload: { formData } }) {
   try {
@@ -51,11 +55,34 @@ export function* getAllSubmissions() {
     });
 
     yield put(submissionsGetAllSuccess(submissionsDetailsArr));
+    // yield put(submissionsCreateBlobStart({ submissionsDetailsArr }));
   } catch ({ response }) {
     const { status, data } = response;
     const { message } = data;
     yield put(submissionsGetAllFailure({ status, message }));
   }
+}
+
+/**
+ * Attempted to create blobs and storing them in redux
+ * However when the blobs are called later the images are undefined.
+ */
+export function* createBlobStart({ payload: { submissionsDetailsArr } }) {
+  const currentSubmissions = yield select(selectAllSubmissions);
+  const token = yield select(selectUserJWTToken);
+
+  let submissionsWithBlobs = null;
+  if (!currentSubmissions) {
+    submissionsWithBlobs = yield createAllBlobs(submissionsDetailsArr, token);
+  } else {
+    submissionsWithBlobs = yield createOnlyNewBlobs(
+      currentSubmissions,
+      submissionsDetailsArr,
+      token
+    );
+  }
+
+  yield put(submissionsCreateBlobSuccess(submissionsWithBlobs));
 }
 
 export function* onSubmissionsStart() {
@@ -69,10 +96,17 @@ export function* onSubmissionsSuccess() {
   );
 }
 
-export function* submissionsGetAllStart() {
+export function* onSubmissionsGetAllStart() {
   yield takeLatest(
     SubmissionActionTypes.SUBMISSIONS_GET_ALL_START,
     getAllSubmissions
+  );
+}
+
+export function* onSubmissionsCreateBlobStart() {
+  yield takeLatest(
+    SubmissionActionTypes.SUBMISSIONS_CREATE_BLOB_START,
+    createBlobStart
   );
 }
 
@@ -80,6 +114,7 @@ export function* submissionsSaga() {
   yield all([
     call(onSubmissionsStart),
     call(onSubmissionsSuccess),
-    call(submissionsGetAllStart),
+    call(onSubmissionsGetAllStart),
+    call(onSubmissionsCreateBlobStart),
   ]);
 }

@@ -44,6 +44,7 @@ const submissionReducer = (state = INITIAL_STATE, action) => {
         ...state,
         submissionErrorAlert: "",
       };
+    case SubmissionActionTypes.SUBMISSIONS_CREATE_BLOB_SUCCESS:
     case SubmissionActionTypes.SUBMISSIONS_GET_ALL_SUCCESS:
       return {
         ...state,
