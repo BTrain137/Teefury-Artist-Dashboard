@@ -140,7 +140,7 @@ router.post(
       const { insertId } = await pool.query(insertQueryString, insertValues);
 
       const selectQueryString =
-        "SELECT `artist_name` AS `artistName`, `title`, `description`, " +
+        "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
         "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
         "`created_at` AS `createdAt` FROM `submissions` WHERE `id`=?";
       /**
@@ -173,7 +173,7 @@ router.get(
     try {
       conn = await pool.getConnection();
       const queryString =
-        "SELECT `artist_name` AS `artistName`, `title`, `description`, " +
+        "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
         "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
         "`created_at` AS `createdAt` FROM `submissions` WHERE `artist_name`=?" +
         "ORDER BY `created_at` DESC";

@@ -3,6 +3,7 @@ import { createSelector } from "reselect";
 /**
  * The detailed information about the artwork
  * @typedef {{
+ *   id:Number,
  *   artistName:String
  *   title:String,
  *   description:String,
