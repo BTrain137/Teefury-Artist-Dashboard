@@ -39,6 +39,7 @@ class ArtistSubmissions extends Component {
       filterBy: "new",
       imageSrc: teefuryBirdLogo,
       allSubmissions: [],
+      submissionCard: null,
     };
   }
 
@@ -74,8 +75,21 @@ class ArtistSubmissions extends Component {
     this.setState({ allSubmissions: submissionsDetailsArr });
   };
 
+  handleOpenModal = (submission) => {
+    console.log(submission);
+    this.setState({ submissionCard: submission });
+  };
+
   render() {
-    const { search, isShowingFilter, filterBy, allSubmissions } = this.state;
+
+    const {
+      search,
+      isShowingFilter,
+      filterBy,
+      allSubmissions,
+    } = this.state;
+
+    const { token } = this.props;
     return (
       <SubmissionContainer>
         <TabHeader>
@@ -146,7 +160,17 @@ class ArtistSubmissions extends Component {
           <ArtCardContainer>
             {allSubmissions.length > 0 ? (
               allSubmissions.map((submissionDetails, i) => {
-                return <ArtCard key={i} {...submissionDetails} delay={i} />;
+                return (
+                  <ArtCard
+                    key={i}
+                    {...submissionDetails}
+                    delay={i}
+                    token={token}
+                    openModal={(e) =>
+                      this.handleOpenModal({ ...submissionDetails })
+                    }
+                  />
+                );
               })
             ) : (
               <h2>Hey Do you don't have any artwork Submit some!</h2>
