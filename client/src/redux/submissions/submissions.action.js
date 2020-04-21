@@ -40,7 +40,7 @@ export const setAllSubmissionsDetails = (submissionsDetailsArr) => ({
  * @param {InputFile} formData.artFile     The psd file of the artwork
  */
 export const submissionCreateStart = (formData) => ({
-  type: SubmissionActionTypes.SUBMISSION_START,
+  type: SubmissionActionTypes.SUBMISSION_CREATE_START,
   payload: formData,
 });
 
