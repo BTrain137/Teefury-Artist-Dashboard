@@ -10,7 +10,7 @@ import {
   selectSubmissionsSuccessAlert,
 } from "../../redux/submissions/submissions.selector";
 import {
-  submissionStart,
+  submissionCreateStart,
   submissionErrorAlertClear,
   submissionSuccessAlertClear,
 } from "../../redux/submissions/submissions.action";
@@ -101,7 +101,7 @@ class ArtistSubmitArt extends Component {
   };
 
   _submitArtwork = () => {
-    const { submissionStart } = this.props;
+    const { submissionCreateStart } = this.props;
     const { elements } = this.artworkSubmissionForm.current;
     const inputsDOM = Array.from(elements);
 
@@ -116,7 +116,7 @@ class ArtistSubmitArt extends Component {
       }
     });
 
-    submissionStart(formData);
+    submissionCreateStart(formData);
   };
 
   _generatePreviewImg = (file) => {
@@ -319,7 +319,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  submissionStart: (formData) => dispatch(submissionStart({ formData })),
+  submissionCreateStart: (formData) => dispatch(submissionCreateStart({ formData })),
   submissionErrorAlertClear: () => dispatch(submissionErrorAlertClear()),
   submissionSuccessAlertClear: () => dispatch(submissionSuccessAlertClear()),
 });
