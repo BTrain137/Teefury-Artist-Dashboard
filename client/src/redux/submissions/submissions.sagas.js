@@ -5,7 +5,7 @@ import SubmissionActionTypes from "./submissions.types";
 import { selectAllSubmissions } from "./submissions.selector";
 import {
   submissionSuccess,
-  submissionAdd,
+  // submissionAdd,
   submissionFailed,
   submissionErrorAlert,
   submissionSuccessAlert,
@@ -17,7 +17,7 @@ import {
 import { selectUserJWTToken } from "../user/user.selector";
 import { createOnlyNewBlobs, createAllBlobs } from "./submissions.utils";
 
-export function* submissionSubmit({ payload: { formData } }) {
+export function* submissionCreateStart({ payload: { formData } }) {
   try {
     const token = yield select(selectUserJWTToken);
     const {
@@ -37,9 +37,30 @@ export function* submissionSubmit({ payload: { formData } }) {
   }
 }
 
+export function* submissionEditStart({ payload: { formData } }) {
+  try {
+    const token = yield select(selectUserJWTToken);
+    const {
+      data: { submissionDetails },
+    } = yield axios.put(`/api/artist/submissions/${formData.get("id")}`, formData, {
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `JWT ${token}`,
+      },
+    });
+    yield put(submissionSuccess({ submissionDetails }));
+  } catch ({ response }) {
+    const { status, data } = response;
+    const { message } = data;
+    yield put(submissionFailed({ status, message }));
+    yield put(submissionErrorAlert(message));
+  }
+
+}
+
 // start and stop spinners
 export function* submissionComplete({ payload: { submissionDetails } }) {
-  yield put(submissionAdd(submissionDetails));
+  // yield put(submissionAdd(submissionDetails));
   yield put(
     submissionSuccessAlert("YAY your master piece has been added. Thank you!")
   );
@@ -85,8 +106,12 @@ export function* createBlobStart({ payload: { submissionsDetailsArr } }) {
   yield put(submissionsCreateBlobSuccess(submissionsWithBlobs));
 }
 
-export function* onSubmissionsStart() {
-  yield takeLatest(SubmissionActionTypes.SUBMISSION_START, submissionSubmit);
+export function* onSubmissionsCreateStart() {
+  yield takeLatest(SubmissionActionTypes.SUBMISSION_CREATE_START, submissionCreateStart);
+}
+
+export function* onSubmissionEditStart() {
+  yield takeLatest(SubmissionActionTypes.SUBMISSIONS_EDIT_START, submissionEditStart)
 }
 
 export function* onSubmissionsSuccess() {
@@ -112,7 +137,8 @@ export function* onSubmissionsCreateBlobStart() {
 
 export function* submissionsSaga() {
   yield all([
-    call(onSubmissionsStart),
+    call(onSubmissionsCreateStart),
+    call(onSubmissionEditStart),
     call(onSubmissionsSuccess),
     call(onSubmissionsGetAllStart),
     call(onSubmissionsCreateBlobStart),

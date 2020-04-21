@@ -1,8 +1,7 @@
 import React, { Component } from "react";
+import axios from "axios";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-
-import axios from "axios";
 
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 import { selectSubmissionsError } from "../../redux/submissions/submissions.selector";
@@ -38,6 +37,7 @@ class ArtistSubmissions extends Component {
       isShowingFilter: false,
       filterBy: "new",
       imageSrc: teefuryBirdLogo,
+      originalSubmissionsArr: [],
       allSubmissions: [],
       submissionCard: null,
     };
@@ -45,6 +45,10 @@ class ArtistSubmissions extends Component {
 
   componentDidMount() {
     this._getAllSubmissions();
+  }
+
+  componentWillUnmount() {
+    this.setState({ allSubmissions: [] });
   }
 
   handleChange = (event) => {
@@ -56,7 +60,19 @@ class ArtistSubmissions extends Component {
     const {
       dataset: { filter },
     } = event.target;
-    this.setState({ filterBy: filter });
+
+    const filteredSubmissions = this.state.originalSubmissionsArr.filter(
+      (sub) => {
+        if (filter === "new") return sub;
+        else return sub.status.toUpperCase() === filter.toUpperCase();
+      }
+    );
+
+    this.setState({
+      filterBy: filter,
+      isShowingFilter: false,
+      allSubmissions: filteredSubmissions,
+    });
   };
 
   toggleFilterArea = () => {
@@ -72,22 +88,14 @@ class ArtistSubmissions extends Component {
       headers: { Authorization: `JWT ${token}` },
     });
 
-    this.setState({ allSubmissions: submissionsDetailsArr });
-  };
-
-  handleOpenModal = (submission) => {
-    console.log(submission);
-    this.setState({ submissionCard: submission });
+    this.setState({
+      allSubmissions: submissionsDetailsArr,
+      originalSubmissionsArr: submissionsDetailsArr,
+    });
   };
 
   render() {
-
-    const {
-      search,
-      isShowingFilter,
-      filterBy,
-      allSubmissions,
-    } = this.state;
+    const { search, isShowingFilter, filterBy, allSubmissions } = this.state;
 
     const { token } = this.props;
     return (
@@ -166,9 +174,6 @@ class ArtistSubmissions extends Component {
                     {...submissionDetails}
                     delay={i}
                     token={token}
-                    openModal={(e) =>
-                      this.handleOpenModal({ ...submissionDetails })
-                    }
                   />
                 );
               })

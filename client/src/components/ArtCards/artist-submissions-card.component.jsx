@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 
 import {
@@ -8,7 +9,7 @@ import {
   CardFooter,
 } from "./artist-submissions-card.styles";
 
-const ArtistArtCard = ({ token, previewArt, delay, openModal }) => {
+const ArtistArtCard = ({ token, previewArt, delay, status, id }) => {
   const [imageSrc, setImageSrc] = useState("");
 
   useEffect(() => {
@@ -34,7 +35,11 @@ const ArtistArtCard = ({ token, previewArt, delay, openModal }) => {
           alt="test"
           loaded={imageSrc ? true : false}
         />
-        <CardFooter onClick={openModal}>VIEW OR EDIT</CardFooter>
+        {status === "PENDING" ? (
+          <Link to={`/artist/submissions/edit/${id}`}>
+            <CardFooter>VIEW OR EDIT</CardFooter>
+          </Link>
+        ) : null}
       </CardWrapper>
     </CardContainer>
   );

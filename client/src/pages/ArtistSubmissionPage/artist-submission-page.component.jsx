@@ -4,8 +4,12 @@ import { Switch, Route, useRouteMatch } from "react-router-dom";
 import Nav from "../../components/Nav/nav.component";
 import ArtistSubmitArt from "../../components/ArtistSubmitArt";
 import ArtistSubmissions from "../../components/ArtistSubmissions";
+import ArtistSubmissionsEdit from "../../components/ArtistSubmissionsEdit";
 
-import { ArtistContainer, SubmissionWrapper } from "./artist-submission-page.styles";
+import {
+  ArtistContainer,
+  SubmissionWrapper,
+} from "./artist-submission-page.styles";
 
 const ArtistSubmissionPage = () => {
   const { path } = useRouteMatch();
@@ -21,6 +25,11 @@ const ArtistSubmissionPage = () => {
         <Route exact path={`${path}/all`}>
           <SubmissionWrapper>
             <ArtistSubmissions />
+          </SubmissionWrapper>
+        </Route>
+        <Route path={`${path}/edit/:id`}>
+          <SubmissionWrapper>
+            <ArtistSubmissionsEdit />
           </SubmissionWrapper>
         </Route>
       </Switch>

@@ -30,6 +30,12 @@ const upload = multer({
   dest: FILE_DIRECTORY,
 });
 
+// Multer upload
+const cpUpload = upload.fields([
+  { name: "artFile", maxCount: 1 },
+  { name: "previewArt", maxCount: 1 },
+]);
+
 // Single File, Just artFile
 router.post(
   "/submit-art-file",
@@ -86,11 +92,6 @@ router.post(
     }
   }
 );
-
-const cpUpload = upload.fields([
-  { name: "artFile", maxCount: 1 },
-  { name: "previewArt", maxCount: 1 },
-]);
 
 // Upload multiple files
 router.post(
@@ -184,6 +185,116 @@ router.get(
       conn.end();
 
       res.status(200).json({ submissionsDetailsArr });
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+// Get one submissions to edit
+router.get(
+  "/submissions/:id",
+  passport.authenticate("jwt"),
+  async (req, res, next) => {
+    const { artistName } = req.user;
+    const { id } = req.params;
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const queryString =
+        "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
+        "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
+        "`created_at` AS `createdAt` FROM `submissions` WHERE `id`=?";
+      /**
+       * @return {SubmissionDetails}
+       */
+      const [submissionDetails] = await pool.query(queryString, [id]);
+      conn.end();
+
+      if (submissionDetails.artistName === artistName) {
+        res.status(200).json({ submissionDetails });
+      } else {
+        res.status(401).json({
+          message: "Artwork not found",
+        });
+      }
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+// Update Submissions
+router.put(
+  "/submissions/:id",
+  passport.authenticate("jwt"),
+  cpUpload,
+  async (req, res, next) => {
+    const { id, title, description } = req.body;
+    const { cleanArtistName } = req.user;
+
+    let conn;
+
+    const [artFile] = req.files["artFile"];
+    const [previewArt] = req.files["previewArt"];
+
+    const artistDirectory = `${FILE_DIRECTORY}/${cleanArtistName}`;
+    const artFileNewPath = `${artistDirectory}/${Date.now()}_${cleanFileName(
+      artFile.originalname
+    )}`;
+    const previewArtNewPath = `${artistDirectory}/${Date.now()}_${cleanFileName(
+      previewArt.originalname
+    )}`;
+
+    try {
+      conn = await pool.getConnection();
+
+      // Delete old art files path
+      const getOldArtFileLocation =
+        "SELECT `art_file` AS `artFile`, `preview_art` AS `previewArt` " +
+        "FROM `submissions` WHERE `id`=?";
+
+      const [oldArtwork] = await pool.query(getOldArtFileLocation, [id]);
+      const { artFile: oldArtFile, previewArt: oldPreviewArt } = oldArtwork;
+
+      // Create file first
+      fs.renameSync(artFile.path, artFileNewPath);
+      fs.renameSync(previewArt.path, previewArtNewPath);
+
+      // Then delete old files
+      fs.unlinkSync(oldArtFile.replace("/api/", ""));
+      fs.unlinkSync(oldPreviewArt.replace("/api/", ""));
+
+      // Update Table
+      const queryString =
+        "UPDATE `submissions` SET `title`=?, `description`=?, `art_file`=?, " +
+        "`preview_art`=? WHERE `id`=?";
+
+      const updateValues = [
+        title,
+        description,
+        `/api/${artFileNewPath}`,
+        `/api/${previewArtNewPath}`,
+        id,
+      ];
+
+      const result = await pool.query(queryString, updateValues);
+
+      conn.end();
+
+      console.log({ result });
+      const { affectedRows } = result;
+
+      if (affectedRows > 1) {
+        // TODO: If more than 1 row is affected do something
+        console.log(artistName, req.user);
+      }
+
+      res.status(200).json({
+        message: "Successfully updated.",
+      });
     } catch (error) {
       conn.end();
       next(error);

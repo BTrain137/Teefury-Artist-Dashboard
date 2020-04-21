@@ -39,8 +39,22 @@ export const setAllSubmissionsDetails = (submissionsDetailsArr) => ({
  * @param {InputFile} formData.previewArt  The preview artwork in jpg or png
  * @param {InputFile} formData.artFile     The psd file of the artwork
  */
-export const submissionStart = (formData) => ({
+export const submissionCreateStart = (formData) => ({
   type: SubmissionActionTypes.SUBMISSION_START,
+  payload: formData,
+});
+
+/**
+ * @param {FormData}  formData             form data object.
+ * @param {String}    formData.id          Id of the submission to edit
+ * @param {String}    formData.artistName  Artist Name associated to the artwork
+ * @param {String }   formData.title       Title of the art piece
+ * @param {String}    formData.description Art work description
+ * @param {InputFile} formData.previewArt  The preview artwork in jpg or png
+ * @param {InputFile} formData.artFile     The psd file of the artwork
+ */
+export const submissionsEditStart = (formData) => ({
+  type: SubmissionActionTypes.SUBMISSIONS_EDIT_START,
   payload: formData,
 });
 

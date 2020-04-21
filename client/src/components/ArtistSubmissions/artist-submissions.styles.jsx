@@ -90,6 +90,7 @@ export const FilterContainer = styled.div`
   padding: 18px 20px 18px 0;
   border-radius: 12px;
   box-shadow: 0px 3px 11px 1px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
 
   .selected {
     background-color: #dedddd;
