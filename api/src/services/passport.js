@@ -149,6 +149,7 @@ passport.use(
   "jwt",
   new JWTStrategy(JWTOpts, async (jwt_payload, done) => {
     const { id, cleanArtistName, artistName } = jwt_payload;
+    console.log("Ln 152 - passport.js :",{ jwt_payload });
     let conn;
 
     try {

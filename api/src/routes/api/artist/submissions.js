@@ -102,64 +102,69 @@ router.post(
     const { title, description } = req.body;
     const { contactEmail, cleanArtistName, artistName } = req.user;
 
-    const [artFile] = req.files["artFile"];
-    const [previewArt] = req.files["previewArt"];
+    // const [artFile] = req.files["artFile"];
+    // const [previewArt] = req.files["previewArt"];
 
-    const artistDirectory = `${FILE_DIRECTORY}/${cleanArtistName}`;
-    const artFileNewPath = `${artistDirectory}/${Date.now()}_${cleanFileName(
-      artFile.originalname
-    )}`;
-    const previewArtNewPath = `${artistDirectory}/${Date.now()}_${cleanFileName(
-      previewArt.originalname
-    )}`;
+    // const artistDirectory = `${FILE_DIRECTORY}/${cleanArtistName}`;
+    // const artFileNewPath = `${artistDirectory}/${Date.now()}_${cleanFileName(
+    //   artFile.originalname
+    // )}`;
+    // const previewArtNewPath = `${artistDirectory}/${Date.now()}_${cleanFileName(
+    //   previewArt.originalname
+    // )}`;
+
+    console.log("Ln 116 - submissions.js: ", { title, description });
+    console.log("Ln 117 - submissions.js: ", { contactEmail, cleanArtistName, artistName });
+
+    res.sendStatus(200);
 
     let conn;
-    try {
-      // Create Artist Directory if not exist
-      !fs.existsSync(artistDirectory) && fs.mkdirSync(artistDirectory);
-      conn = await pool.getConnection();
+    // try {
+    //   // Create Artist Directory if not exist
+    //   !fs.existsSync(artistDirectory) && fs.mkdirSync(artistDirectory);
+    //   conn = await pool.getConnection();
 
-      fs.renameSync(artFile.path, artFileNewPath);
-      fs.renameSync(previewArt.path, previewArtNewPath);
+    //   fs.renameSync(artFile.path, artFileNewPath);
+    //   fs.renameSync(previewArt.path, previewArtNewPath);
 
-      const insertQueryString =
-        "INSERT INTO `submissions` (`artist_name`, `username_contact_email`, " +
-        "`title`, `description`, `art_file`, `preview_art`) VALUES (?,?,?,?,?,?)";
+    //   const insertQueryString =
+    //     "INSERT INTO `submissions` (`artist_name`, `username_contact_email`, " +
+    //     "`title`, `description`, `art_file`, `preview_art`) VALUES (?,?,?,?,?,?)";
 
-      const insertValues = [
-        artistName,
-        contactEmail,
-        title,
-        description,
-        `/api/${artFileNewPath}`,
-        `/api/${previewArtNewPath}`,
-      ];
+    //   const insertValues = [
+    //     artistName,
+    //     contactEmail,
+    //     title,
+    //     description,
+    //     `/api/${artFileNewPath}`,
+    //     `/api/${previewArtNewPath}`,
+    //   ];
 
-      /**
-       * @return {InsertDatabaseResponse}
-       */
-      const { insertId } = await pool.query(insertQueryString, insertValues);
+    //   /**
+    //    * @return {InsertDatabaseResponse}
+    //    */
+    //   const { insertId } = await pool.query(insertQueryString, insertValues);
 
-      const selectQueryString =
-        "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
-        "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
-        "`created_at` AS `createdAt` FROM `submissions` WHERE `id`=?";
-      /**
-       * @return {SubmissionDetails}
-       */
-      const [submissionDetails] = await pool.query(selectQueryString, [
-        insertId,
-      ]);
+    //   const selectQueryString =
+    //     "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
+    //     "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
+    //     "`created_at` AS `createdAt` FROM `submissions` WHERE `id`=?";
+    //   /**
+    //    * @return {SubmissionDetails}
+    //    */
+    //   const [submissionDetails] = await pool.query(selectQueryString, [
+    //     insertId,
+    //   ]);
 
-      conn.end();
-      /**
-       * @returns {SubmissionDetails[]}
-       */
-      res.status(200).json({ submissionDetails });
-    } catch (error) {
-      conn.end();
-      next(error);
-    }
+    //   conn.end();
+    //   /**
+    //    * @returns {SubmissionDetails[]}
+    //    */
+    //   res.status(200).json({ submissionDetails });
+    // } catch (error) {
+    //   conn.end();
+    //   next(error);
+    // }
   }
 );
 

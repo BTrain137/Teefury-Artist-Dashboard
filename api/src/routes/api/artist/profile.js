@@ -239,7 +239,7 @@ router.delete(
 
       if (affectedRows > 1) {
         // TODO: Report why there are more than 1 items deleted
-        console.log({ user_id: id, contactEmail });
+        console.log({ id: id, contactEmail });
       }
 
       res.sendStatus(200);
