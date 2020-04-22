@@ -217,7 +217,7 @@ class ArtistSubmitArt extends Component {
           >
             <SubmitCard>
               <h4 style={{ color: "#6A6A6A" }}>Preview Image</h4>
-              {/* <label htmlFor="preview-art">
+              <label htmlFor="preview-art">
                 <InputArtPreview
                   id="preview-art"
                   type="file"
@@ -243,8 +243,8 @@ class ArtistSubmitArt extends Component {
                     </ArtPreview>
                   )}
                 </InputArtPreview>
-              </label> */}
-              {/* <label htmlFor="art-file">
+              </label>
+              <label htmlFor="art-file">
                 <InputArtFile
                   id="art-file"
                   type="file"
@@ -255,7 +255,7 @@ class ArtistSubmitArt extends Component {
                 >
                   {artFileName}
                 </InputArtFile>
-              </label> */}
+              </label>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <IconTopSubtitle>ai, psd, or eps at 300 dpi</IconTopSubtitle>
               </div>
