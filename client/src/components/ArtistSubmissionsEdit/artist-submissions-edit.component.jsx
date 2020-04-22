@@ -19,6 +19,7 @@ import {
 } from "../../redux/submissions/submissions.action";
 
 import { ReactComponent as Upload } from "../../assets/upload.svg";
+import { ReactComponent as Loading } from "../../assets/loading.svg";
 import { InputArtFile, BtnArtSubmit, InputArtPreview } from "../Button";
 
 import {
@@ -54,6 +55,7 @@ class ArtistSubmitArt extends Component {
       description: "",
       artFileName: "ART FILE",
       artPreviewImg: "",
+      artHasSubmitted: false,
       isDisableSubmit: false,
     };
   }
@@ -125,6 +127,14 @@ class ArtistSubmitArt extends Component {
     });
 
     submissionsEditStart(formData);
+    Swal.fire({
+      icon: "warning",
+      text:
+        "Please be patient!!! Don't close this window these are large files.",
+      showConfirmButton: false,
+    });
+
+    this.setState({ artHasSubmitted: true });
   };
 
   _generatePreviewImg = (file) => {
@@ -161,6 +171,7 @@ class ArtistSubmitArt extends Component {
       description: "",
       artFileName: "ART FILE",
       artPreviewImg: "",
+      artHasSubmitted: false,
       isDisableSubmit: false,
     });
   };
@@ -237,6 +248,7 @@ class ArtistSubmitArt extends Component {
       description,
       isDisableSubmit,
       artPreviewImg,
+      artHasSubmitted,
       artFileName,
     } = this.state;
 
@@ -346,14 +358,31 @@ class ArtistSubmitArt extends Component {
                   maxlength="255"
                   required
                 />
-                <BtnArtSubmit
-                  type="submit"
-                  disabled={isDisableSubmit}
-                  textAlign="right"
-                  style={{ backgroundColor: "#0B7C80", cursor: "pointer" }}
-                >
-                  SUBMIT
-                </BtnArtSubmit>
+                {artHasSubmitted ? (
+                  <BtnArtSubmit
+                    type="submit"
+                    disabled={true}
+                    textAlign="right"
+                    style={{
+                      backgroundColor: "#0B7C80",
+                      cursor: "pointer",
+                      width: "95px",
+                      height: "45px",
+                      padding: "0",
+                    }}
+                  >
+                    <Loading />
+                  </BtnArtSubmit>
+                ) : (
+                  <BtnArtSubmit
+                    type="submit"
+                    disabled={isDisableSubmit}
+                    textAlign="right"
+                    style={{ backgroundColor: "#0B7C80", cursor: "pointer" }}
+                  >
+                    Submit
+                  </BtnArtSubmit>
+                )}
               </div>
             </SubmitCard>
           </FormArtistSubmit>
