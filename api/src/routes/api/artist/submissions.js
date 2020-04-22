@@ -113,12 +113,6 @@ router.post(
       previewArt.originalname
     )}`;
 
-    console.log("Ln 116 - submissions.js: ", { title, description });
-    console.log("Ln 117 - submissions.js: ", { contactEmail, cleanArtistName, artistName });
-    console.log("Ln 118 - submissions.js: ", { contactEmail, cleanArtistName, artistName });
-    console.log("Ln 119 - submissions.js: ", { artFileNewPath });
-    console.log("Ln 120 - submissions.js: ", { previewArtNewPath });
-
     let conn;
     try {
       // Create Artist Directory if not exist
@@ -286,12 +280,9 @@ router.put(
         id,
       ];
 
-      const result = await pool.query(queryString, updateValues);
+      const { affectedRows } = await pool.query(queryString, updateValues);
 
       conn.end();
-
-      console.log({ result });
-      const { affectedRows } = result;
 
       if (affectedRows > 1) {
         // TODO: If more than 1 row is affected do something
