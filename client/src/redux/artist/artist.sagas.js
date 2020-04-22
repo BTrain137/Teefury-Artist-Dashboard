@@ -10,6 +10,7 @@ import {
   updateArtistProfileSuccess,
 } from "./artist.action";
 import { selectUserJWTToken } from "../user/user.selector";
+import { setUserJWTToken } from "../user/user.action";
 
 export function* setArtistProfileWithDetails({ payload: { artistProfile } }) {
   yield put(setArtistProfile(artistProfile));
@@ -19,11 +20,12 @@ export function* createArtistProfile({ payload: { reqBody } }) {
   try {
     const token = yield select(selectUserJWTToken);
     const {
-      data: { artistProfile },
+      data: { artistProfile, token: newToken },
     } = yield axios.post("/api/artist/profile", reqBody, {
       headers: { Authorization: `JWT ${token}` },
     });
     yield put(createArtistProfileSuccess({ artistProfile }));
+    yield put(setUserJWTToken(newToken));
   } catch (error) {
     const { status, message } = error.response.data;
     yield put(artistProfileFailure({ status, messages: [message] }));
@@ -33,6 +35,7 @@ export function* createArtistProfile({ payload: { reqBody } }) {
 export function* getArtistProfile() {
   try {
     const token = yield select(selectUserJWTToken);
+    console.log({token});
     const {
       data: { artistProfile },
     } = yield axios.get("/api/artist/profile", {

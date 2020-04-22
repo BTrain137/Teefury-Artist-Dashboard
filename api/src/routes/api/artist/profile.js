@@ -1,6 +1,9 @@
 import express from "express";
-import pool from "../../../database/connection";
 import passport from "passport";
+import jwt from "jsonwebtoken";
+import pool from "../../../database/connection";
+import { secret } from "../../../services/jwtConfig";
+import { cleanStringShopify } from "../../../utils/cleanData";
 
 /**
  * Complete Artist Profile
@@ -73,7 +76,14 @@ router.post(
       isInternational,
     } = req.body;
 
-    const { contactEmail } = req.user;
+    const { id, contactEmail, is_admin } = req.user;
+
+    // Update Token
+    const jwtToken = {
+      id,
+      contactEmail,
+      is_admin,
+    };
 
     try {
       conn = await pool.getConnection();
@@ -126,12 +136,20 @@ router.post(
         : false;
       delete artistProfile.international;
 
+      jwtToken.cleanArtistName = cleanStringShopify(artistProfile.artistName);
+      jwtToken.artistName = artistProfile.artistName;
+
+      const token = jwt.sign(jwtToken, secret, {
+        expiresIn: 60 * 60 * 24 * 90,
+      });
+
       /**
        * @return {message:String, artistProfile:ArtistProfile}
        */
       res.status(200).json({
         message: "Artist Created",
         artistProfile,
+        token,
       });
     } catch (error) {
       conn.end();
