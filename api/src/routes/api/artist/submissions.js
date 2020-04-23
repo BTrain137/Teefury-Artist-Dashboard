@@ -1,7 +1,7 @@
 import fs from "fs";
 import express from "express";
 import multer from "multer";
-import { cleanFileName, cleanStringShopify } from "../../../utils/cleanData";
+import { cleanFileName, } from "../../../utils/cleanData";
 import passport from "passport";
 import pool from "../../../database/connection";
 
