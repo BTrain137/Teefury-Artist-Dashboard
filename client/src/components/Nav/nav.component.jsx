@@ -1,22 +1,22 @@
 import React from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { selectUserAccount } from "../../redux/user/user.selector";
 
 import { ReactComponent as BellIcon } from "../../assets/bell.svg";
 import { ReactComponent as CogIcon } from "../../assets/cog.svg";
+import { ReactComponent as ApprovalIcon } from "../../assets/approval.svg";
+import { ReactComponent as SignoutIcon } from "../../assets/signout.svg";
 import { ReactComponent as ComputerIcon } from "../../assets/computer.svg";
 import { ReactComponent as HouseIcon } from "../../assets/house.svg";
 import { NavItemLink, NavItemStyle } from "../NavItem/nav-item.component";
 import SignOut from "../Signout/signout.component";
 
-import {
-  NavHeader,
-  NavWrapper,
-  Title,
-  LogoImg,
-  Subtitle,
-} from "./nav.styles";
+import { NavHeader, NavWrapper, Title, LogoImg, Subtitle } from "./nav.styles";
 import logo from "../../assets/logo.png";
 
-const Nav = () => (
+const Nav = ({ userAccount }) => (
   <NavHeader>
     <Title>
       <LogoImg src={logo} alt="Teefury Logo" />
@@ -48,11 +48,24 @@ const Nav = () => (
       >
         Notifications
       </NavItemLink>
-      <NavItemStyle>
+      {userAccount.isAdmin ? (
+        <NavItemLink
+          to="/admin/art-submissions"
+          pathToMatch="/art-submissions"
+          Icon={ApprovalIcon}
+        >
+          Art Review
+        </NavItemLink>
+      ) : null}
+      <NavItemStyle Icon={SignoutIcon}>
         <SignOut />
       </NavItemStyle>
     </NavWrapper>
   </NavHeader>
 );
 
-export default Nav;
+const mapStateToProps = createStructuredSelector({
+  userAccount: selectUserAccount,
+});
+
+export default connect(mapStateToProps)(Nav);
