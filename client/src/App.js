@@ -22,7 +22,7 @@ function App() {
       <Route path="/artist/submissions" component={ArtistSubmissionPage} />
       <Route exact path="/artist/commissions" component={ArtistProfilePage} />
       {/* <Route exact path="/artist/notifications" component={ArtistProfilePage} /> */}
-      <Route exact path="/admin/art-submissions" component={AdminPage} />
+      <Route path="/admin/art-submissions" component={AdminPage} />
     </Switch>
   );
 }
