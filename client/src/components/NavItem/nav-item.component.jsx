@@ -23,18 +23,14 @@ export const NavItemLink = ({
       {path.includes(pathToMatch) ? (
         <LinkWrapperSelected {...otherProps}>
           <LinkAnchorSelected to={to}>
-            <LogoWrapper>
-              <Icon />
-            </LogoWrapper>
+            <LogoWrapper>{Icon ? <Icon /> : null}</LogoWrapper>
             {children}
           </LinkAnchorSelected>
         </LinkWrapperSelected>
       ) : (
         <LinkWrapper {...otherProps}>
           <LinkAnchor to={to}>
-            <LogoWrapper>
-              <Icon />
-            </LogoWrapper>
+            <LogoWrapper>{Icon ? <Icon /> : null}</LogoWrapper>
             {children}
           </LinkAnchor>
         </LinkWrapper>
