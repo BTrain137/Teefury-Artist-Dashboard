@@ -19,9 +19,7 @@ const ArtistArtCard = ({ token, previewArt, delay, status, id }) => {
           return res.blob();
         })
         .then((blob) => {
-          setTimeout(() => {
-            setImageSrc(URL.createObjectURL(blob));
-          }, (delay * 300 + 500) % 3500);
+          setImageSrc(URL.createObjectURL(blob));
         });
     };
     fetchImage();
@@ -36,8 +34,8 @@ const ArtistArtCard = ({ token, previewArt, delay, status, id }) => {
           loaded={imageSrc ? true : false}
         />
         {status === "PENDING" ? (
-          <Link to={`/artist/submissions/edit/${id}`}>
-            <CardFooter>VIEW OR EDIT</CardFooter>
+          <Link to={`/artist/submissions/review/${id}`}>
+            <CardFooter>Review Artwork</CardFooter>
           </Link>
         ) : null}
       </CardWrapper>
