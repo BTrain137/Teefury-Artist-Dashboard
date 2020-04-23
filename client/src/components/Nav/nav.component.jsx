@@ -4,7 +4,7 @@ import { createStructuredSelector } from "reselect";
 
 import { selectUserAccount } from "../../redux/user/user.selector";
 
-import { ReactComponent as BellIcon } from "../../assets/bell.svg";
+// import { ReactComponent as BellIcon } from "../../assets/bell.svg";
 import { ReactComponent as CogIcon } from "../../assets/cog.svg";
 import { ReactComponent as ApprovalIcon } from "../../assets/approval.svg";
 import { ReactComponent as SignoutIcon } from "../../assets/signout.svg";
