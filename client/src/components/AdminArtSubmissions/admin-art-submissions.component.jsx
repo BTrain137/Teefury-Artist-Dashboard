@@ -31,10 +31,10 @@ class AdminApproval extends Component {
       startAt: 0,
       search: "",
       isShowingFilter: false,
-      filterBy: "new",
+      filterBy: "pending",
       imageSrc: teefuryBirdLogo,
       originalSubmissionsArr: [],
-      newSubmissions: [],
+      filteredSubmissions: [],
     };
   }
 
@@ -43,7 +43,7 @@ class AdminApproval extends Component {
   }
 
   componentWillUnmount() {
-    this.setState({ newSubmissions: [] });
+    this.setState({ filteredSubmissions: [] });
   }
 
   handleChange = (event) => {
@@ -58,7 +58,7 @@ class AdminApproval extends Component {
 
     const filteredSubmissions = this.state.originalSubmissionsArr.filter(
       (sub) => {
-        if (filter === "new") return sub;
+        if (filter === "all") return sub;
         else return sub.status.toUpperCase() === filter.toUpperCase();
       }
     );
@@ -66,7 +66,7 @@ class AdminApproval extends Component {
     this.setState({
       filterBy: filter,
       isShowingFilter: false,
-      newSubmissions: filteredSubmissions,
+      filteredSubmissions: filteredSubmissions,
     });
   };
 
@@ -88,14 +88,23 @@ class AdminApproval extends Component {
       }
     );
 
+    const onLoadFilterPending = submissionsDetailsArr.filter(
+      (sub) => sub.status.toUpperCase() === "PENDING"
+    );
+
     this.setState({
-      newSubmissions: submissionsDetailsArr,
+      filteredSubmissions: onLoadFilterPending,
       originalSubmissionsArr: submissionsDetailsArr,
     });
   };
 
   render() {
-    const { search, isShowingFilter, filterBy, newSubmissions } = this.state;
+    const {
+      search,
+      isShowingFilter,
+      filterBy,
+      filteredSubmissions,
+    } = this.state;
 
     const { token } = this.props;
     return (
@@ -122,8 +131,8 @@ class AdminApproval extends Component {
             {isShowingFilter ? (
               <FilterContainer>
                 <FilterBtn
-                  data-filter="new"
-                  className={filterBy === "new" ? "selected" : ""}
+                  data-filter="all"
+                  className={filterBy === "all" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
                   ALL
@@ -133,21 +142,23 @@ class AdminApproval extends Component {
                   className={filterBy === "pending" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
-                  PENDING
+                  NEW
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="reviewed"
-                  className={filterBy === "reviewed" ? "selected" : ""}
+                  data-filter="approved - gallery"
+                  className={
+                    filterBy === "approved - gallery" ? "selected" : ""
+                  }
                   onClick={this.handleClick}
                 >
-                  REVIEWED
+                  APPROVED GALLERY
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="approved"
-                  className={filterBy === "approved" ? "selected" : ""}
+                  data-filter="approved - daily"
+                  className={filterBy === "approved - daily" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
-                  APPROVED
+                  APPROVED DAILY
                 </FilterBtn>
                 <FilterBtn
                   data-filter="declined"
@@ -160,8 +171,8 @@ class AdminApproval extends Component {
             ) : null}
           </FilterHeader>
           <ArtCardContainer>
-            {newSubmissions.length > 0 ? (
-              newSubmissions.map((submissionDetails, i) => {
+            {filteredSubmissions.length > 0 ? (
+              filteredSubmissions.map((submissionDetails, i) => {
                 return (
                   <ArtCard
                     key={i}

@@ -1,5 +1,4 @@
-import styled, { css } from "styled-components";
-import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 export const SubmissionContainer = styled.div`
   width: 90%;
@@ -47,7 +46,7 @@ export const AdjustableIconWrapper = styled.div`
 
 export const FilterContainer = styled.div`
   position: absolute;
-  bottom: -220px;
+  bottom: -250px;
   right: -20px;
   z-index: 5;
   max-width: 170px;
