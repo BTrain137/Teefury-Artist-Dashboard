@@ -5,6 +5,7 @@ export const CardContainer = styled.div``;
 export const CardWrapper = styled.figure`
   position: relative;
   transition: transform 0.2s ease-in-out;
+  display: flex;
 
   &:hover {
     transform: scale(1.2);
@@ -41,4 +42,20 @@ export const CardFooter = styled.figcaption`
   border-radius: 0px 0px 28px 28px;
   cursor: pointer;
   display: none;
+`;
+
+export const Figcaption = styled.figcaption`
+  margin-left: 20px;
+`;
+
+export const ArtTitle = styled.h2`
+  font-family: sans-serif;
+`;
+
+export const ArtHeaders = styled.h3`
+  margin-top: 0;
+`;
+
+export const Caption = styled.span`
+  font-size: 12px;
 `;

@@ -7,9 +7,20 @@ import {
   CardWrapper,
   ImgCard,
   CardFooter,
+  Figcaption,
+  ArtTitle,
+  Caption,
+  ArtHeaders,
 } from "./art-submissions-card.styles";
 
-const ArtistArtCard = ({ token, previewArt, delay, status, id }) => {
+const ArtistArtCard = ({
+  token,
+  previewArt,
+  id,
+  artistName,
+  title,
+  createdAt,
+}) => {
   const [imageSrc, setImageSrc] = useState("");
 
   useEffect(() => {
@@ -23,7 +34,7 @@ const ArtistArtCard = ({ token, previewArt, delay, status, id }) => {
         });
     };
     fetchImage();
-  }, [token, previewArt, delay]);
+  }, [token, previewArt]);
 
   return (
     <CardContainer>
@@ -33,11 +44,18 @@ const ArtistArtCard = ({ token, previewArt, delay, status, id }) => {
           alt="test"
           loaded={imageSrc ? true : false}
         />
-        {status === "PENDING" ? (
-          <Link to={`/artist/submissions/review/${id}`}>
-            <CardFooter>Review Artwork</CardFooter>
-          </Link>
-        ) : null}
+        <Figcaption>
+          <ArtTitle>{title.toUpperCase()}</ArtTitle>
+          <Caption>Artist:</Caption>
+          <ArtHeaders>{artistName}</ArtHeaders>
+          <Caption>Submitted on:</Caption>
+          <ArtHeaders style={{ fontSize: "14px" }}>
+            {new Date(createdAt).toLocaleString("en-US")}
+          </ArtHeaders>
+        </Figcaption>
+        <Link to={`/artist/submissions/review/${id}`}>
+          <CardFooter>Review Artwork</CardFooter>
+        </Link>
       </CardWrapper>
     </CardContainer>
   );
