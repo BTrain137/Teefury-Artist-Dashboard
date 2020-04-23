@@ -53,7 +53,7 @@ const ArtistArtCard = ({
             {new Date(createdAt).toLocaleString("en-US")}
           </ArtHeaders>
         </Figcaption>
-        <Link to={`/artist/submissions/review/${id}`}>
+        <Link to={`/admin/art-submissions/review/${id}`}>
           <CardFooter>Review Artwork</CardFooter>
         </Link>
       </CardWrapper>

@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 import Nav from "../../components/Nav/nav.component";
 import AdminArtSubmissions from "../../components/AdminArtSubmissions";
-import ArtistSubmissionsEdit from "../../components/ArtistSubmissionsEdit";
+import AdminArtApproval from "../../components/AdminArtApproval";
 
 import {
   ArtistContainer,
@@ -23,7 +23,7 @@ const AdminPage = () => {
         </Route>
         <Route path={`${path}/review/:id`}>
           <SubmissionWrapper>
-            <ArtistSubmissionsEdit />
+            <AdminArtApproval />
           </SubmissionWrapper>
         </Route>
       </Switch>
