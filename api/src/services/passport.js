@@ -237,3 +237,49 @@ passport.use(
     }
   })
 );
+
+/**
+ * @param {JWTToken} jwt_payload
+ */
+passport.use(
+  "jwt-admin",
+  new JWTStrategy(JWTOpts, async (jwt_payload, done) => {
+    const { id } = jwt_payload;
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+
+      const [user] = await pool.query(
+        "SELECT `id`, `is_admin`, " +
+          "`username_contact_email` AS `contactEmail` " +
+          "FROM `users` WHERE `id`=?",
+        [id]
+      );
+      conn.end();
+
+      if(!user.is_admin) {
+        return done(null, false, {
+          message: "Not Admin",
+          status: 401,
+        });
+      }
+
+      if (user) {
+        /**
+         * @return {JWTReqUser}
+         */
+        return done(null, { ...user });
+      } else {
+        // 401 Unauthorized would be sent to user
+        return done(null, false, {
+          message: "Unable To Locate User.",
+          status: 401,
+        });
+      }
+    } catch (error) {
+      conn.end();
+      done(error);
+    }
+  })
+);
