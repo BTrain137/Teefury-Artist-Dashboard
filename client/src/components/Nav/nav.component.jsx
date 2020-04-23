@@ -41,13 +41,13 @@ const Nav = ({ userAccount }) => (
       >
         Commissions
       </NavItemLink>
-      <NavItemLink
+      {/* <NavItemLink
         to="/artist/notifications"
         pathToMatch="/notifications"
         Icon={BellIcon}
       >
         Notifications
-      </NavItemLink>
+      </NavItemLink> */}
       {userAccount.isAdmin ? (
         <NavItemLink
           to="/admin/art-submissions"
