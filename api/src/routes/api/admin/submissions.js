@@ -1,6 +1,20 @@
 import express from "express";
 import passport from "passport";
 import pool from "../../../database/connection";
+import { sendMail } from "../../../services/email";
+
+/**
+ * Database quires return an array. Even if 1 item exist.
+ * @typedef {{
+ *   artFile:String,
+ *   artistName:String,
+ *   description:String,
+ *   previewArt:String,
+ *   status:String,
+ *   title:String,
+ * }} SubmissionDetails
+ *
+ */
 
 const router = express.Router();
 
@@ -55,15 +69,55 @@ router.get(
       /**
        * @return {SubmissionDetails}
        */
-      const [submissionDetails] = await pool.query(queryString, [
-        submissionId,
-      ]);
+      const [submissionDetails] = await pool.query(queryString, [submissionId]);
 
       conn.end();
 
       res.status(200).json({ submissionDetails });
     } catch (error) {
       conn.end();
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/submissions/status",
+  passport.authenticate("jwt-admin"),
+  async (req, res) => {
+    const { id: submissionId, status } = req.params;
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+      const queryString =
+        "UPDATE `submissions` SET `status`= ?" + "WHERE `id`=?";
+
+      const { affectedRows } = await pool.query(queryString, [
+        status,
+        submissionId,
+      ]);
+
+      conn.end();
+
+      res.status(202);
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/submission/test",
+  // passport.authenticate("jwt-admin"),
+  async (req, res, next) => {
+    try {
+      const success = await sendMail("crazy_azndriver@yahoo.com", "What up");
+      console.log("success", success);
+      res.sendStatus(202);
+    } catch (error) {
+      console.log("error ", error);
       next(error);
     }
   }

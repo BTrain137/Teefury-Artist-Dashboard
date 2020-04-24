@@ -1,7 +1,9 @@
 import { Router } from "express";
 const router = Router();
-import artistSubmissions from "./submissions";
+import adminSubmissions from "./submissions";
+import adminEmail from "./email";
 
-router.use(artistSubmissions);
+router.use(adminEmail);
+router.use(adminSubmissions);
 
 export default router;
