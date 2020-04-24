@@ -40,10 +40,22 @@ const artSubmitCTA = css`
   font-weight: bold;
   background-color: #50b8bd;
   color: white;
+  cursor: pointer;
 `;
+
 export const BtnArtSubmitStyled = styled.button`
   ${artSubmitCTA}
 `;
+
+export const BtnArtSubmitLoadingStyled = styled.button`
+  ${artSubmitCTA}
+  ${(p) =>
+    p.loaded
+      ? null
+      : css`
+          padding: 0;
+        `}
+`
 
 export const InputArtPreviewWrapper = styled.div`
   // min-width: 290px;

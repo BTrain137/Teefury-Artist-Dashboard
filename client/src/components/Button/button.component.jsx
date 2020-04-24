@@ -6,6 +6,7 @@ import {
   ButtonMdStyled,
   ButtonSmStyled,
   BtnArtSubmitStyled,
+  BtnArtSubmitLoadingStyled,
   InputArtFileStyled,
   SpanStyled,
   InputArtPreviewWrapper,
@@ -49,4 +50,10 @@ export const InputArtPreview = ({ children, ...props }) => (
     {children}
     <InputArtFileStyled {...props} />
   </InputArtPreviewWrapper>
+);
+
+export const BtnArtSubmitLoading = ({ children, textAlign, ...props }) => (
+  <ButtonMdContainer style={{ textAlign }}>
+    <BtnArtSubmitLoadingStyled {...props}>{children}</BtnArtSubmitLoadingStyled>
+  </ButtonMdContainer>
 );
