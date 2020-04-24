@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post(
   "/submissions",
-  // passport.authenticate("jwt-admin"),
+  passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     const { startAt } = req.body;
     console.log(startAt);
@@ -40,7 +40,7 @@ router.post(
 
 router.get(
   "/submissions/review/:id",
-  // passport.authenticate("jwt-admin"),
+  passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     const { id: submissionId } = req.params;
     let conn;
