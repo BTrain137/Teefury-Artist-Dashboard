@@ -65,43 +65,43 @@ const reqLogin = (req, user, next) => {
           is_admin,
         };
 
-        if (!is_admin) {
-          let conn;
-          try {
-            conn = await pool.getConnection();
-            // TODO: Change up artist to full artist profile. No more basic
-            const [
-              artistProfile,
-            ] = await pool.query(
-              "SELECT `artist_name` AS `artistName`, " +
-                "`first_name` AS `firstName`, " +
-                "`last_name` AS `lastName`, " +
-                "`username_contact_email` AS `contactEmail`, " +
-                "`paypal_email` AS `paypalEmail`, " +
-                "`phone` AS `phoneNumber`, " +
-                "`social_facebook` AS `socialFacebook`, " +
-                "`social_instagram` AS `socialInstagram`, " +
-                "`social_twitter` AS `socialTwitter`, " +
-                "`international` FROM `artist_profile` " +
-                "WHERE `username_contact_email`=?",
-              [contactEmail]
+        let conn;
+        try {
+          conn = await pool.getConnection();
+          // TODO: Change up artist to full artist profile. No more basic
+          const [
+            artistProfile,
+          ] = await pool.query(
+            "SELECT `artist_name` AS `artistName`, " +
+              "`first_name` AS `firstName`, " +
+              "`last_name` AS `lastName`, " +
+              "`username_contact_email` AS `contactEmail`, " +
+              "`paypal_email` AS `paypalEmail`, " +
+              "`phone` AS `phoneNumber`, " +
+              "`social_facebook` AS `socialFacebook`, " +
+              "`social_instagram` AS `socialInstagram`, " +
+              "`social_twitter` AS `socialTwitter`, " +
+              "`international` FROM `artist_profile` " +
+              "WHERE `username_contact_email`=?",
+            [contactEmail]
+          );
+          conn.end();
+
+          if (artistProfile) {
+            artistProfile.isInternational = artistProfile.international
+              ? true
+              : false;
+            delete artistProfile.international;
+
+            userProfile.artistProfile = artistProfile;
+            jwtToken.cleanArtistName = cleanStringShopify(
+              artistProfile.artistName
             );
-            conn.end();
-
-            if (artistProfile) {
-              artistProfile.isInternational = artistProfile.international
-                ? true
-                : false;
-              delete artistProfile.international;
-
-              userProfile.artistProfile = artistProfile;
-              jwtToken.cleanArtistName =  cleanStringShopify(artistProfile.artistName);
-              jwtToken.artistName = artistProfile.artistName;
-            }
-          } catch (error) {
-            conn.end();
-            return next(error);
+            jwtToken.artistName = artistProfile.artistName;
           }
+        } catch (error) {
+          conn.end();
+          return next(error);
         }
 
         const token = jwt.sign(jwtToken, secret, {
