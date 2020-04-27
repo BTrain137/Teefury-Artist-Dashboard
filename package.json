@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel ./api/src -d ./api/dist",
     "client": "cd client && npm start",
-    "deploy": "npm install",
+    "deploy": "cd network && pm2 deploy production --force",
     "install": "cd client && npm install",
     "local-prod-code": "NODE_ENV=production npm run start:prod",
     "start-prod-server": "NODE_ENV=production nodemon --ignore 'client/*' ./api/src/index.js --exec babel-node -e js",
