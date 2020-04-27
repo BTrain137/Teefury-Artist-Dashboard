@@ -10,6 +10,7 @@ import { selectUserJWTToken } from "../../redux/user/user.selector";
 import { ReactComponent as UploadIcon } from "../../assets/upload.svg";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
 import { BtnArtSubmit, BtnArtSubmitLoading } from "../Button";
+import ApprovedEmail from "./approved-email.component";
 
 import {
   SubmissionContainer,
@@ -46,6 +47,8 @@ class ArtistSubmitArt extends Component {
       title: "",
       artHasSubmitted: false,
       isDisableSubmit: false,
+      isApproved: false,
+      isDenied: false,
     };
   }
 
@@ -114,6 +117,18 @@ class ArtistSubmitArt extends Component {
       });
   };
 
+  handleClickApproved = () => {
+    this.setState({
+      isApproved: true,
+    });
+  };
+
+  handleClickDeny = () => {
+    this.setState({
+      isDenied: true,
+    });
+  };
+
   render() {
     const {
       artFile,
@@ -121,16 +136,15 @@ class ArtistSubmitArt extends Component {
       artistName,
       createdAt,
       description,
-      // eslint-disable-next-line
-      id,
-      // eslint-disable-next-line
-      previewArt,
+      // id,
+      // previewArt,
       status,
       title,
-      artHasSubmitted,
-      isDisableSubmit,
+      // artHasSubmitted,
+      // isDisableSubmit,
       artPreviewImg,
       isEnlargeImg,
+      isApproved,
     } = this.state;
 
     return (
@@ -165,16 +179,6 @@ class ArtistSubmitArt extends Component {
               <BtnArtSubmitLoading
                 type="button"
                 textAlign="center"
-                style={{ width: "150px", height: "45px" }}
-                loaded={artPreviewImg}
-              >
-                <DownloadLink href={artPreviewImg} download>
-                  {artPreviewImg ? "Preview Image" : <LoadingIcon />}
-                </DownloadLink>
-              </BtnArtSubmitLoading>
-              <BtnArtSubmitLoading
-                type="button"
-                textAlign="center"
                 style={{ width: "95px", height: "45px" }}
               >
                 <DownloadLink href={artFileDownload} download>
@@ -201,34 +205,32 @@ class ArtistSubmitArt extends Component {
                 <GreyTextArea style={{ fontSize: "15px" }}>
                   {status}
                 </GreyTextArea>
-                {artHasSubmitted ? (
+                <div
+                  style={{ display: "flex", justifyContent: "space-around" }}
+                >
                   <BtnArtSubmit
                     type="submit"
-                    disabled={true}
                     textAlign="right"
-                    style={{
-                      backgroundColor: "#0B7C80",
-                      cursor: "pointer",
-                      width: "95px",
-                      height: "45px",
-                      padding: "0",
-                    }}
+                    style={{ backgroundColor: "rgb(0, 182, 6)" }}
+                    onClick={this.handleClickApproved}
                   >
-                    <LoadingIcon />
+                    Approve
                   </BtnArtSubmit>
-                ) : (
                   <BtnArtSubmit
                     type="submit"
-                    disabled={isDisableSubmit}
                     textAlign="right"
-                    style={{ backgroundColor: "#0B7C80", cursor: "pointer" }}
+                    style={{ backgroundColor: "rgb(236, 0, 0)" }}
+                    onClick={this.handleClickDeny}
                   >
-                    Submit
+                    Deny
                   </BtnArtSubmit>
-                )}
+                </div>
               </div>
             </SubmitCard>
           </ArtworkContainer>
+          {isApproved ? (
+            <ApprovedEmail title={title} approvedType={"Approved - Daily"} />
+          ) : null}
         </TabArea>
       </SubmissionContainer>
     );

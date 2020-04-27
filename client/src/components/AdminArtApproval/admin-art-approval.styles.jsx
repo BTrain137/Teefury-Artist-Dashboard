@@ -129,3 +129,20 @@ export const DownloadLink = styled.a`
   color: #fff;
   text-decoration: none;
 `;
+
+// Approval Email
+
+export const MockEmailContainer = styled.section`
+  margin-top: 60px;
+  border-top: 2px solid black;
+`;
+
+export const SelectWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 160px;
+  height: 30px;
+  border-radius: 10px;
+  margin: 20px auto;
+`;
