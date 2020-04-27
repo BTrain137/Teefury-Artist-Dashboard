@@ -43,7 +43,7 @@ XOXOXO
   const [emailSubject, setEmailSubject] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [approvalMsg, setApprovalMsg] = useState(
-    "<h2>Please Select An option</h2>"
+    "<h2>Please Select an Approved Option</h2>"
   );
 
   const handleOnChange = (event) => {
@@ -67,7 +67,7 @@ XOXOXO
           setApprovalMsg("<h2>DO NOT SEND</h2>"), setEmailSubject("DO NOT SEND")
         );
       case "Not Selected":
-        return setApprovalMsg("<h2>Please Select An option</h2>");
+        return setApprovalMsg("<h2>Please Select an Approved Option</h2>");
       default:
         break;
     }
@@ -119,7 +119,7 @@ XOXOXO
     <MockEmailContainer>
       <SelectWrapper>
         <select onChange={handleOnChange}>
-          <option value="Not Selected">Please Select An Option</option>
+          <option value="Not Selected">Please Select an Approved Option</option>
           <option value="Approved - Daily">Approved - Daily</option>
           <option value="Approved - Gallery">Approved - Gallery</option>
           <option value="Approved - DO NOT SEND">Approved - DO NOT SEND</option>
@@ -151,7 +151,7 @@ XOXOXO
           <div dangerouslySetInnerHTML={{ __html: approvalMsg }} />
         </>
       ) : (
-        <h2>Please Select An option</h2>
+        <h2>Please Select an Approved Option</h2>
       )}
     </MockEmailContainer>
   );

@@ -11,6 +11,7 @@ import { ReactComponent as UploadIcon } from "../../assets/upload.svg";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
 import { BtnArtSubmit, BtnArtSubmitLoading } from "../Button";
 import ApprovedEmail from "./approved-email.component";
+import DenyEmail from "./deny-email.component";
 
 import {
   SubmissionContainer,
@@ -68,7 +69,7 @@ class ArtistSubmitArt extends Component {
     event.preventDefault();
   };
 
-  handleClick = (event) => {
+  clickEnlargeImg = (event) => {
     this.setState({ isEnlargeImg: !this.state.isEnlargeImg });
   };
 
@@ -120,13 +121,15 @@ class ArtistSubmitArt extends Component {
 
   handleClickApproved = () => {
     this.setState({
-      isApproved: true,
+      isApproved: !this.state.isApproved,
+      isDenied: false,
     });
   };
 
   handleClickDeny = () => {
     this.setState({
-      isDenied: true,
+      isDenied: !this.state.isDenied,
+      isApproved: false,
     });
   };
 
@@ -147,6 +150,7 @@ class ArtistSubmitArt extends Component {
       artPreviewImg,
       isEnlargeImg,
       isApproved,
+      isDenied,
     } = this.state;
 
     return (
@@ -163,7 +167,7 @@ class ArtistSubmitArt extends Component {
                   src={this.state.artPreviewImg}
                   alt="Art Preview"
                   isEnlargeImg={isEnlargeImg}
-                  onClick={this.handleClick}
+                  onClick={this.clickEnlargeImg}
                 />
               ) : (
                 <ArtPreview>
@@ -232,6 +236,10 @@ class ArtistSubmitArt extends Component {
           </ArtworkContainer>
           {isApproved ? (
             <ApprovedEmail title={title} id={id} artistEmail={artistEmail} />
+          ) : null}
+
+          {isDenied ? (
+            <DenyEmail title={title} id={id} artistEmail={artistEmail} />
           ) : null}
         </TabArea>
       </SubmissionContainer>

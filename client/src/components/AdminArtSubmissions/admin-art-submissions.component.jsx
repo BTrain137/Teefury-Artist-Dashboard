@@ -161,6 +161,13 @@ class AdminApproval extends Component {
                   APPROVED DAILY
                 </FilterBtn>
                 <FilterBtn
+                  data-filter="approved - do not send"
+                  className={filterBy === "approved - do not send" ? "selected" : ""}
+                  onClick={this.handleClick}
+                >
+                  APPROVED - DO NOT SEND
+                </FilterBtn>
+                <FilterBtn
                   data-filter="declined"
                   className={filterBy === "declined" ? "selected" : ""}
                   onClick={this.handleClick}

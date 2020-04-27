@@ -28,7 +28,7 @@ export const sendMail = (artistEmail, subject, htmlContent) => {
       from: CLIENT_EMAIL,
       to: artistEmail,
       subject,
-      html: `${htmlContent}<br/><img style="width:45px;height:45px;" src="cid:logo">`, // html body
+      html: `${htmlContent}<br/><br/><img style="width:40px;height:40px;" src="cid:logo">`, // html body
       attachments: [
         {
           filename: "Logo.svg",
