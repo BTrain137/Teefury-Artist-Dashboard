@@ -8,6 +8,7 @@ import { sendMail } from "../../../services/email";
  * @typedef {{
  *   artFile:String,
  *   artistName:String,
+ *   artistEmail:String,
  *   description:String,
  *   previewArt:String,
  *   status:String,
@@ -62,7 +63,8 @@ router.get(
     try {
       conn = await pool.getConnection();
       const queryString =
-        "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
+        "SELECT `id`, `username_contact_email` AS `artistEmail`, " +
+        "`artist_name` AS `artistName`, `title`, `description`, " +
         "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
         "`created_at` AS `createdAt` FROM `submissions` " +
         "WHERE `id`=?";

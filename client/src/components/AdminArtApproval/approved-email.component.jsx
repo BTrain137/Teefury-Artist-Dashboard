@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { MockEmailContainer, SelectWrapper } from "./admin-art-approval.styles";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import axios from "axios";
+import Swal from "sweetalert2";
+
+import { selectUserJWTToken } from "../../redux/user/user.selector";
+
 import { BtnArtSubmitLoading } from "../Button";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
 
-const ApprovedEmail = ({ title }) => {
+import { MockEmailContainer, SelectWrapper } from "./admin-art-approval.styles";
+
+const ApprovedEmail = ({ token, title, id, artistEmail }) => {
   const approvedDaily = `
 Congrats!<br/><br/>
 The Mad Scientists at TeeFury Labs have selected your submission, ${title}!, to be featured as a daily tee in the near future!<br/><br/>
@@ -32,8 +40,10 @@ XOXOXO
 `;
 
   const [approvalType, setApprovalType] = useState("Not Selected");
+  const [emailSubject, setEmailSubject] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [approvalMsg, setApprovalMsg] = useState(
-    "<h1>Please Select An option</h1>"
+    "<h2>Please Select An option</h2>"
   );
 
   const handleOnChange = (event) => {
@@ -43,19 +53,66 @@ XOXOXO
 
     switch (value) {
       case "Approved - Daily":
-        return setApprovalMsg(approvedDaily);
+        return (
+          setApprovalMsg(approvedDaily),
+          setEmailSubject("Your Artwork Has Been Selected!")
+        );
       case "Approved - Gallery":
-        return setApprovalMsg(approvedGallery);
-      case "DO NOT SEND":
-        return setApprovalMsg("<h1>DO NOT SEND</h1>");
+        return (
+          setApprovalMsg(approvedGallery),
+          setEmailSubject("Your Artwork Will Be Entering The Gallery!")
+        );
+      case "Approved - DO NOT SEND":
+        return (
+          setApprovalMsg("<h2>DO NOT SEND</h2>"), setEmailSubject("DO NOT SEND")
+        );
       case "Not Selected":
-        return setApprovalMsg("<h1>Please Select An option</h1>");
+        return setApprovalMsg("<h2>Please Select An option</h2>");
+      default:
+        break;
     }
   };
 
+  const sendEmail = async (htmlContent) => {
+    const reqBody = {
+      // Artwork
+      id,
+      status: approvalType,
+      // // Artist Email
+      artistEmail,
+      subject: emailSubject,
+      htmlContent,
+    };
+
+    setIsLoading(true);
+    try {
+      const { status } = await axios.post("/api/admin/email", reqBody, {
+        headers: { Authorization: `JWT ${token}` },
+      });
+
+      if(status === 202) {
+        Swal.fire({
+          icon: "success",
+          title: "Email Sent",
+        });
+      }
+      else {
+        Swal.fire({
+          icon: "success",
+          title: "Updated",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Email Not Sent",
+      });
+    }
+    setIsLoading(false);
+  };
+
   const handleClick = (event) => {
-    console.log(event.target);
-    console.log(approvalMsg);
+    sendEmail(approvalMsg);
   };
 
   return (
@@ -65,22 +122,43 @@ XOXOXO
           <option value="Not Selected">Please Select An Option</option>
           <option value="Approved - Daily">Approved - Daily</option>
           <option value="Approved - Gallery">Approved - Gallery</option>
-          <option value="DO NOT SEND">DO NOT SEND</option>
+          <option value="Approved - DO NOT SEND">Approved - DO NOT SEND</option>
         </select>
       </SelectWrapper>
       {approvalType !== "Not Selected" ? (
-        <BtnArtSubmitLoading
-          type="button"
-          textAlign="center"
-          style={{ width: "95px", height: "45px" }}
-          onClick={handleClick}
-        >
-          Send Email
-        </BtnArtSubmitLoading>
-      ) : null}
-      <div dangerouslySetInnerHTML={{ __html: approvalMsg }} />
+        <>
+          <BtnArtSubmitLoading
+            type="button"
+            textAlign="center"
+            style={{ width: "95px", height: "45px" }}
+            onClick={handleClick}
+          >
+            {isLoading ? <LoadingIcon /> : "Send Email"}
+          </BtnArtSubmitLoading>
+          <div style={{ marginTop: "20px" }}>
+            <span>
+              <b>To:</b>{" "}
+            </span>
+            {artistEmail}
+            <br />
+            <span>
+              <b>Subject:</b>{" "}
+            </span>
+            {emailSubject}
+            <br />
+            <br />
+          </div>
+          <div dangerouslySetInnerHTML={{ __html: approvalMsg }} />
+        </>
+      ) : (
+        <h2>Please Select An option</h2>
+      )}
     </MockEmailContainer>
   );
 };
 
-export default ApprovedEmail;
+const mapStateToProps = createStructuredSelector({
+  token: selectUserJWTToken,
+});
+
+export default connect(mapStateToProps)(ApprovedEmail);

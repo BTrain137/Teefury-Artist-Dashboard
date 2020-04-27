@@ -37,9 +37,10 @@ class ArtistSubmitArt extends Component {
       artFile: "",
       artFileDownload: "",
       artistName: "",
+      artistEmail: "",
       createdAt: "",
       description: "",
-      id: 0,
+      id: null,
       previewArt: "",
       artPreviewImg: "",
       isEnlargeImg: false,
@@ -134,9 +135,10 @@ class ArtistSubmitArt extends Component {
       artFile,
       artFileDownload,
       artistName,
+      artistEmail,
       createdAt,
       description,
-      // id,
+      id,
       // previewArt,
       status,
       title,
@@ -229,7 +231,7 @@ class ArtistSubmitArt extends Component {
             </SubmitCard>
           </ArtworkContainer>
           {isApproved ? (
-            <ApprovedEmail title={title} approvedType={"Approved - Daily"} />
+            <ApprovedEmail title={title} id={id} artistEmail={artistEmail} />
           ) : null}
         </TabArea>
       </SubmissionContainer>
