@@ -34,7 +34,7 @@ export const sendMail = (artistEmail, subject, htmlContent) => {
       attachments: [
         {
           filename: "Logo.svg",
-          path: __dirname + "/../assets/tee-bird.svg",
+          path: __dirname + "/../../assets/tee-bird.svg",
           cid: "logo",
         },
       ],
