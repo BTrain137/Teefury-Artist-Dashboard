@@ -42,8 +42,12 @@ export const sendMail = (artistEmail, subject, htmlContent) => {
 
     transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
+        console.log({err});
+        console.log("++++++++++++++++++++++++++++++");
         reject(err);
       } else {
+        console.log({info});
+        console.log("++++++++++++++++++++++++++++++");
         resolve(info);
       }
     });
