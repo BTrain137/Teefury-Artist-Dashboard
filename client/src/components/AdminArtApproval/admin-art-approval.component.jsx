@@ -9,9 +9,8 @@ import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 import { ReactComponent as UploadIcon } from "../../assets/upload.svg";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
-import { BtnArtSubmit, BtnArtSubmitLoading } from "../Button";
-import ApprovedEmail from "./approved-email.component";
-import DenyEmail from "./deny-email.component";
+import { BtnArtSubmitLoading } from "../Button";
+import EmailTemplate from "./email-template.component";
 
 import {
   SubmissionContainer,
@@ -49,8 +48,6 @@ class ArtistSubmitArt extends Component {
       title: "",
       artHasSubmitted: false,
       isDisableSubmit: false,
-      isApproved: false,
-      isDenied: false,
     };
   }
 
@@ -119,18 +116,26 @@ class ArtistSubmitArt extends Component {
       });
   };
 
-  handleClickApproved = () => {
-    this.setState({
-      isApproved: !this.state.isApproved,
-      isDenied: false,
-    });
-  };
+  onChange = async (event) => {
+    const { value } = event.currentTarget;
+    const { token } = this.props;
+    const { id } = this.state;
 
-  handleClickDeny = () => {
-    this.setState({
-      isDenied: !this.state.isDenied,
-      isApproved: false,
-    });
+    try {
+      await axios.post(
+        "/api/admin/submissions/status",
+        { status: value, id },
+        {
+          headers: { Authorization: `JWT ${token}` },
+        }
+      );
+      this.setState({ status: value });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Nothing Happened Sorry!",
+      });
+    }
   };
 
   render() {
@@ -141,16 +146,10 @@ class ArtistSubmitArt extends Component {
       artistEmail,
       createdAt,
       description,
-      id,
-      // previewArt,
       status,
       title,
-      // artHasSubmitted,
-      // isDisableSubmit,
       artPreviewImg,
       isEnlargeImg,
-      isApproved,
-      isDenied,
     } = this.state;
 
     return (
@@ -185,6 +184,16 @@ class ArtistSubmitArt extends Component {
               <BtnArtSubmitLoading
                 type="button"
                 textAlign="center"
+                style={{ width: "150px", height: "45px" }}
+                loaded={artPreviewImg}
+              >
+                <DownloadLink href={artPreviewImg} download>
+                  {artPreviewImg ? "Preview Image" : <LoadingIcon />}
+                </DownloadLink>
+              </BtnArtSubmitLoading>
+              <BtnArtSubmitLoading
+                type="button"
+                textAlign="center"
                 style={{ width: "95px", height: "45px" }}
               >
                 <DownloadLink href={artFileDownload} download>
@@ -214,33 +223,18 @@ class ArtistSubmitArt extends Component {
                 <div
                   style={{ display: "flex", justifyContent: "space-around" }}
                 >
-                  <BtnArtSubmit
-                    type="submit"
-                    textAlign="right"
-                    style={{ backgroundColor: "rgb(0, 182, 6)" }}
-                    onClick={this.handleClickApproved}
-                  >
-                    Approve
-                  </BtnArtSubmit>
-                  <BtnArtSubmit
-                    type="submit"
-                    textAlign="right"
-                    style={{ backgroundColor: "rgb(236, 0, 0)" }}
-                    onClick={this.handleClickDeny}
-                  >
-                    Deny
-                  </BtnArtSubmit>
+                  <select onChange={this.onChange}>
+                    <option value="NEW">NEW</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="REVIEWED">REVIEWED</option>
+                    <option value="APPROVED">APPROVED</option>
+                    <option value="DECLINED">DECLINED</option>
+                  </select>
                 </div>
               </div>
             </SubmitCard>
           </ArtworkContainer>
-          {isApproved ? (
-            <ApprovedEmail title={title} id={id} artistEmail={artistEmail} />
-          ) : null}
-
-          {isDenied ? (
-            <DenyEmail title={title} id={id} artistEmail={artistEmail} />
-          ) : null}
+          <EmailTemplate title={title} artistEmail={artistEmail} />
         </TabArea>
       </SubmissionContainer>
     );

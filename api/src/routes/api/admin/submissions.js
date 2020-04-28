@@ -24,7 +24,6 @@ router.post(
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     const { startAt } = req.body;
-    console.log(startAt);
 
     let conn;
 
@@ -83,11 +82,12 @@ router.get(
   }
 );
 
+// Change Submissions status
 router.post(
   "/submissions/status",
   passport.authenticate("jwt-admin"),
   async (req, res) => {
-    const { id: submissionId, status } = req.params;
+    const { id: submissionId, status } = req.body;
     let conn;
 
     try {
@@ -102,7 +102,7 @@ router.post(
 
       conn.end();
 
-      res.status(202);
+      res.sendStatus(202);
     } catch (error) {
       conn.end();
       next(error);
@@ -111,7 +111,7 @@ router.post(
 );
 
 router.get(
-  "/submission/test",
+  "/submissions/test",
   // passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     try {

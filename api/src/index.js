@@ -4,7 +4,7 @@ import cors from "cors";
 import logger from "morgan";
 import helmet from "helmet";
 import path from "path";
-import passport from "passport"
+import passport from "passport";
 import routes from "./routes";
 import "./services/passport.js";
 
@@ -23,11 +23,13 @@ if (NODE_ENV === "development") app.use(logger("dev"));
 // API Routes
 app.use(routes);
 
+app.use("/public", express.static(path.join(__dirname, "../../public")));
+
 // Art files submitted by artist
 // /api/art-submissions/<ArtistName>/imageFile.psd
 app.use("/api/art-submissions", [
   passport.authenticate("jwt-submissions"),
- express.static(path.join(__dirname, "../../art-submissions"))
+  express.static(path.join(__dirname, "../../art-submissions")),
 ]);
 
 app.use((error, req, res, next) => {
@@ -44,21 +46,21 @@ app.use((error, req, res, next) => {
     return next(error);
   }
 
-  if(!error.status || error.status === 500) {
-    error.message = "We are experiencing some issues please check again later."
+  if (!error.status || error.status === 500) {
+    error.message = "We are experiencing some issues please check again later.";
     // TODO: Sent an alert to dev to check why there is a 500 error
   }
 
   res.status(error.status || 500).json({
     status: error.status,
-    message: error.message
+    message: error.message,
   });
 });
 
 // Serve React In Production
 if (NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../../client/build")));
-  app.get("*", function(_, res) {
+  app.get("*", function (_, res) {
     res.sendFile(path.join(__dirname, "../../client/build", "index.html"));
   });
 }

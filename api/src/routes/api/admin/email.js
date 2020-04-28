@@ -1,6 +1,5 @@
 import express from "express";
 import passport from "passport";
-import pool from "../../../database/connection";
 import { sendMail } from "../../../services/email";
 
 /**
@@ -23,38 +22,15 @@ router.post(
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     const {
-      // Artwork
-      id: submissionId,
-      status,
-      // Artist Email
       artistEmail,
       subject,
       htmlContent,
     } = req.body;
-    let conn;
 
     try {
-      conn = await pool.getConnection();
-      const queryString =
-        "UPDATE `submissions` SET `status`= ? " +
-        "WHERE `id`=?";
-      /**
-       * @return {SubmissionDetails}
-       */
-      const { affectedRows } = await pool.query(queryString, [
-        status,
-        submissionId,
-      ]);
-
-      conn.end();
-
-      if(subject !== "DO NOT SEND") {
-        const emailResult = await sendMail(artistEmail, subject, htmlContent);
-        return res.sendStatus(202);
-      }
-      res.sendStatus(200);
+      await sendMail(artistEmail, subject, htmlContent);
+      res.sendStatus(202);
     } catch (error) {
-      conn.end();
       next(error);
     }
   }

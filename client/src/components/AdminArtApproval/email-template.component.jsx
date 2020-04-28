@@ -11,13 +11,21 @@ import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
 
 import { MockEmailContainer, SelectWrapper } from "./admin-art-approval.styles";
 
-const ApprovedEmail = ({ token, title, id, artistEmail }) => {
+const EmailTemplate = ({ token, title, artistEmail }) => {
+  const deniedEmailBody = `
+  After reviewing your submission, ${title}, we've decided not to print your design at this time.<br/><br/>
+  We receive a large number of high quality submissions on a daily basis and we can only choose a select few. Even when our basic design guidelines are met, sometimes it comes down to whether a design will resonate with the TeeFury audience to a level that will benefit both the artist and the site.<br/><br/>
+  Please don't be discouraged! We appreciate every submission, and do hope to see more designs from you in the future.<br/><br/>
+  Thanks for submitting!<br/><br/>
+  The TeeFury Team
+`;
+
   const approvedDaily = `
 Congrats!<br/><br/>
 The Mad Scientists at TeeFury Labs have selected your submission, ${title}!, to be featured as a daily tee in the near future!<br/><br/>
 Since you've already given us your high-res artwork there's nothing left for you to do for now, if for some reason we have an issue with your artwork we will contact you with further instruction. You'll also receive an email to let you know once your print date has been chosen (this could take several weeks so we appreciate your patience).<br/><br/>
 Please also be aware that we may need to change the title of your design for marketing purposes. If you have any alternate titles please always feel free to include those in your notes!<br/><br/>
-Download our official logo to use in your tee promotions: TeeFury Logo <br/><br/>
+Download our official logo to use in your tee promotions: <a href="/public/TeeFury+Logo.zip" rel="nofollow" download>TeeFury Logo</a> <br/><br/>
 As a reminder: you receive a $1 USD per-sale commission during the initial 24-hour sale period so be sure to get the word out to friends, family and fans! Once the initial 24-hour sale is complete, your design will roll into our Gallery for an increased commission of $2 USD per-sale with payment going out every month for items shipped the previous month.<br/><br/>
 Just one more note - we love to debut designs at TeeFury, so as a courtesy we ask that you refrain from releasing your design elsewhere on the internet until it's run as a daily tee.  We would like to get you the highest sales possible, and one way to do so is by increasing urgency and impulse to buy.  When a design is available everywhere, the impulse is diminished.  Let us offer your tee at a great price and push those sales for you - letting our marketing efforts work to their fullest extent, and allowing you to gain the most benefit possible! We respect this relationship and hope that you will too.<br/><br/>
 Questions? Feel free to drop us a line at art@teefury.com.<br/><br/>
@@ -42,8 +50,8 @@ XOXOXO
   const [approvalType, setApprovalType] = useState("Not Selected");
   const [emailSubject, setEmailSubject] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [approvalMsg, setApprovalMsg] = useState(
-    "<h2>Please Select an Approved Option</h2>"
+  const [emailBody, setEmailBody] = useState(
+    "<h2>Please Select an Option</h2>"
   );
 
   const handleOnChange = (event) => {
@@ -52,56 +60,46 @@ XOXOXO
     setApprovalType(value);
 
     switch (value) {
+      case "Denied":
+        return (
+          setEmailBody(deniedEmailBody),
+          setEmailSubject("We're sorry but your submission was declined.")
+        );
       case "Approved - Daily":
         return (
-          setApprovalMsg(approvedDaily),
+          setEmailBody(approvedDaily),
           setEmailSubject("Your Artwork Has Been Selected!")
         );
       case "Approved - Gallery":
         return (
-          setApprovalMsg(approvedGallery),
+          setEmailBody(approvedGallery),
           setEmailSubject("Your Artwork Will Be Entering The Gallery!")
         );
-      case "Approved - DO NOT SEND":
-        return (
-          setApprovalMsg("<h2>DO NOT SEND</h2>"), setEmailSubject("DO NOT SEND")
-        );
       case "Not Selected":
-        return setApprovalMsg("<h2>Please Select an Approved Option</h2>");
+        return setEmailBody("<h2>Please Select an Option</h2>");
       default:
         break;
     }
   };
 
-  const sendEmail = async (htmlContent) => {
+  const sendEmail = async () => {
     const reqBody = {
-      // Artwork
-      id,
-      status: approvalType,
       // // Artist Email
       artistEmail,
       subject: emailSubject,
-      htmlContent,
+      htmlContent: emailBody,
     };
 
     setIsLoading(true);
     try {
-      const { status } = await axios.post("/api/admin/email", reqBody, {
+      await axios.post("/api/admin/email", reqBody, {
         headers: { Authorization: `JWT ${token}` },
       });
 
-      if(status === 202) {
-        Swal.fire({
-          icon: "success",
-          title: "Email Sent",
-        });
-      }
-      else {
-        Swal.fire({
-          icon: "success",
-          title: "Updated",
-        });
-      }
+      Swal.fire({
+        icon: "success",
+        title: "Email Sent",
+      });
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -111,18 +109,18 @@ XOXOXO
     setIsLoading(false);
   };
 
-  const handleClick = (event) => {
-    sendEmail(approvalMsg);
+  const handleClick = () => {
+    sendEmail();
   };
 
   return (
     <MockEmailContainer>
       <SelectWrapper>
         <select onChange={handleOnChange}>
-          <option value="Not Selected">Please Select an Approved Option</option>
+          <option value="Not Selected">Please Select an Option</option>
           <option value="Approved - Daily">Approved - Daily</option>
           <option value="Approved - Gallery">Approved - Gallery</option>
-          <option value="Approved - DO NOT SEND">Approved - DO NOT SEND</option>
+          <option value="Denied">Denied</option>
         </select>
       </SelectWrapper>
       {approvalType !== "Not Selected" ? (
@@ -148,10 +146,10 @@ XOXOXO
             <br />
             <br />
           </div>
-          <div dangerouslySetInnerHTML={{ __html: approvalMsg }} />
+          <div dangerouslySetInnerHTML={{ __html: emailBody }} />
         </>
       ) : (
-        <h2>Please Select an Approved Option</h2>
+        <h2>Please Select an Option</h2>
       )}
     </MockEmailContainer>
   );
@@ -161,4 +159,4 @@ const mapStateToProps = createStructuredSelector({
   token: selectUserJWTToken,
 });
 
-export default connect(mapStateToProps)(ApprovedEmail);
+export default connect(mapStateToProps)(EmailTemplate);
