@@ -36,7 +36,7 @@ module.exports = {
       path: "/var/www/artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
       "post-deploy":
-        "npm install && cd client && npm install && cd ./.. && pm2 reload ecosystem.config.js --only artist-dashboard --env production",
+        "npm install && cd client && npm install && cd ./.. && pm2 reload ./network/ecosystem.config.js --only artist-dashboard --env production",
     },
     stage: {
       user: "root",
@@ -46,7 +46,7 @@ module.exports = {
       path: "/var/www/stage-artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
       "post-deploy":
-        "npm install && cd client && npm install && cd ./.. && pm2 reload ecosystem.config.js --only stage-artist-dashboard --env production",
+        "npm install && cd client && npm install && cd ./.. && pm2 reload ./network/ecosystem.config.js --only stage-artist-dashboard --env production",
     },
   },
 };
