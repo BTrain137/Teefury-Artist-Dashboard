@@ -17,6 +17,15 @@ module.exports = {
         NODE_ENV: "production",
       },
     },
+    {
+      name: "stage-artist-dashboard",
+      cwd: "/var/www/stage-artist-dashboard/source",
+      script: "npm start",
+      max_memory_restart: "200M",
+      env_production: {
+        NODE_ENV: "production",
+      },
+    },
   ],
   deploy: {
     production: {
@@ -27,7 +36,17 @@ module.exports = {
       path: "/var/www/artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
       "post-deploy":
-        "npm install && cd client && npm install && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --env production",
+        "npm install && cd client && npm install && cd ./.. && pm2 reload ecosystem.config.js --only artist-dashboard --env production",
+    },
+    stage: {
+      user: "root",
+      key: "~/.ssh/id_rsa_hetnzer_artist_dashboard_2",
+      host: ["95.217.162.146"],
+      ref: "origin/stage",
+      path: "/var/www/stage-artist-dashboard",
+      repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
+      "post-deploy":
+        "npm install && cd client && npm install && cd ./.. && pm2 reload ecosystem.config.js --only stage-artist-dashboard --env production",
     },
   },
 };
