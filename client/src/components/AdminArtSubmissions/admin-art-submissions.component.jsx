@@ -31,7 +31,7 @@ class AdminApproval extends Component {
       startAt: 0,
       search: "",
       isShowingFilter: false,
-      filterBy: "pending",
+      filterBy: "PENDING",
       imageSrc: teefuryBirdLogo,
       originalSubmissionsArr: [],
       filteredSubmissions: [],
@@ -58,8 +58,8 @@ class AdminApproval extends Component {
 
     const filteredSubmissions = this.state.originalSubmissionsArr.filter(
       (sub) => {
-        if (filter === "all") return sub;
-        else return sub.status.toUpperCase() === filter.toUpperCase();
+        if (filter === "NEW") return sub;
+        else return sub.status === filter;
       }
     );
 
@@ -131,45 +131,36 @@ class AdminApproval extends Component {
             {isShowingFilter ? (
               <FilterContainer>
                 <FilterBtn
-                  data-filter="all"
-                  className={filterBy === "all" ? "selected" : ""}
-                  onClick={this.handleClick}
-                >
-                  ALL
-                </FilterBtn>
-                <FilterBtn
-                  data-filter="pending"
-                  className={filterBy === "pending" ? "selected" : ""}
+                  data-filter="NEW"
+                  className={filterBy === "NEW" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
                   NEW
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="approved - gallery"
-                  className={
-                    filterBy === "approved - gallery" ? "selected" : ""
-                  }
+                  data-filter="PENDING"
+                  className={filterBy === "PENDING" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
-                  APPROVED GALLERY
+                  PENDING
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="approved - daily"
-                  className={filterBy === "approved - daily" ? "selected" : ""}
+                  data-filter="REVIEWED"
+                  className={filterBy === "REVIEWED" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
-                  APPROVED DAILY
+                  REVIEWED
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="approved - do not send"
-                  className={filterBy === "approved - do not send" ? "selected" : ""}
+                  data-filter="APPROVED"
+                  className={filterBy === "APPROVED" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
-                  APPROVED - DO NOT SEND
+                  APPROVED
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="declined"
-                  className={filterBy === "declined" ? "selected" : ""}
+                  data-filter="DECLINED"
+                  className={filterBy === "DECLINED" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
                   DECLINED
