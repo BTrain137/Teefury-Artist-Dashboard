@@ -24,6 +24,8 @@ export const sendMail = (artistEmail, subject, htmlContent) => {
       },
     });
 
+    console.log({ CLIENT_EMAIL, CLIENT_HOST, CLIENT_USER, CLIENT_PASSWORD } );
+
     const mailOptions = {
       from: CLIENT_EMAIL,
       to: artistEmail,

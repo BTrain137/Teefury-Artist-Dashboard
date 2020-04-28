@@ -33,6 +33,16 @@ router.post(
     } = req.body;
     let conn;
 
+    console.log({
+      // Artwork
+      id: submissionId,
+      status,
+      // Artist Email
+      artistEmail,
+      subject,
+      htmlContent,
+    });
+
     try {
       conn = await pool.getConnection();
       const queryString =
@@ -50,6 +60,7 @@ router.post(
 
       if(subject !== "DO NOT SEND") {
         const emailResult = await sendMail(artistEmail, subject, htmlContent);
+        console.log({emailResult});
         return res.sendStatus(202);
       }
       res.sendStatus(200);
