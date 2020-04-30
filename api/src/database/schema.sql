@@ -49,17 +49,17 @@ CREATE TABLE `submissions` (
   PRIMARY KEY(`id`)
 );
 
-DROP TABLE IF EXISTS `shopify_orders`;
-CREATE TABLE `shopify_orders` (
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE `orders` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `order` VARCHAR(20),
   `order_id` BIGINT,
-  `order_created_at` VARCHAR(50),
+  `order_created_at` DATETIME,
   `product_title` TEXT,
   `quantity` TINYINT,
-  `vender` VARCHAR(30),
+  `vendor` VARCHAR(30),
   `product_type` VARCHAR(20),
-  `shipping_fulfillment` VARCHAR(20),
+  `variant_sku` TEXT,
   `commissions_paid` BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY(`id`)
 );
