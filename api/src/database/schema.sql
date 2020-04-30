@@ -48,3 +48,18 @@ CREATE TABLE `submissions` (
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`)
 );
+
+DROP TABLE IF EXISTS `shopify_orders`;
+CREATE TABLE `shopify_orders` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `order` VARCHAR(20),
+  `order_id` BIGINT,
+  `order_created_at` VARCHAR(50),
+  `product_title` TEXT,
+  `quantity` TINYINT,
+  `vender` VARCHAR(30),
+  `product_type` VARCHAR(20),
+  `shipping_fulfillment` VARCHAR(20),
+  `commissions_paid` BOOLEAN NOT NULL DEFAULT 0,
+  PRIMARY KEY(`id`)
+);
