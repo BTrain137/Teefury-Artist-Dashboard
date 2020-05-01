@@ -4,7 +4,7 @@ import { createStructuredSelector } from "reselect";
 
 import { selectUserAccount } from "../../redux/user/user.selector";
 
-// import { ReactComponent as BellIcon } from "../../assets/bell.svg";
+import { ReactComponent as BellIcon } from "../../assets/bell.svg";
 import { ReactComponent as CogIcon } from "../../assets/cog.svg";
 import { ReactComponent as ApprovalIcon } from "../../assets/approval.svg";
 import { ReactComponent as SignoutIcon } from "../../assets/signout.svg";
@@ -27,36 +27,48 @@ const Nav = ({ userAccount }) => (
       <NavItemLink to="/artist/profile" pathToMatch="/profile" Icon={HouseIcon}>
         Home
       </NavItemLink>
-      <NavItemLink
-        to="/artist/submissions"
-        pathToMatch="/submissions"
-        Icon={ComputerIcon}
-      >
-        Submissions
-      </NavItemLink>
-      <NavItemLink
-        to="/artist/commissions"
-        pathToMatch="/commissions"
-        Icon={CogIcon}
-      >
-        Commissions
-      </NavItemLink>
-      {/* <NavItemLink
-        to="/artist/notifications"
-        pathToMatch="/notifications"
-        Icon={BellIcon}
-      >
-        Notifications
-      </NavItemLink> */}
       {userAccount.isAdmin ? (
-        <NavItemLink
-          to="/admin/art-submissions"
-          pathToMatch="/art-submissions"
-          Icon={ApprovalIcon}
-        >
-          Art Review
-        </NavItemLink>
-      ) : null}
+        <>
+          <NavItemLink
+            to="/admin/art-submissions"
+            pathToMatch="/art-submissions"
+            Icon={ApprovalIcon}
+          >
+            Art Review
+          </NavItemLink>
+          <NavItemLink
+            to="/admin/commissions"
+            pathToMatch="/admin/commissions"
+            Icon={CogIcon}
+          >
+            Commissions
+          </NavItemLink>
+        </>
+      ) : (
+        <>
+          <NavItemLink
+            to="/artist/submissions"
+            pathToMatch="/submissions"
+            Icon={ComputerIcon}
+          >
+            Submissions
+          </NavItemLink>
+          <NavItemLink
+            to="/artist/commissions"
+            pathToMatch="/commissions"
+            Icon={CogIcon}
+          >
+            Commissions
+          </NavItemLink>
+          <NavItemLink
+            to="/artist/notifications"
+            pathToMatch="/notifications"
+            Icon={BellIcon}
+          >
+            Notifications
+          </NavItemLink>
+        </>
+      )}
       <NavItemStyle Icon={SignoutIcon}>
         <SignOut />
       </NavItemStyle>
