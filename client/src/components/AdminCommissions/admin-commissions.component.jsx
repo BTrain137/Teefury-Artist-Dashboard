@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
 
-import "./admin-commissions.styles.css"
+import Table from "./paginate";
 
 import {
   SubmissionContainer,
@@ -42,32 +42,7 @@ class ArtistCommissions extends Component {
             ) : null}
           </FilterHeader>
 
-          <table>
-            <tr>
-              <th>Date</th>
-              <th>Order#</th>
-              <th>Title</th>
-              <th>Vendor</th>
-              <th>Commissions Amount</th>
-              <th>Paid or Unpaid</th>
-            </tr>
-            <tr>
-              <td>2020-04-08</td>
-              <td>TF689660</td>
-              <td>100 Cups of Coffee</td>
-              <td>Mykelad</td>
-              <td>Tee</td>
-              <td>No</td>
-            </tr>
-            <tr>
-              <td>2020-04-08</td>
-              <td>TF689661</td>
-              <td>Starts</td>
-              <td>vp021</td>
-              <td>Tee</td>
-              <td>Yes</td>
-            </tr>
-          </table>
+          <Table/>
         </TabArea>
       </SubmissionContainer>
     );
