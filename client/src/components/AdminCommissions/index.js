@@ -1,1 +1,1 @@
-export { default } from "./admin-commissions.component"
+export { default } from "./admin-commissions.component";
