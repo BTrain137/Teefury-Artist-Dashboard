@@ -176,16 +176,16 @@ function App() {
         accessor: "order",
       },
       {
-        Header: "Product Type",
-        accessor: "product_type",
-      },
-      {
         Header: "Title",
         accessor: "product_title",
       },
       {
         Header: "Vendor",
         accessor: "vendor",
+      },
+      {
+        Header: "Product Type",
+        accessor: "product_type",
       },
       {
         Header: "Commissions Amount",
