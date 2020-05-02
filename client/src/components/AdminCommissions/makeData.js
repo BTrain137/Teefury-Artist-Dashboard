@@ -9,19 +9,15 @@ const range = len => {
 }
 
 const newPerson = () => {
-  const statusChance = Math.random()
+
   return {
-    firstName: namor.generate({ words: 1, numbers: 0 }),
-    lastName: namor.generate({ words: 1, numbers: 0 }),
-    age: Math.floor(Math.random() * 30),
-    visits: Math.floor(Math.random() * 100),
-    progress: Math.floor(Math.random() * 100),
-    status:
-      statusChance > 0.66
-        ? 'relationship'
-        : statusChance > 0.33
-        ? 'complicated'
-        : 'single',
+    order_created_at: namor.generate({ words: 1, numbers: 0 }),
+    order: namor.generate({ words: 1, numbers: 0 }),
+    product_type: namor.generate({ words: 1, numbers: 0 }),
+    product_title: namor.generate({ words: 2, numbers: 0 }),
+    vendor: namor.generate({ words: 1, numbers: 0 }),
+    commissions_amount: Math.floor(Math.random() * 3),
+    commissions_paid: Math.floor(Math.random() * 2) === 1 ? "Paid" : "Not Paid",
   }
 }
 
