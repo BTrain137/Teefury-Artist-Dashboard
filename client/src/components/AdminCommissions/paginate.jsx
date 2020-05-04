@@ -1,8 +1,14 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useMemo, useEffect, useState } from "react";
+import axios from "axios";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 import { useTable, usePagination } from "react-table";
 
-import makeData from "./makeData";
+import { convertTime } from "../../utils/cleanData";
+
+import { selectUserJWTToken } from "../../redux/user/user.selector";
+
+import styled from "styled-components";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -164,8 +170,8 @@ function Table({ columns, data }) {
   );
 }
 
-function App() {
-  const columns = React.useMemo(
+function App({ token }) {
+  const columns = useMemo(
     () => [
       {
         Header: "Date",
@@ -199,13 +205,44 @@ function App() {
     []
   );
 
-  const data = React.useMemo(() => makeData(100), []);
+  const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    const getAllCommissions = async () => {
+      const reqBody = {
+        startAt: 1,
+      };
+      const {
+        data: { commissionsDetailsArr },
+      } = await axios.post("/api/admin/commissions", reqBody, {
+        headers: { Authorization: `JWT ${token}` },
+      });
+  
+      const convertDetailsForAdmin = commissionsDetailsArr.map(details => {
+        const { order_created_at, commissions_paid, ...otherProperty } = details;
+        return {
+          ...otherProperty,
+          order_created_at: convertTime(order_created_at),
+          commissions_paid: commissions_paid ? "Paid": "Unpaid",
+        }
+      })
+
+      setTableData(convertDetailsForAdmin);
+    };
+
+    getAllCommissions();
+
+  }, [token]);
 
   return (
     <Styles>
-      <Table columns={columns} data={data} />
+      <Table columns={columns} data={tableData} />
     </Styles>
   );
 }
 
-export default App;
+const mapStateToProps = createStructuredSelector({
+  token: selectUserJWTToken,
+});
+
+export default connect(mapStateToProps)(App);
