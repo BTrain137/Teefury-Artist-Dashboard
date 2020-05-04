@@ -42,7 +42,7 @@ class ArtistCommissions extends Component {
             ) : null}
           </FilterHeader>
 
-          <Table/>
+          <Table />
         </TabArea>
       </SubmissionContainer>
     );
