@@ -11,11 +11,11 @@ const range = len => {
 const newPerson = () => {
 
   return {
-    order_created_at: namor.generate({ words: 1, numbers: 0 }),
-    order: namor.generate({ words: 1, numbers: 0 }),
-    product_type: namor.generate({ words: 1, numbers: 0 }),
+    order_created_at: namor.generate({ subset: "manly" }),
+    order: namor.generate({ subset: "manly" }),
+    product_type: namor.generate({ subset: "manly" }),
     product_title: namor.generate({ words: 2, numbers: 0 }),
-    vendor: namor.generate({ words: 1, numbers: 0 }),
+    vendor: namor.generate({ subset: "manly" }),
     commissions_amount: Math.floor(Math.random() * 3),
     commissions_paid: Math.floor(Math.random() * 2) === 1 ? "Paid" : "Not Paid",
   }
