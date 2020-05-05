@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useMemo, useEffect, useState } from "react";
+import axios from "axios";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 import styled from "styled-components";
 import { useTable, useFilters, useGlobalFilter } from "react-table";
+
 // A great library for fuzzy filtering/sorting items
 import matchSorter from "match-sorter";
 
-import makeData from "./makeData";
+import { convertTime } from "../../utils/cleanData";
+import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -34,32 +39,6 @@ const Styles = styled.div`
     }
   }
 `;
-
-// Define a default UI for filtering
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-}) {
-  const count = preGlobalFilteredRows.length;
-
-  return (
-    <span>
-      Search:{" "}
-      <input
-        value={globalFilter || ""}
-        onChange={(e) => {
-          setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
-        }}
-        placeholder={`${count} records...`}
-        style={{
-          fontSize: "1.1rem",
-          border: "0",
-        }}
-      />
-    </span>
-  );
-}
 
 // Define a default UI for filtering
 function DefaultColumnFilter({
@@ -111,100 +90,6 @@ function SelectColumnFilter({
   );
 }
 
-// This is a custom filter UI that uses a
-// slider to set the filter value between a column's
-// min and max values
-function SliderColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
-}) {
-  // Calculate the min and max
-  // using the preFilteredRows
-
-  const [min, max] = React.useMemo(() => {
-    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
-    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
-    preFilteredRows.forEach((row) => {
-      min = Math.min(row.values[id], min);
-      max = Math.max(row.values[id], max);
-    });
-    return [min, max];
-  }, [id, preFilteredRows]);
-
-  return (
-    <>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        value={filterValue || min}
-        onChange={(e) => {
-          setFilter(parseInt(e.target.value, 10));
-        }}
-      />
-      <button onClick={() => setFilter(undefined)}>Off</button>
-    </>
-  );
-}
-
-// This is a custom UI for our 'between' or number range
-// filter. It uses two number boxes and filters rows to
-// ones that have values between the two
-function NumberRangeColumnFilter({
-  column: { filterValue = [], preFilteredRows, setFilter, id },
-}) {
-  const [min, max] = React.useMemo(() => {
-    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
-    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
-    preFilteredRows.forEach((row) => {
-      min = Math.min(row.values[id], min);
-      max = Math.max(row.values[id], max);
-    });
-    return [min, max];
-  }, [id, preFilteredRows]);
-
-  return (
-    <div
-      style={{
-        display: "flex",
-      }}
-    >
-      <input
-        value={filterValue[0] || ""}
-        type="number"
-        onChange={(e) => {
-          const val = e.target.value;
-          setFilter((old = []) => [
-            val ? parseInt(val, 10) : undefined,
-            old[1],
-          ]);
-        }}
-        placeholder={`Min (${min})`}
-        style={{
-          width: "70px",
-          marginRight: "0.5rem",
-        }}
-      />
-      to
-      <input
-        value={filterValue[1] || ""}
-        type="number"
-        onChange={(e) => {
-          const val = e.target.value;
-          setFilter((old = []) => [
-            old[0],
-            val ? parseInt(val, 10) : undefined,
-          ]);
-        }}
-        placeholder={`Max (${max})`}
-        style={{
-          width: "70px",
-          marginLeft: "0.5rem",
-        }}
-      />
-    </div>
-  );
-}
-
 function fuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
 }
@@ -249,9 +134,6 @@ function Table({ columns, data }) {
     rows,
     prepareRow,
     state,
-    visibleColumns,
-    preGlobalFilteredRows,
-    setGlobalFilter,
   } = useTable(
     {
       columns,
@@ -282,20 +164,6 @@ function Table({ columns, data }) {
               ))}
             </tr>
           ))}
-          <tr>
-            <th
-              colSpan={visibleColumns.length}
-              style={{
-                textAlign: "left",
-              }}
-            >
-              <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={state.globalFilter}
-                setGlobalFilter={setGlobalFilter}
-              />
-            </th>
-          </tr>
         </thead>
         <tbody {...getTableBodyProps()}>
           {firstPageRows.map((row, i) => {
@@ -337,12 +205,13 @@ function filterGreaterThan(rows, id, filterValue) {
 // check, but here, we want to remove the filter if it's not a number
 filterGreaterThan.autoRemove = (val) => typeof val !== "number";
 
-function App() {
-  const columns = React.useMemo(
+function App({ token }) {
+  const columns = useMemo(
     () => [
       {
         Header: "Date",
-        accessor: "order_created_at"
+        accessor: "order_created_at",
+        disableFilters: true,
       },
       {
         Header: "Order #",
@@ -351,40 +220,81 @@ function App() {
         filter: "fuzzyText",
       },
       {
-        Header: "Age",
-        accessor: "age",
-        Filter: SliderColumnFilter,
+        Header: "Title",
+        accessor: "product_title",
+        filter: "fuzzyText",
+        // Filter: SliderColumnFilter,
+        // filter: "equals",
+      },
+      {
+        Header: "Vendor",
+        accessor: "vendor",
+        filter: "fuzzyText",
+        // Filter: NumberRangeColumnFilter,
+        // filter: "between",
+      },
+      {
+        Header: "Product Type",
+        accessor: "product_type",
+        Filter: SelectColumnFilter,
         filter: "equals",
+        // filter: "includes",
       },
       {
-        Header: "Visits",
-        accessor: "visits",
-        Filter: NumberRangeColumnFilter,
-        filter: "between",
+        Header: "Commissions Amount",
+        accessor: "commissions_amount",
+        disableFilters: true,
       },
       {
-        Header: "Status",
-        accessor: "status",
+        Header: "Paid or Unpaid",
+        accessor: "commissions_paid",
         Filter: SelectColumnFilter,
         filter: "includes",
-      },
-      {
-        Header: "Profile Progress",
-        accessor: "progress",
-        Filter: SliderColumnFilter,
-        filter: filterGreaterThan,
+        // Filter: SliderColumnFilter,
+        // filter: filterGreaterThan,
       },
     ],
     []
   );
 
-  const data = React.useMemo(() => makeData(100000), []);
+  const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    const getAllCommissions = async () => {
+      const reqBody = {
+        startAt: 1,
+      };
+      const {
+        data: { commissionsDetailsArr },
+      } = await axios.post("/api/admin/commissions", reqBody, {
+        headers: { Authorization: `JWT ${token}` },
+      });
+  
+      const convertDetailsForAdmin = commissionsDetailsArr.map(details => {
+        const { order_created_at, commissions_paid, ...otherProperty } = details;
+        return {
+          ...otherProperty,
+          order_created_at: convertTime(order_created_at),
+          commissions_paid: commissions_paid ? "Paid": "Unpaid",
+        }
+      })
+
+      setTableData(convertDetailsForAdmin);
+    };
+
+    getAllCommissions();
+
+  }, [token]);
 
   return (
     <Styles>
-      <Table columns={columns} data={data} />
+      <Table columns={columns} data={tableData} />
     </Styles>
   );
 }
 
-export default App;
+const mapStateToProps = createStructuredSelector({
+  token: selectUserJWTToken,
+});
+
+export default connect(mapStateToProps)(App);

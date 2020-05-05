@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
 
-import Table from "./paginate";
+import Table from "./filtering";
 
 import {
   SubmissionContainer,
