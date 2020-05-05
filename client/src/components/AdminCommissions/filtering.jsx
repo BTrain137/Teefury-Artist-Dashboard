@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import styled from "styled-components";
 import { useTable, useFilters, usePagination } from "react-table";
-
-// A great library for fuzzy filtering/sorting items
 import matchSorter from "match-sorter";
 
 import { convertTime } from "../../utils/cleanData";
@@ -38,12 +36,12 @@ const Styles = styled.div`
         border-right: 0;
       }
     }
+  }
 
-    .pagination {
-      padding: 0.5rem;
-      text-align: center;
-      margin-top: 25px;
-    }
+  .pagination {
+    padding: 0.5rem;
+    text-align: center;
+    margin-top: 25px;
   }
 `;
 
@@ -126,20 +124,14 @@ function Table({ columns, data }) {
     []
   );
 
-  const defaultColumn = React.useMemo(
-    () => ({
-      // Let's set up our default Filter UI
-      Filter: DefaultColumnFilter,
-    }),
-    []
-  );
+  const defaultColumn = useMemo(() => ({ Filter: DefaultColumnFilter }), []);
 
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
     prepareRow,
+    page,
 
     // Paginate
     canPreviousPage,
@@ -155,25 +147,21 @@ function Table({ columns, data }) {
     {
       columns,
       data,
-      defaultColumn, // Be sure to pass the defaultColumn option
+      defaultColumn, 
       filterTypes,
     },
-    useFilters, // useFilters!
+    useFilters, 
     usePagination
   );
-
-  // We don't want to render all of the rows for this example, so cap
-  // it for this use case
-  const firstPageRows = rows.slice(0, 10);
 
   return (
     <>
       <table {...getTableProps()}>
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>
+          {headerGroups.map((headerGroup, i) => (
+            <tr key={i} {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column, j) => (
+                <th key={j} {...column.getHeaderProps()}>
                   {column.render("Header")}
                   {/* Render the columns filter UI */}
                   <div>{column.canFilter ? column.render("Filter") : null}</div>
@@ -183,7 +171,7 @@ function Table({ columns, data }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {firstPageRows.map((row, i) => {
+          {page.map((row, i) => {
             prepareRow(row);
             return (
               <tr key={i} {...row.getRowProps()}>
@@ -247,41 +235,29 @@ function Table({ columns, data }) {
         </select>
       </div>
 
-      <div>
-        <pre>
-          <code>
-            {JSON.stringify(
-              {
-                filters,
-                pageIndex,
-                pageSize,
-                pageCount,
-                canNextPage,
-                canPreviousPage,
-              },
-              null,
-              2
-            )}
-          </code>
-        </pre>
-      </div>
+      {process.env.NODE_ENV === "development" ? (
+        <div>
+          <pre>
+            <code>
+              {JSON.stringify(
+                {
+                  filters,
+                  pageIndex,
+                  pageSize,
+                  pageCount,
+                  canNextPage,
+                  canPreviousPage,
+                },
+                null,
+                2
+              )}
+            </code>
+          </pre>
+        </div>
+      ) : null}
     </>
   );
 }
-
-// Define a custom filter filter function!
-function filterGreaterThan(rows, id, filterValue) {
-  return rows.filter((row) => {
-    const rowValue = row.values[id];
-    return rowValue >= filterValue;
-  });
-}
-
-// This is an autoRemove method on the filter function that
-// when given the new filter value and returns true, the filter
-// will be automatically removed. Normally this is just an undefined
-// check, but here, we want to remove the filter if it's not a number
-filterGreaterThan.autoRemove = (val) => typeof val !== "number";
 
 function App({ token }) {
   const columns = useMemo(
@@ -294,29 +270,23 @@ function App({ token }) {
       {
         Header: "Order #",
         accessor: "order",
-        // Use our custom `fuzzyText` filter on this column
         filter: "fuzzyText",
       },
       {
         Header: "Title",
         accessor: "product_title",
         filter: "fuzzyText",
-        // Filter: SliderColumnFilter,
-        // filter: "equals",
       },
       {
         Header: "Vendor",
         accessor: "vendor",
         filter: "fuzzyText",
-        // Filter: NumberRangeColumnFilter,
-        // filter: "between",
       },
       {
         Header: "Product Type",
         accessor: "product_type",
         Filter: SelectColumnFilter,
         filter: "equals",
-        // filter: "includes",
       },
       {
         Header: "Commissions Amount",
@@ -328,8 +298,6 @@ function App({ token }) {
         accessor: "commissions_paid",
         Filter: SelectColumnFilter,
         filter: "includes",
-        // Filter: SliderColumnFilter,
-        // filter: filterGreaterThan,
       },
     ],
     []
