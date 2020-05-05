@@ -3,7 +3,9 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import styled from "styled-components";
-import { useTable, useFilters, usePagination } from "react-table";
+import { useTable, useFilters, useGlobalFilter } from "react-table";
+
+// A great library for fuzzy filtering/sorting items
 import matchSorter from "match-sorter";
 
 import { convertTime } from "../../utils/cleanData";
@@ -15,7 +17,6 @@ const Styles = styled.div`
   table {
     border-spacing: 0;
     border: 1px solid black;
-    width: 100%;
 
     tr {
       :last-child {
@@ -36,12 +37,6 @@ const Styles = styled.div`
         border-right: 0;
       }
     }
-  }
-
-  .pagination {
-    padding: 0.5rem;
-    text-align: center;
-    margin-top: 25px;
   }
 `;
 
@@ -124,44 +119,44 @@ function Table({ columns, data }) {
     []
   );
 
-  const defaultColumn = useMemo(() => ({ Filter: DefaultColumnFilter }), []);
+  const defaultColumn = React.useMemo(
+    () => ({
+      // Let's set up our default Filter UI
+      Filter: DefaultColumnFilter,
+    }),
+    []
+  );
 
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    rows,
     prepareRow,
-    page,
-
-    // Paginate
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize, filters },
+    state,
   } = useTable(
     {
       columns,
       data,
-      defaultColumn, 
+      defaultColumn, // Be sure to pass the defaultColumn option
       filterTypes,
     },
-    useFilters, 
-    usePagination
+    useFilters, // useFilters!
+    useGlobalFilter // useGlobalFilter!
   );
+
+  // We don't want to render all of the rows for this example, so cap
+  // it for this use case
+  const firstPageRows = rows.slice(0, 10);
 
   return (
     <>
       <table {...getTableProps()}>
         <thead>
-          {headerGroups.map((headerGroup, i) => (
-            <tr key={i} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, j) => (
-                <th key={j} {...column.getHeaderProps()}>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()}>
                   {column.render("Header")}
                   {/* Render the columns filter UI */}
                   <div>{column.canFilter ? column.render("Filter") : null}</div>
@@ -171,15 +166,13 @@ function Table({ columns, data }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map((row, i) => {
+          {firstPageRows.map((row, i) => {
             prepareRow(row);
             return (
-              <tr key={i} {...row.getRowProps()}>
-                {row.cells.map((cell, j) => {
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
                   return (
-                    <td key={j} {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </td>
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                   );
                 })}
               </tr>
@@ -188,76 +181,29 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       <br />
-
-      {/* Pagination */}
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {"<<"}
-        </button>{" "}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {"<"}
-        </button>{" "}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {">"}
-        </button>{" "}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {">>"}
-        </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <span>
-          | Go to page:{" "}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+      <div>Showing the first 20 results of {rows.length} rows</div>
+      <div>
+        <pre>
+          <code>{JSON.stringify(state.filters, null, 2)}</code>
+        </pre>
       </div>
-
-      {process.env.NODE_ENV === "development" ? (
-        <div>
-          <pre>
-            <code>
-              {JSON.stringify(
-                {
-                  filters,
-                  pageIndex,
-                  pageSize,
-                  pageCount,
-                  canNextPage,
-                  canPreviousPage,
-                },
-                null,
-                2
-              )}
-            </code>
-          </pre>
-        </div>
-      ) : null}
     </>
   );
 }
+
+// Define a custom filter filter function!
+function filterGreaterThan(rows, id, filterValue) {
+  return rows.filter((row) => {
+    const rowValue = row.values[id];
+    return rowValue >= filterValue;
+  });
+}
+
+// This is an autoRemove method on the filter function that
+// when given the new filter value and returns true, the filter
+// will be automatically removed. Normally this is just an undefined
+// check, but here, we want to remove the filter if it's not a number
+filterGreaterThan.autoRemove = (val) => typeof val !== "number";
 
 function App({ token }) {
   const columns = useMemo(
@@ -270,23 +216,29 @@ function App({ token }) {
       {
         Header: "Order #",
         accessor: "order",
+        // Use our custom `fuzzyText` filter on this column
         filter: "fuzzyText",
       },
       {
         Header: "Title",
         accessor: "product_title",
         filter: "fuzzyText",
+        // Filter: SliderColumnFilter,
+        // filter: "equals",
       },
       {
         Header: "Vendor",
         accessor: "vendor",
         filter: "fuzzyText",
+        // Filter: NumberRangeColumnFilter,
+        // filter: "between",
       },
       {
         Header: "Product Type",
         accessor: "product_type",
         Filter: SelectColumnFilter,
         filter: "equals",
+        // filter: "includes",
       },
       {
         Header: "Commissions Amount",
@@ -298,6 +250,8 @@ function App({ token }) {
         accessor: "commissions_paid",
         Filter: SelectColumnFilter,
         filter: "includes",
+        // Filter: SliderColumnFilter,
+        // filter: filterGreaterThan,
       },
     ],
     []
@@ -315,24 +269,21 @@ function App({ token }) {
       } = await axios.post("/api/admin/commissions", reqBody, {
         headers: { Authorization: `JWT ${token}` },
       });
-
-      const convertDetailsForAdmin = commissionsDetailsArr.map((details) => {
-        const {
-          order_created_at,
-          commissions_paid,
-          ...otherProperty
-        } = details;
+  
+      const convertDetailsForAdmin = commissionsDetailsArr.map(details => {
+        const { order_created_at, commissions_paid, ...otherProperty } = details;
         return {
           ...otherProperty,
           order_created_at: convertTime(order_created_at),
-          commissions_paid: commissions_paid ? "Paid" : "Unpaid",
-        };
-      });
+          commissions_paid: commissions_paid ? "Paid": "Unpaid",
+        }
+      })
 
       setTableData(convertDetailsForAdmin);
     };
 
     getAllCommissions();
+
   }, [token]);
 
   return (
