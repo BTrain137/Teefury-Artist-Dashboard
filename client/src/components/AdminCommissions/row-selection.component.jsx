@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useMemo, useEffect, useState } from "react";
+import axios from "axios";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 import styled from "styled-components";
 import { useTable, useRowSelect } from "react-table";
 
-import makeData from "./makeData";
+import Checkbox from "@material-ui/core/Checkbox";
+import { convertTime } from "../../utils/cleanData";
+import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -44,7 +49,8 @@ const IndeterminateCheckbox = React.forwardRef(
 
     return (
       <>
-        <input type="checkbox" ref={resolvedRef} {...rest} />
+        <Checkbox ref={resolvedRef} {...rest} />
+        {/* <input type="checkbox" ref={resolvedRef} {...rest} /> */}
       </>
     );
   }
@@ -54,10 +60,10 @@ function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
-    getTableBodyProps,
     headerGroups,
-    rows,
     prepareRow,
+    getTableBodyProps,
+    rows,
     selectedFlatRows,
     state: { selectedRowIds },
   } = useTable(
@@ -120,6 +126,7 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
+
       <pre>
         <code>
           {JSON.stringify(
@@ -138,8 +145,8 @@ function Table({ columns, data }) {
   );
 }
 
-function App() {
-  const columns = React.useMemo(
+function App({ token }) {
+  const columns = useMemo(
     () => [
       {
         Header: "Date",
@@ -173,13 +180,47 @@ function App() {
     []
   );
 
-  const data = React.useMemo(() => makeData(10, 3), []);
+  const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    const getAllCommissions = async () => {
+      const reqBody = {
+        startAt: 1,
+      };
+      const {
+        data: { commissionsDetailsArr },
+      } = await axios.post("/api/admin/commissions", reqBody, {
+        headers: { Authorization: `JWT ${token}` },
+      });
+
+      const convertDetailsForAdmin = commissionsDetailsArr.map((details) => {
+        const {
+          order_created_at,
+          commissions_paid,
+          ...otherProperty
+        } = details;
+        return {
+          ...otherProperty,
+          order_created_at: convertTime(order_created_at),
+          commissions_paid: commissions_paid ? "Paid" : "Unpaid",
+        };
+      });
+
+      setTableData(convertDetailsForAdmin);
+    };
+
+    getAllCommissions();
+  }, [token]);
 
   return (
     <Styles>
-      <Table columns={columns} data={data} />
+      <Table columns={columns} data={tableData} />
     </Styles>
   );
 }
 
-export default App;
+const mapStateToProps = createStructuredSelector({
+  token: selectUserJWTToken,
+});
+
+export default connect(mapStateToProps)(App);
