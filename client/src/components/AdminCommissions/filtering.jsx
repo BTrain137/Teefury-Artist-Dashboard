@@ -3,7 +3,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import styled from "styled-components";
-import { useTable, useFilters, useGlobalFilter } from "react-table";
+import { useTable, useFilters, usePagination } from "react-table";
 
 // A great library for fuzzy filtering/sorting items
 import matchSorter from "match-sorter";
@@ -17,6 +17,7 @@ const Styles = styled.div`
   table {
     border-spacing: 0;
     border: 1px solid black;
+    width: 100%;
 
     tr {
       :last-child {
@@ -36,6 +37,12 @@ const Styles = styled.div`
       :last-child {
         border-right: 0;
       }
+    }
+
+    .pagination {
+      padding: 0.5rem;
+      text-align: center;
+      margin-top: 25px;
     }
   }
 `;
@@ -133,7 +140,17 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-    state,
+
+    // Paginate
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize, filters },
   } = useTable(
     {
       columns,
@@ -142,7 +159,7 @@ function Table({ columns, data }) {
       filterTypes,
     },
     useFilters, // useFilters!
-    useGlobalFilter // useGlobalFilter!
+    usePagination
   );
 
   // We don't want to render all of the rows for this example, so cap
@@ -169,10 +186,12 @@ function Table({ columns, data }) {
           {firstPageRows.map((row, i) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
+              <tr key={i} {...row.getRowProps()}>
+                {row.cells.map((cell, j) => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    <td key={j} {...cell.getCellProps()}>
+                      {cell.render("Cell")}
+                    </td>
                   );
                 })}
               </tr>
@@ -181,10 +200,69 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       <br />
-      <div>Showing the first 20 results of {rows.length} rows</div>
+
+      {/* Pagination */}
+      <div className="pagination">
+        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {"<<"}
+        </button>{" "}
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {"<"}
+        </button>{" "}
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          {">"}
+        </button>{" "}
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {">>"}
+        </button>{" "}
+        <span>
+          Page{" "}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{" "}
+        </span>
+        <span>
+          | Go to page:{" "}
+          <input
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
+            }}
+            style={{ width: "100px" }}
+          />
+        </span>{" "}
+        <select
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div>
         <pre>
-          <code>{JSON.stringify(state.filters, null, 2)}</code>
+          <code>
+            {JSON.stringify(
+              {
+                filters,
+                pageIndex,
+                pageSize,
+                pageCount,
+                canNextPage,
+                canPreviousPage,
+              },
+              null,
+              2
+            )}
+          </code>
         </pre>
       </div>
     </>
@@ -269,21 +347,24 @@ function App({ token }) {
       } = await axios.post("/api/admin/commissions", reqBody, {
         headers: { Authorization: `JWT ${token}` },
       });
-  
-      const convertDetailsForAdmin = commissionsDetailsArr.map(details => {
-        const { order_created_at, commissions_paid, ...otherProperty } = details;
+
+      const convertDetailsForAdmin = commissionsDetailsArr.map((details) => {
+        const {
+          order_created_at,
+          commissions_paid,
+          ...otherProperty
+        } = details;
         return {
           ...otherProperty,
           order_created_at: convertTime(order_created_at),
-          commissions_paid: commissions_paid ? "Paid": "Unpaid",
-        }
-      })
+          commissions_paid: commissions_paid ? "Paid" : "Unpaid",
+        };
+      });
 
       setTableData(convertDetailsForAdmin);
     };
 
     getAllCommissions();
-
   }, [token]);
 
   return (
