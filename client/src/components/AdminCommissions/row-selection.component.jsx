@@ -142,38 +142,32 @@ function App() {
   const columns = React.useMemo(
     () => [
       {
-        Header: "Name",
-        columns: [
-          {
-            Header: "First Name",
-            accessor: "firstName",
-          },
-          {
-            Header: "Last Name",
-            accessor: "lastName",
-          },
-        ],
+        Header: "Date",
+        accessor: "order_created_at",
       },
       {
-        Header: "Info",
-        columns: [
-          {
-            Header: "Age",
-            accessor: "age",
-          },
-          {
-            Header: "Visits",
-            accessor: "visits",
-          },
-          {
-            Header: "Status",
-            accessor: "status",
-          },
-          {
-            Header: "Profile Progress",
-            accessor: "progress",
-          },
-        ],
+        Header: "Order #",
+        accessor: "order",
+      },
+      {
+        Header: "Title",
+        accessor: "product_title",
+      },
+      {
+        Header: "Vendor",
+        accessor: "vendor",
+      },
+      {
+        Header: "Product Type",
+        accessor: "product_type",
+      },
+      {
+        Header: "Commissions Amount",
+        accessor: "commissions_amount",
+      },
+      {
+        Header: "Paid or Unpaid",
+        accessor: "commissions_paid",
       },
     ],
     []
