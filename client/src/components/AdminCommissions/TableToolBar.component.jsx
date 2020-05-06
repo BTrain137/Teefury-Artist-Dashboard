@@ -1,0 +1,88 @@
+import React from "react";
+import PropTypes from "prop-types";
+
+import clsx from "clsx";
+
+import CheckIcon from "@material-ui/icons/Check";
+import NotInterestedRoundedIcon from '@material-ui/icons/NotInterestedRounded';
+import IconButton from "@material-ui/core/IconButton";
+import { lighten, makeStyles } from "@material-ui/core/styles";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Tooltip from "@material-ui/core/Tooltip";
+
+const useToolbarStyles = makeStyles((theme) => ({
+  root: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(1),
+  },
+  highlight:
+    theme.palette.type === "light"
+      ? {
+          color: theme.palette.secondary.main,
+          backgroundColor: lighten(theme.palette.primary.main, 0.85),
+        }
+      : {
+          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.secondary.dark,
+        },
+  title: {
+    flex: "1 1 100%",
+  },
+  iconPaid: {
+    color: "green"
+  },
+}));
+
+const TableToolbar = (props) => {
+  const classes = useToolbarStyles();
+  const {
+    numSelected,
+    markedAsPaid,
+    markedAsUnpaid,
+  } = props;
+  return (
+    <Toolbar
+      className={clsx(classes.root, {
+        [classes.highlight]: numSelected > 0,
+      })}
+    >
+      {numSelected > 0 ? (
+        <Typography
+          className={classes.title}
+          color="inherit"
+          variant="subtitle1"
+        >
+          {numSelected} selected
+        </Typography>
+      ) : (
+        <Typography className={classes.title} variant="h6" id="tableTitle">
+          Commissions
+        </Typography>
+      )}
+
+      {numSelected > 0 ? (
+        <>
+        <Tooltip title="Paid">
+          <IconButton aria-label="paid" onClick={markedAsPaid}>
+            <CheckIcon fontSize={"large"} className={classes.iconPaid} /> Paid
+          </IconButton>
+        </Tooltip>
+        {" "}
+        <Tooltip title="Unpaid">
+        <IconButton aria-label="unpaid" onClick={markedAsUnpaid}>
+          <NotInterestedRoundedIcon fontSize={"large"} color={"error"} /> Unpaid
+        </IconButton>
+      </Tooltip>
+      </>
+      ) : null}
+    </Toolbar>
+  );
+};
+
+TableToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+  markedAsPaid: PropTypes.func.isRequired,
+};
+
+export default TableToolbar;

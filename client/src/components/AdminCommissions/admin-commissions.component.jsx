@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 
-import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
+// import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
 
-import Table from "../Table/Table.component";
-// import Table from "./row-selection.component";
+// import Table from "../Table/Table.component";
+import Table from "./select-filtering-paginate";
 
 import {
   SubmissionContainer,
   TabArea,
-  FilterHeader,
-  AdjustableIconWrapper,
-  FilterContainer,
-} from "./admin-commissions.styles";
+  // FilterHeader,
+  // AdjustableIconWrapper,
+  // FilterContainer,
+} from "../SharedStyle/styled.component";
 
-class ArtistCommissions extends Component {
+class AdminCommissions extends Component {
   constructor(props) {
     super(props);
 
@@ -28,11 +28,11 @@ class ArtistCommissions extends Component {
   };
 
   render() {
-    const { isShowingFilter } = this.state;
+    // const { isShowingFilter } = this.state;
     return (
       <SubmissionContainer>
         <TabArea>
-          <FilterHeader>
+          {/* <FilterHeader>
             <AdjustableIconWrapper onClick={this.toggleFilterArea}>
               <AdjustablesIcon />
             </AdjustableIconWrapper>
@@ -41,7 +41,7 @@ class ArtistCommissions extends Component {
                 <div style={{ height: "100px", width: "50px" }} />
               </FilterContainer>
             ) : null}
-          </FilterHeader>
+          </FilterHeader> */}
 
           <Table />
         </TabArea>
@@ -50,4 +50,4 @@ class ArtistCommissions extends Component {
   }
 }
 
-export default ArtistCommissions;
+export default AdminCommissions;

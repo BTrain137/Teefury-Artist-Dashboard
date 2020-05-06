@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { useTable, useRowSelect } from "react-table";
 
 import Checkbox from "@material-ui/core/Checkbox";
-import { convertTime } from "../../utils/cleanData";
+import { justDate } from "../../utils/cleanData";
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 const Styles = styled.div`
@@ -64,6 +64,7 @@ function Table({ columns, data }) {
     prepareRow,
     getTableBodyProps,
     rows,
+    page,
     selectedFlatRows,
     state: { selectedRowIds },
   } = useTable(
@@ -201,7 +202,7 @@ function App({ token }) {
         } = details;
         return {
           ...otherProperty,
-          order_created_at: convertTime(order_created_at),
+          order_created_at: justDate(order_created_at),
           commissions_paid: commissions_paid ? "Paid" : "Unpaid",
         };
       });
