@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
+// import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
 
 // import Table from "../Table/Table.component";
 import Table from "./filtering-paginate.component";
@@ -9,9 +9,9 @@ import Table from "./filtering-paginate.component";
 import {
   SubmissionContainer,
   TabArea,
-  FilterHeader,
-  AdjustableIconWrapper,
-  FilterContainer,
+  // FilterHeader,
+  // AdjustableIconWrapper,
+  // FilterContainer,
 } from "./artist-commissions.styles";
 
 class ArtistCommissions extends Component {
@@ -29,7 +29,7 @@ class ArtistCommissions extends Component {
   };
 
   render() {
-    const { isShowingFilter } = this.state;
+    // const { isShowingFilter } = this.state;
     return (
       <SubmissionContainer>
         <TabArea>
