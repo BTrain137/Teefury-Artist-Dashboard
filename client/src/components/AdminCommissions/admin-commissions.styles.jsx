@@ -1,50 +1,37 @@
 import styled from "styled-components";
 
-export const SubmissionContainer = styled.div`
-  width: 90%;
-  margin: 40px auto;
-`;
+export const Styles = styled.div`
+  padding: 1rem;
 
-export const TabArea = styled.div`
-  box-shadow: 0px 7px 16px 2px rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
-  padding: 55px;
-  min-height: 70vh;
-`;
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+    width: 100%;
 
-export const FilterHeader = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  position: relative;
-`;
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
 
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
 
-export const AdjustableIconWrapper = styled.div`
-  width: 30px;
-  cursor: pointer;
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
 
-  path {
-    fill: #1a8488;
+  .pagination {
+    padding: 0.5rem;
+    text-align: center;
+    margin-top: 25px;
   }
 `;
-
-export const FilterContainer = styled.div`
-  position: absolute;
-  bottom: -145px;
-  right: -20px;
-  z-index: 5;
-  max-width: 170px;
-  padding: 18px 20px 18px 0;
-  border-radius: 12px;
-  box-shadow: 0px 3px 11px 1px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
-
-  .selected {
-    background-color: #dedddd;
-    border-left: 5px solid #6a6a6a;
-    border-radius: 0 12px 12px 0;
-    padding-left: 30px;
-    box-shadow: 0px 3px 11px 1px rgba(0, 0, 0, 0.2);
-  }
-`;
-
