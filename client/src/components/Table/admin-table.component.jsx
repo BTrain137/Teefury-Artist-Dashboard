@@ -6,6 +6,7 @@ import TableToolbar from "./table-tool-bar.component";
 import { fetchComForTable } from "../../utils/table";
 import { DefaultColumnFilter, IndeterminateCheckbox, fuzzyTextFilterFn } from "../../libs/table";
 
+import { TableContainer } from "./table.styles";
 
 // Remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val) => !val;
@@ -136,7 +137,7 @@ const Table = ({ columns, data, token, setTableData }) => {
   };
 
   return (
-    <>
+    <TableContainer>
       <TableToolbar
         numSelected={Object.keys(selectedRowIds).length}
         markedAsPaid={markedAsPaid}
@@ -245,7 +246,7 @@ const Table = ({ columns, data, token, setTableData }) => {
           </pre>
         </div>
       ) : null}
-    </>
+    </TableContainer>
   );
 }
 

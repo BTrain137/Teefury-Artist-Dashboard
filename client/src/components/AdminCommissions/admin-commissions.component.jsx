@@ -8,7 +8,6 @@ import { fetchComForTable } from "../../utils/table";
 import { SelectColumnFilter } from "../../libs/table";
 
 import { SubmissionContainer, TabArea } from "../SharedStyle/styled.component";
-import { TableContainer } from "./admin-commissions.styles";
 
 const TABLE_COLUMNS = [
   {
@@ -52,7 +51,7 @@ const TABLE_COLUMNS = [
     accessor: "commissions_paid",
     Filter: SelectColumnFilter,
     filter: "includes",
-  }
+  },
 ];
 
 class AdminCommissions extends Component {
@@ -97,17 +96,15 @@ class AdminCommissions extends Component {
     return (
       <SubmissionContainer>
         <TabArea>
-          <TableContainer>
-            {tableData.length > 1 ? (
-              <AdminTable
-                columns={TABLE_COLUMNS}
-                setTableData={this.setTableData}
-                data={tableData}
-                token={token}
-                onClick={this.handleTableButtonClick.bind(this)}
-              />
-            ) : null}
-          </TableContainer>
+          {tableData.length > 1 ? (
+            <AdminTable
+              columns={TABLE_COLUMNS}
+              setTableData={this.setTableData}
+              data={tableData}
+              token={token}
+              onClick={this.handleTableButtonClick.bind(this)}
+            />
+          ) : null}
         </TabArea>
       </SubmissionContainer>
     );
