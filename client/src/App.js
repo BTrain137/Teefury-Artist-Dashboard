@@ -12,23 +12,37 @@ import ArtistCommissions from "./pages/ArtistCommissions";
 import AdminArtSubmissionsPage from "./pages/AdminArtSubmissions";
 import AdminCommissionsPage from "./pages/AdminCommissions";
 
-import "./App.css";
+import { GlobalStyle } from "./GlobalStyle";
 
 function App() {
   return (
-    <Switch>
-      <Route exact path="/" component={SignInPage} />
-      <Route exact path="/signup" component={SignUpPage} />
-      {/* Artist Routes */}
-      <Route exact path="/artist/create" component={CreateArtistPage} />
-      <Route exact path="/artist/profile" component={ArtistProfilePage} />
-      <Route path="/artist/submissions" component={ArtistSubmissionPage} />
-      <Route exact path="/artist/commissions" component={ArtistCommissions} />
-      <Route exact path="/artist/notifications" component={ArtistProfilePage} />
-      {/* Admin Routes TODO: Secure Routes */}
-      <Route path="/admin/art-submissions" component={AdminArtSubmissionsPage} />
-      <Route exact path="/admin/commissions" component={AdminCommissionsPage} />
-    </Switch>
+    <>
+      <GlobalStyle />
+      <Switch>
+        <Route exact path="/" component={SignInPage} />
+        <Route exact path="/signup" component={SignUpPage} />
+        {/* Artist Routes */}
+        <Route exact path="/artist/create" component={CreateArtistPage} />
+        <Route exact path="/artist/profile" component={ArtistProfilePage} />
+        <Route path="/artist/submissions" component={ArtistSubmissionPage} />
+        <Route exact path="/artist/commissions" component={ArtistCommissions} />
+        <Route
+          exact
+          path="/artist/notifications"
+          component={ArtistProfilePage}
+        />
+        {/* Admin Routes TODO: Secure Routes */}
+        <Route
+          path="/admin/art-submissions"
+          component={AdminArtSubmissionsPage}
+        />
+        <Route
+          exact
+          path="/admin/commissions"
+          component={AdminCommissionsPage}
+        />
+      </Switch>
+    </>
   );
 }
 
