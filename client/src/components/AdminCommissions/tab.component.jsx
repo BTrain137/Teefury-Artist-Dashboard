@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import Swal from "sweetalert2";
 import { useTable, useFilters, usePagination, useRowSelect } from "react-table";
 
-import TableToolbar from "./table-too-bar.component";
+import TableToolbar from "./table-tool-bar.component";
 import { fetchComForTable } from "../../utils/table";
 import { DefaultColumnFilter, IndeterminateCheckbox, fuzzyTextFilterFn } from "../../libs/table";
 
