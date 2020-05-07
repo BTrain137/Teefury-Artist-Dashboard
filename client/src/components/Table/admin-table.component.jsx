@@ -11,7 +11,7 @@ import { TableContainer } from "./table.styles";
 // Remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
-const Table = ({ columns, data, token, setTableData }) => {
+const AdminTable = ({ columns, data, token, setTableData }) => {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -250,4 +250,4 @@ const Table = ({ columns, data, token, setTableData }) => {
   );
 }
 
-export default Table;
+export default AdminTable;
