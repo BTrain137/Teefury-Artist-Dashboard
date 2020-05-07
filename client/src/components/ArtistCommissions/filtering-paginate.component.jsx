@@ -1,109 +1,14 @@
-import React, { useMemo, useEffect, useState } from "react";
-import axios from "axios";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
-import styled from "styled-components";
+import React, { useMemo } from "react"
 import { useTable, useFilters, usePagination } from "react-table";
-import matchSorter from "match-sorter";
 
-import { justDate } from "../../utils/cleanData";
-import { selectUserJWTToken } from "../../redux/user/user.selector";
-
-const Styles = styled.div`
-  padding: 1rem;
-
-  table {
-    border-spacing: 0;
-    border: 1px solid black;
-    width: 100%;
-
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
-      }
-    }
-
-    th,
-    td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
-
-      :last-child {
-        border-right: 0;
-      }
-    }
-  }
-
-  .pagination {
-    padding: 0.5rem;
-    text-align: center;
-    margin-top: 25px;
-  }
-`;
-
-// Define a default UI for filtering
-function DefaultColumnFilter({
-  column: { filterValue, preFilteredRows, setFilter },
-}) {
-  const count = preFilteredRows.length;
-
-  return (
-    <input
-      value={filterValue || ""}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
-      }}
-      placeholder={`Search ${count} records...`}
-    />
-  );
-}
-
-// This is a custom filter UI for selecting
-// a unique option from a list
-function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
-}) {
-  // Calculate the options for filtering
-  // using the preFilteredRows
-  const options = React.useMemo(() => {
-    const options = new Set();
-    preFilteredRows.forEach((row) => {
-      options.add(row.values[id]);
-    });
-    return [...options.values()];
-  }, [id, preFilteredRows]);
-
-  // Render a multi-select box
-  return (
-    <select
-      value={filterValue}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined);
-      }}
-    >
-      <option value="">All</option>
-      {options.map((option, i) => (
-        <option key={i} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  );
-}
-
-function fuzzyTextFilterFn(rows, id, filterValue) {
-  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
-}
+import { DefaultColumnFilter, fuzzyTextFilterFn } from "../../libs/table";
+import { TableContainer } from "../Table/table.styles";
 
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
 // Our table component
-function Table({ columns, data }) {
+const ArtistTable = ({ columns, data }) => {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -155,7 +60,7 @@ function Table({ columns, data }) {
   );
 
   return (
-    <>
+    <TableContainer>
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup, i) => (
@@ -255,87 +160,8 @@ function Table({ columns, data }) {
           </pre>
         </div>
       ) : null}
-    </>
+    </TableContainer>
   );
 }
 
-function App({ token }) {
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Date",
-        accessor: "order_created_at",
-        disableFilters: true,
-      },
-      {
-        Header: "Title",
-        accessor: "product_title",
-        filter: "fuzzyText",
-      },
-      {
-        Header: "Product Type",
-        accessor: "product_type",
-        Filter: SelectColumnFilter,
-        filter: "equals",
-      },
-      {
-        Header: "Commissions Amount",
-        accessor: "commissions_amount",
-        disableFilters: true,
-      },
-      {
-        Header: "Paid or Unpaid",
-        accessor: "commissions_paid",
-        Filter: SelectColumnFilter,
-        filter: "includes",
-      },
-    ],
-    []
-  );
-
-  const [tableData, setTableData] = useState([]);
-
-  useEffect(() => {
-    const getAllCommissions = async () => {
-      const reqBody = {
-        startAt: 1,
-      };
-      const {
-        data: { commissionsDetailsArr },
-      } = await axios.post("/api/admin/commissions", reqBody, {
-        headers: { Authorization: `JWT ${token}` },
-      });
-
-      const convertDetailsForAdmin = commissionsDetailsArr.map((details) => {
-        const {
-          order_created_at,
-          commissions_paid,
-          commissions_amount,
-          ...otherProperty
-        } = details;
-        return {
-          ...otherProperty,
-          commissions_amount: Math.floor(Math.random() * 3),
-          order_created_at: justDate(order_created_at),
-          commissions_paid: commissions_paid ? "Paid" : "Unpaid",
-        };
-      });
-
-      setTableData(convertDetailsForAdmin);
-    };
-
-    getAllCommissions();
-  }, [token]);
-
-  return (
-    <Styles>
-      <Table columns={columns} data={tableData} />
-    </Styles>
-  );
-}
-
-const mapStateToProps = createStructuredSelector({
-  token: selectUserJWTToken,
-});
-
-export default connect(mapStateToProps)(App);
+export default ArtistTable;
