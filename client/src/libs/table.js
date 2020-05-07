@@ -50,7 +50,7 @@ export const DefaultColumnFilter = ({
       placeholder={`Search ${count} records...`}
     />
   );
-}
+};
 
 // Selection
 export const IndeterminateCheckbox = React.forwardRef(
@@ -73,5 +73,16 @@ export const IndeterminateCheckbox = React.forwardRef(
 // Fuzzy find by a library
 export const fuzzyTextFilterFn = (rows, id, filterValue) => {
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
+};
+
+export const startWithFn = (rows, id, filterValue) => {
+  return rows.filter((row) => {
+    const rowValue = row.values[id];
+    return rowValue !== undefined
+      ? String(rowValue)
+          .toLowerCase()
+          .startsWith(String(filterValue).toLowerCase())
+      : true;
+  });
 }
 

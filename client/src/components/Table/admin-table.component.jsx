@@ -1,10 +1,15 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import Swal from "sweetalert2";
 import { useTable, useFilters, usePagination, useRowSelect } from "react-table";
 
 import TableToolbar from "./table-tool-bar.component";
 import { fetchComForTable } from "../../utils/table";
-import { DefaultColumnFilter, IndeterminateCheckbox, fuzzyTextFilterFn } from "../../libs/table";
+import {
+  DefaultColumnFilter,
+  IndeterminateCheckbox,
+  fuzzyTextFilterFn,
+  startWithFn,
+} from "../../libs/table";
 
 import { TableContainer } from "./table.styles";
 
@@ -14,19 +19,8 @@ fuzzyTextFilterFn.autoRemove = (val) => !val;
 const AdminTable = ({ columns, data, token, setTableData }) => {
   const filterTypes = React.useMemo(
     () => ({
-      // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // "startWith"
-      text: (rows, id, filterValue) => {
-        return rows.filter((row) => {
-          const rowValue = row.values[id];
-          return rowValue !== undefined
-            ? String(rowValue)
-                .toLowerCase()
-                .startsWith(String(filterValue).toLowerCase())
-            : true;
-        });
-      },
+      text: startWithFn,
     }),
     []
   );
@@ -52,6 +46,7 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
 
     // Selection
     selectedFlatRows,
+    toggleAllRowsSelected,
 
     state: { pageIndex, pageSize, filters, selectedRowIds },
   } = useTable(
@@ -248,6 +243,6 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
       ) : null}
     </TableContainer>
   );
-}
+};
 
 export default AdminTable;
