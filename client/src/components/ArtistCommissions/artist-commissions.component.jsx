@@ -7,6 +7,7 @@ import { ArtistTable } from "../Table";
 import { fetchComForTable } from "../../utils/table";
 import { SelectColumnFilter } from "../../libs/table";
 
+import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 import { SubmissionContainer, TabArea } from "../SharedStyle/styled.component";
 
 const TABLE_COLUMNS = [
@@ -45,6 +46,7 @@ class ArtistCommissions extends Component {
 
     this.state = {
       tableData: [],
+      errorMsg: "",
     };
   }
 
@@ -57,29 +59,44 @@ class ArtistCommissions extends Component {
   };
 
   getAllCommissions = async () => {
-    const { token } = this.props;
-    const reqBody = {
-      url: "/api/admin/commissions",
-      method: "POST",
-      data: {
-        startAt: 1,
-      },
-    };
+    try {
+      const { token } = this.props;
+      const reqBody = {
+        url: "/api/artist/commissions",
+        method: "GET",
+      };
 
-    const tableData = await fetchComForTable(reqBody, token);
+      const tableData = await fetchComForTable(reqBody, token);
 
-    this.setState({ tableData });
+      this.setState({ tableData });
+    } catch (error) {
+      this.setState({
+        errorMsg:
+          "We Could not find any records. Let us know if its a mistake.",
+      });
+    }
   };
 
   render() {
-    const { tableData } = this.state;
+    const { tableData, errorMsg } = this.state;
     return (
       <SubmissionContainer>
         <TabArea>
-          <ArtistTable
-            columns={TABLE_COLUMNS}
-            data={tableData}
-          />
+          {tableData.length > 1 ? (
+            <ArtistTable columns={TABLE_COLUMNS} data={tableData} />
+          ) : errorMsg ? (
+            <h2>{errorMsg}</h2>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "50px",
+              }}
+            >
+              <img className="rotating" src={teefuryBirdLogo} alt="tee bird" />
+            </div>
+          )}
         </TabArea>
       </SubmissionContainer>
     );
