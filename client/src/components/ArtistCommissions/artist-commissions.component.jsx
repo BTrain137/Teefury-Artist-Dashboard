@@ -1,54 +1,93 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { selectUserJWTToken } from "../../redux/user/user.selector";
 
-// import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
+import { ArtistTable } from "../Table";
+import { fetchComForTable } from "../../utils/table";
+import { SelectColumnFilter } from "../../libs/table";
 
-// import Table from "../Table/Table.component";
-import Table from "./filtering-paginate.component";
-// import Table from "./row-selection.component";
+import { SubmissionContainer, TabArea } from "../SharedStyle/styled.component";
 
-import {
-  SubmissionContainer,
-  TabArea,
-  // FilterHeader,
-  // AdjustableIconWrapper,
-  // FilterContainer,
-} from "./artist-commissions.styles";
+const TABLE_COLUMNS = [
+  {
+    Header: "Date",
+    accessor: "order_created_at",
+    disableFilters: true,
+  },
+  {
+    Header: "Title",
+    accessor: "product_title",
+    filter: "fuzzyText",
+  },
+  {
+    Header: "Product Type",
+    accessor: "product_type",
+    Filter: SelectColumnFilter,
+    filter: "equals",
+  },
+  {
+    Header: "Commissions Amount",
+    accessor: "commissions_amount",
+    disableFilters: true,
+  },
+  {
+    Header: "Paid or Unpaid",
+    accessor: "commissions_paid",
+    Filter: SelectColumnFilter,
+    filter: "includes",
+  },
+];
 
 class ArtistCommissions extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isShowingFilter: false,
+      tableData: [],
     };
   }
 
-  toggleFilterArea = () => {
-    const { isShowingFilter } = this.state;
-    this.setState({ isShowingFilter: !isShowingFilter });
+  componentDidMount() {
+    this.getAllCommissions();
+  }
+
+  setTableData = (data) => {
+    this.setState({ tableData: data });
+  };
+
+  getAllCommissions = async () => {
+    const { token } = this.props;
+    const reqBody = {
+      url: "/api/admin/commissions",
+      method: "POST",
+      data: {
+        startAt: 1,
+      },
+    };
+
+    const tableData = await fetchComForTable(reqBody, token);
+
+    this.setState({ tableData });
   };
 
   render() {
-    // const { isShowingFilter } = this.state;
+    const { tableData } = this.state;
     return (
       <SubmissionContainer>
         <TabArea>
-          {/* <FilterHeader>
-            <AdjustableIconWrapper onClick={this.toggleFilterArea}>
-              <AdjustablesIcon />
-            </AdjustableIconWrapper>
-            {isShowingFilter ? (
-              <FilterContainer>
-                <div style={{ height: "100px", width: "50px" }} />
-              </FilterContainer>
-            ) : null}
-          </FilterHeader> */}
-
-          <Table />
+          <ArtistTable
+            columns={TABLE_COLUMNS}
+            data={tableData}
+          />
         </TabArea>
       </SubmissionContainer>
     );
   }
 }
 
-export default ArtistCommissions;
+const mapStateToProps = createStructuredSelector({
+  token: selectUserJWTToken,
+});
+
+export default connect(mapStateToProps)(ArtistCommissions);
