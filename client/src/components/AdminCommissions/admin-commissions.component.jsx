@@ -23,7 +23,7 @@ const TABLE_COLUMNS = [
   {
     Header: "Order #",
     accessor: "order",
-    filter: "fuzzyText",
+    filter: "text",
   },
   {
     Header: "Title",
