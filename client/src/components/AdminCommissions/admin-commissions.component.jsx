@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
-import Table from "./table.component";
+import { AdminTable } from "../Table";
 import { fetchComForTable } from "../../utils/table";
 import { SelectColumnFilter } from "../../libs/table";
 
 import { SubmissionContainer, TabArea } from "../SharedStyle/styled.component";
-import { Styles } from "./admin-commissions.styles";
+import { TableContainer } from "./admin-commissions.styles";
 
 const TABLE_COLUMNS = [
   {
@@ -97,9 +97,9 @@ class AdminCommissions extends Component {
     return (
       <SubmissionContainer>
         <TabArea>
-          <Styles>
+          <TableContainer>
             {tableData.length > 1 ? (
-              <Table
+              <AdminTable
                 columns={TABLE_COLUMNS}
                 setTableData={this.setTableData}
                 data={tableData}
@@ -107,7 +107,7 @@ class AdminCommissions extends Component {
                 onClick={this.handleTableButtonClick.bind(this)}
               />
             ) : null}
-          </Styles>
+          </TableContainer>
         </TabArea>
       </SubmissionContainer>
     );

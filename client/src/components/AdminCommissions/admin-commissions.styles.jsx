@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Styles = styled.div`
+export const TableContainer = styled.div`
   padding: 1rem;
 
   table {
