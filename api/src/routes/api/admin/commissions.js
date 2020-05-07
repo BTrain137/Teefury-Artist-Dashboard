@@ -5,6 +5,7 @@ import pool from "../../../database/connection";
 /**
  * Database quires return an array. Even if 1 item exist.
  * @typedef {{
+ *   dbRowId:Number,
  *   order:String,
  *   order_created_at:String,
  *   product_title:String,
