@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 
 import CheckIcon from "@material-ui/icons/Check";
-import NotInterestedRoundedIcon from '@material-ui/icons/NotInterestedRounded';
+import NotInterestedRoundedIcon from "@material-ui/icons/NotInterestedRounded";
 import IconButton from "@material-ui/core/IconButton";
+import ListAltIcon from "@material-ui/icons/ListAlt";
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -30,17 +31,18 @@ const useToolbarStyles = makeStyles((theme) => ({
     flex: "1 1 100%",
   },
   iconPaid: {
-    color: "green"
+    color: "green",
   },
 }));
 
-const TableToolbar = (props) => {
+const TableToolbar = ({
+  numSelected,
+  markedAsPaid,
+  markedAsUnpaid,
+  exportCSV,
+}) => {
   const classes = useToolbarStyles();
-  const {
-    numSelected,
-    markedAsPaid,
-    markedAsUnpaid,
-  } = props;
+
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -63,19 +65,25 @@ const TableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <>
-        <Tooltip title="Paid">
-          <IconButton aria-label="paid" onClick={markedAsPaid}>
-            <CheckIcon fontSize={"large"} className={classes.iconPaid} /> Paid
+          <Tooltip title="Paid">
+            <IconButton aria-label="paid" onClick={markedAsPaid}>
+              <CheckIcon fontSize={"large"} className={classes.iconPaid} /> Paid
+            </IconButton>
+          </Tooltip>{" "}
+          <Tooltip title="Unpaid">
+            <IconButton aria-label="unpaid" onClick={markedAsUnpaid}>
+              <NotInterestedRoundedIcon fontSize={"large"} color={"error"} />{" "}
+              Unpaid
+            </IconButton>
+          </Tooltip>
+        </>
+      ) : (
+        <Tooltip title="CSV">
+          <IconButton aria-label="export csv" onClick={exportCSV}>
+            <ListAltIcon fontSize={"large"} /> Export CSV
           </IconButton>
         </Tooltip>
-        {" "}
-        <Tooltip title="Unpaid">
-        <IconButton aria-label="unpaid" onClick={markedAsUnpaid}>
-          <NotInterestedRoundedIcon fontSize={"large"} color={"error"} /> Unpaid
-        </IconButton>
-      </Tooltip>
-      </>
-      ) : null}
+      )}
     </Toolbar>
   );
 };

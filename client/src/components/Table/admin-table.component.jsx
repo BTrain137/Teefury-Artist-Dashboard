@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import Swal from "sweetalert2";
+import { CSVDownload } from "react-csv";
 import { useTable, useFilters, usePagination, useRowSelect } from "react-table";
 
 import TableToolbar from "./table-tool-bar.component";
@@ -33,6 +34,7 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
     headerGroups,
     prepareRow,
     page,
+    rows,
 
     // Paginate
     canPreviousPage,
@@ -46,7 +48,6 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
 
     // Selection
     selectedFlatRows,
-    toggleAllRowsSelected,
 
     state: { pageIndex, pageSize, filters, selectedRowIds },
   } = useTable(
@@ -131,12 +132,35 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
     updateCommissions(false);
   };
 
+  const [csvData, setCsvData] = useState({ csvBodyData: [], csvHeaders: [] });
+  const { csvBodyData, csvHeaders } = csvData;
+
+  const exportCSV = () => {
+    const csvHeaders = [
+      { label: "id", key: "dbRowId" },
+      { label: "Date", key: "order_created_at" },
+      { label: "Order #", key: "order" },
+      { label: "Title", key: "product_title" },
+      { label: "Vendor", key: "vendor" },
+      { label: "Product", key: "product_type" },
+      { label: "Commissions Amount", key: "commissions_amount" },
+      { label: "Paid or Unpaid", key: "commissions_paid" },
+    ];
+    const csvBodyData = rows.map((row) => row.original);
+
+    setCsvData({ csvBodyData, csvHeaders });
+  };
+
   return (
     <TableContainer>
+      {csvBodyData.length > 0 ? (
+        <CSVDownload data={csvBodyData} headers={csvHeaders} />
+      ) : null}
       <TableToolbar
         numSelected={Object.keys(selectedRowIds).length}
         markedAsPaid={markedAsPaid}
         markedAsUnpaid={markedAsUnpaid}
+        exportCSV={exportCSV}
       />
       <table {...getTableProps()}>
         <thead>
