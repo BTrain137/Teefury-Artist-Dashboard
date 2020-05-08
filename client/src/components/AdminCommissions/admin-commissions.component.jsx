@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
+import DatePicker from "./date-picker.component";
 import { AdminTable } from "../Table";
 import { fetchComForTable } from "../../utils/table";
 import { SelectColumnFilter } from "../../libs/table";
@@ -96,6 +97,7 @@ class AdminCommissions extends Component {
     return (
       <SubmissionContainer>
         <TabArea>
+          <DatePicker />
           {tableData.length > 1 ? (
             <AdminTable
               columns={TABLE_COLUMNS}
