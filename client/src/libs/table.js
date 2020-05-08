@@ -84,5 +84,4 @@ export const startWithFn = (rows, id, filterValue) => {
           .startsWith(String(filterValue).toLowerCase())
       : true;
   });
-}
-
+};
