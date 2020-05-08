@@ -153,15 +153,18 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
 
   return (
     <TableContainer>
+      {/* Download CSV file */}
       {csvBodyData.length > 0 ? (
         <CSVDownload data={csvBodyData} headers={csvHeaders} />
       ) : null}
+      {/* Toolbar */}
       <TableToolbar
         numSelected={Object.keys(selectedRowIds).length}
         markedAsPaid={markedAsPaid}
         markedAsUnpaid={markedAsUnpaid}
         exportCSV={exportCSV}
       />
+      {/* Table */}
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup, i) => (
