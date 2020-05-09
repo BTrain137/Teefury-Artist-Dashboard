@@ -6,24 +6,21 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css f
 
 const TableQueries = ({ handleDateFilter }) => {
-  const [dates, setDates] = useState([
-    {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: "selection",
-    },
-  ]);
+  const [dates, setDates] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  });
 
   const [state, setState] = useState({ isDateOpen: false });
   const { isDateOpen } = state;
 
   const handleChange = (item) => {
-    console.log(item);
-    setDates([item.selection]);
+    setDates(item.selection);
   };
 
   const handleClick = () => {
-    const { startDate, endDate } = dates[0];
+    const { startDate, endDate } = dates;
     const start = new Date(startDate).toLocaleDateString("en-CA");
     const end = new Date(endDate).toLocaleDateString("en-CA");
     handleDateFilter({ startDate: start, endDate: end });
@@ -46,16 +43,22 @@ const TableQueries = ({ handleDateFilter }) => {
               editableDateInputs={true}
               onChange={handleChange}
               moveRangeOnFirstSelection={false}
-              ranges={dates}
+              ranges={[dates]}
             />
-            <ButtonSm style={{ marginLeft: "20px" }} onClick={handleClick}>
-              Filter By Date
-            </ButtonSm>
+            <div>
+              <ButtonSm style={{ marginLeft: "20px" }} onClick={handleClick}>
+                Filter By Date
+              </ButtonSm>
+              <ButtonSm
+                style={{ marginLeft: "20px" }}
+                onClick={() => setState({ ...state, isDateOpen: false })}
+              >
+                X
+              </ButtonSm>
+            </div>
           </>
         ) : (
-          <ButtonSm
-            onClick={() => setState({ ...state, isDateOpen: !isDateOpen })}
-          >
+          <ButtonSm onClick={() => setState({ ...state, isDateOpen: true })}>
             Open Calender
           </ButtonSm>
         )}
