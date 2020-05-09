@@ -98,4 +98,41 @@ router.put(
   }
 );
 
+router.post(
+  "/commissions/dates",
+  passport.authenticate("jwt-admin"),
+  async (req, res, next) => {
+    const { startAt, startDate, endDate } = req.body;
+    const defaultStartAt = startAt ? startAt : 1;
+
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+      let queryString =
+        "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
+        "`vendor`, `product_type`, `order_id` as `commissions_amount`, `commissions_paid` " +
+        "FROM `orders` ";
+
+      if (startDate && endDate) {
+        queryString += "WHERE `order_created_at` BETWEEN '" + startDate + "' AND '" + endDate + "' ";
+      }
+
+      queryString += "LIMIT " + defaultStartAt + ",100";
+      
+      /**
+       * @return {CommissionsDetails[]}
+       */
+      const commissionsDetailsArr = await pool.query(queryString);
+      conn.end();
+
+      res.status(200).json({ commissionsDetailsArr });
+      // res.sendStatus(200)
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
 export default router;

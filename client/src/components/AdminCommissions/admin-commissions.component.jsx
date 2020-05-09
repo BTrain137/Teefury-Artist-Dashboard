@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
-import DatePicker from "./date-picker.component";
 import { AdminTable } from "../Table";
+import TableQueries from "./table-queries.component";
 import { fetchComForTable } from "../../utils/table";
 import { SelectColumnFilter } from "../../libs/table";
 
@@ -72,10 +72,6 @@ class AdminCommissions extends Component {
     this.setState({ tableData: data });
   };
 
-  handleTableButtonClick(obj) {
-    console.log(obj.row);
-  }
-
   getAllCommissions = async () => {
     const { token } = this.props;
     const reqBody = {
@@ -91,22 +87,39 @@ class AdminCommissions extends Component {
     this.setState({ tableData });
   };
 
+  handleDateFilter = async ({ startDate, endDate, }) => {
+    const { token } = this.props;
+    const reqBody = {
+      url: "/api/admin/commissions/dates",
+      method: "POST",
+      data: {
+        startAt: 1,
+        startDate,
+        endDate,
+      },
+    };
+
+    const tableData = await fetchComForTable(reqBody, token);
+    console.log(tableData);
+
+    this.setState({ tableData });
+  };
+
   render() {
     const { tableData } = this.state;
     const { token } = this.props;
     return (
       <SubmissionContainer>
         <TabArea>
-          <DatePicker />
+          <TableQueries handleDateFilter={this.handleDateFilter} />
           {tableData.length > 1 ? (
             <AdminTable
               columns={TABLE_COLUMNS}
               setTableData={this.setTableData}
               data={tableData}
               token={token}
-              onClick={this.handleTableButtonClick.bind(this)}
             />
-          ) : null}
+          ) : <h2> No Records Found </h2>}
         </TabArea>
       </SubmissionContainer>
     );
