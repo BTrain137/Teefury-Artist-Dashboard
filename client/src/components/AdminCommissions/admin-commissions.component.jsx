@@ -123,8 +123,8 @@ class AdminCommissions extends Component {
     };
 
     if (hasNewDatesAssigned) {
-      reqBody = {
-        ...reqBody,
+      reqBody.data = {
+        ...reqBody.data,
         startDate,
         endDate,
       };
@@ -164,9 +164,7 @@ class AdminCommissions extends Component {
       }
     }
 
-    console.log({reqBody});
     const tableData = await fetchComForTable(reqBody, token);
-    console.log({startAt: isPaginate ? newStartAt : startAt});
     this.setState({ tableData, maxDisplay, startAt: isPaginate ? newStartAt : startAt });
   }
 
