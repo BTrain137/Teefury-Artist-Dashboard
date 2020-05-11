@@ -108,7 +108,13 @@ class AdminCommissions extends Component {
 
     const tableData = await fetchComForTable(reqBody, token);
 
-    this.setState({ tableData, startDate, endDate, hasNewDatesAssigned: true });
+    this.setState({
+      tableData,
+      startDate,
+      endDate,
+      hasNewDatesAssigned: true,
+      startAt: 1,
+    });
   };
 
   handleMaxDisplay = async (maxDisplay) => {
@@ -132,7 +138,7 @@ class AdminCommissions extends Component {
 
     const tableData = await fetchComForTable(reqBody, token);
 
-    this.setState({ tableData, maxDisplay });
+    this.setState({ tableData, maxDisplay, startAt: 1 });
   };
 
   handlePagDBNext = async (isPaginate) => {
@@ -156,17 +162,21 @@ class AdminCommissions extends Component {
       };
     }
 
-    if(isPaginate) {
+    if (isPaginate) {
       newStartAt = startAt + 1;
       reqBody.data = {
         ...reqBody.data,
-        startAt: newStartAt
-      }
+        startAt: newStartAt,
+      };
     }
 
     const tableData = await fetchComForTable(reqBody, token);
-    this.setState({ tableData, maxDisplay, startAt: isPaginate ? newStartAt : startAt });
-  }
+    this.setState({
+      tableData,
+      maxDisplay,
+      startAt: isPaginate ? newStartAt : startAt,
+    });
+  };
 
   render() {
     const { tableData, maxDisplay, startDate, endDate } = this.state;
