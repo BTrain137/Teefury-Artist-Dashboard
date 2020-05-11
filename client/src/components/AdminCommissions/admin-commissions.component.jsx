@@ -65,7 +65,7 @@ class AdminCommissions extends Component {
       startDate: new Date(),
       endDate: new Date(),
       hasNewDatesAssigned: false,
-      startAt: 1,
+      startAt: 0,
     };
   }
 

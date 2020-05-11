@@ -106,9 +106,10 @@ router.post(
   async (req, res, next) => {
     const { startAt, startDate, endDate, maxDisplay } = req.body;
     const defaultMax = maxDisplay ? maxDisplay : 1000;
-    const defaultStartAt = startAt ? startAt * defaultMax : 1;
+    // const defaultStartAt = startAt ? startAt * defaultMax : 0;
     let conn;
 
+    console.log(defaultStartAt);
     try {
       conn = await pool.getConnection();
       let queryString =
@@ -125,7 +126,8 @@ router.post(
           "' ";
       }
 
-      queryString += "LIMIT " + defaultStartAt + "," + defaultMax;
+      // queryString += "LIMIT " + defaultStartAt + "," + defaultMax;
+      queryString += "LIMIT 0," + defaultMax;
 
       /**
        * @return {CommissionsDetails[]}

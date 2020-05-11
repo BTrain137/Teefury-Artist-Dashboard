@@ -117,7 +117,7 @@ const TableQueries = ({
           </ButtonSm>
         )}
       </div>
-      <div
+      {/* <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -129,7 +129,7 @@ const TableQueries = ({
           >
             Get Next {maxDisplay}
           </ButtonSm>
-      </div>
+      </div> */}
     </div>
   );
 };
