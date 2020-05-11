@@ -17,7 +17,7 @@ import { TableContainer } from "./table.styles";
 // Remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
-const AdminTable = ({ columns, data, token, setTableData }) => {
+const AdminTable = ({ columns, data, token, setTableData, maxDisplay }) => {
   const filterTypes = React.useMemo(
     () => ({
       fuzzyText: fuzzyTextFilterFn,
@@ -163,6 +163,8 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
         markedAsPaid={markedAsPaid}
         markedAsUnpaid={markedAsUnpaid}
         exportCSV={exportCSV}
+        totalRecords={rows.length}
+        maxDisplay={maxDisplay}
       />
       {/* Table */}
       <table {...getTableProps()}>
@@ -200,6 +202,7 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
 
       {/* Pagination */}
       <div className="pagination">
+        <span>Total: {rows.length} </span>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {"<<"}
         </button>{" "}

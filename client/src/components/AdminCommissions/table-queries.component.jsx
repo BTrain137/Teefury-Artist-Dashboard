@@ -5,15 +5,27 @@ import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css f
 
-const TableQueries = ({ handleDateFilter }) => {
+const TableQueries = ({
+  handleDateFilter,
+  handleMaxDisplay,
+  handlePagDBNext,
+  globalStartDate,
+  globalEndDate,
+  globalMaxDisplay,
+}) => {
   const [dates, setDates] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: globalStartDate,
+    endDate: globalEndDate,
     key: "selection",
   });
 
-  const [state, setState] = useState({ isDateOpen: false });
-  const { isDateOpen } = state;
+  const [state, setState] = useState({
+    isDateOpen: false,
+    isMaxDisplay: false,
+    maxDisplay: globalMaxDisplay,
+  });
+
+  const { isDateOpen, isMaxDisplay, maxDisplay } = state;
 
   const handleChange = (item) => {
     setDates(item.selection);
@@ -26,15 +38,25 @@ const TableQueries = ({ handleDateFilter }) => {
     handleDateFilter({ startDate: start, endDate: end });
   };
 
+  const handleMaxDisplayChange = (event) => {
+    setState({ ...state, maxDisplay: event.currentTarget.value });
+  };
+
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
+        paddingBottom: "25px",
+        borderBottom: "1px solid",
+      }}
+    >
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          paddingBottom: "25px",
-          borderBottom: "1px solid",
         }}
       >
         {isDateOpen ? (
@@ -63,7 +85,52 @@ const TableQueries = ({ handleDateFilter }) => {
           </ButtonSm>
         )}
       </div>
-    </>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {isMaxDisplay ? (
+          <>
+            <input
+              type="number"
+              onChange={handleMaxDisplayChange}
+              value={maxDisplay}
+            />
+            <div style={{ paddingTop: "30px" }}>
+              <ButtonSm onClick={() => handleMaxDisplay(maxDisplay)}>
+                Update
+              </ButtonSm>
+              <ButtonSm
+                style={{ marginLeft: "20px" }}
+                onClick={() => setState({ ...state, isMaxDisplay: false })}
+              >
+                X
+              </ButtonSm>
+            </div>
+          </>
+        ) : (
+          <ButtonSm onClick={() => setState({ ...state, isMaxDisplay: true })}>
+            Edit Max Display
+          </ButtonSm>
+        )}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+          <ButtonSm
+            onClick={() => handlePagDBNext(true)}
+          >
+            Get Next {maxDisplay}
+          </ButtonSm>
+      </div>
+    </div>
   );
 };
 

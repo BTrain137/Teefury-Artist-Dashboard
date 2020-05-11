@@ -61,6 +61,11 @@ class AdminCommissions extends Component {
 
     this.state = {
       tableData: [],
+      maxDisplay: 1000,
+      startDate: new Date(),
+      endDate: new Date(),
+      hasNewDatesAssigned: false,
+      startAt: 1,
     };
   }
 
@@ -74,11 +79,12 @@ class AdminCommissions extends Component {
 
   getAllCommissions = async () => {
     const { token } = this.props;
+    const { maxDisplay } = this.state;
     const reqBody = {
       url: "/api/admin/commissions",
       method: "POST",
       data: {
-        startAt: 1,
+        maxDisplay,
       },
     };
 
@@ -87,39 +93,108 @@ class AdminCommissions extends Component {
     this.setState({ tableData });
   };
 
-  handleDateFilter = async ({ startDate, endDate, }) => {
+  handleDateFilter = async ({ startDate, endDate }) => {
     const { token } = this.props;
+    const { maxDisplay } = this.state;
     const reqBody = {
       url: "/api/admin/commissions/dates",
       method: "POST",
       data: {
-        startAt: 1,
         startDate,
         endDate,
+        maxDisplay,
       },
     };
 
     const tableData = await fetchComForTable(reqBody, token);
-    console.log(tableData);
 
-    this.setState({ tableData });
+    this.setState({ tableData, startDate, endDate, hasNewDatesAssigned: true });
   };
 
+  handleMaxDisplay = async (maxDisplay) => {
+    const { hasNewDatesAssigned, startDate, endDate } = this.state;
+    const { token } = this.props;
+    let reqBody = {
+      url: "/api/admin/commissions/dates",
+      method: "POST",
+      data: {
+        maxDisplay,
+      },
+    };
+
+    if (hasNewDatesAssigned) {
+      reqBody = {
+        ...reqBody,
+        startDate,
+        endDate,
+      };
+    }
+
+    const tableData = await fetchComForTable(reqBody, token);
+
+    this.setState({ tableData, maxDisplay });
+  };
+
+  handlePagDBNext = async (isPaginate) => {
+    const { startAt, maxDisplay } = this.state;
+    let newStartAt = 0;
+    const { hasNewDatesAssigned, startDate, endDate } = this.state;
+    const { token } = this.props;
+    let reqBody = {
+      url: "/api/admin/commissions/dates",
+      method: "POST",
+      data: {
+        maxDisplay,
+      },
+    };
+
+    if (hasNewDatesAssigned) {
+      reqBody.data = {
+        ...reqBody.data,
+        startDate,
+        endDate,
+      };
+    }
+
+    if(isPaginate) {
+      newStartAt = startAt + 1;
+      reqBody.data = {
+        ...reqBody.data,
+        startAt: newStartAt
+      }
+    }
+
+    console.log({reqBody});
+    const tableData = await fetchComForTable(reqBody, token);
+    console.log({startAt: isPaginate ? newStartAt : startAt});
+    this.setState({ tableData, maxDisplay, startAt: isPaginate ? newStartAt : startAt });
+  }
+
   render() {
-    const { tableData } = this.state;
+    const { tableData, maxDisplay, startDate, endDate } = this.state;
     const { token } = this.props;
     return (
       <SubmissionContainer>
         <TabArea>
-          <TableQueries handleDateFilter={this.handleDateFilter} />
+          <TableQueries
+            handleDateFilter={this.handleDateFilter}
+            handleMaxDisplay={this.handleMaxDisplay}
+            handlePagDBNext={this.handlePagDBNext}
+            globalMaxDisplay={maxDisplay}
+            globalStartDate={startDate}
+            globalEndDate={endDate}
+          />
           {tableData.length > 1 ? (
             <AdminTable
               columns={TABLE_COLUMNS}
               setTableData={this.setTableData}
               data={tableData}
               token={token}
+              maxDisplay={maxDisplay}
             />
-          ) : <h2> No Records Found </h2>}
+          ) : (
+            <h2> No Records Found </h2>
+          )}
         </TabArea>
       </SubmissionContainer>
     );

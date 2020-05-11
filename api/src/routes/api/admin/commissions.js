@@ -22,8 +22,9 @@ router.post(
   "/commissions",
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
-    const { startAt } = req.body;
+    const { startAt, maxDisplay } = req.body;
     const defaultStartAt = startAt ? startAt : 1;
+    const defaultMax = maxDisplay ? maxDisplay : 1000;
 
     let conn;
 
@@ -35,7 +36,8 @@ router.post(
         "FROM `orders` " +
         "LIMIT " +
         defaultStartAt +
-        ",100";
+        "," +
+        defaultMax;
 
       /**
        * @return {CommissionsDetails[]}
@@ -102,9 +104,9 @@ router.post(
   "/commissions/dates",
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
-    const { startAt, startDate, endDate } = req.body;
-    const defaultStartAt = startAt ? startAt : 1;
-
+    const { startAt, startDate, endDate, maxDisplay } = req.body;
+    const defaultMax = maxDisplay ? maxDisplay : 1000;
+    const defaultStartAt = startAt ? startAt * defaultMax : 1;
     let conn;
 
     try {
@@ -115,11 +117,16 @@ router.post(
         "FROM `orders` ";
 
       if (startDate && endDate) {
-        queryString += "WHERE `order_created_at` BETWEEN '" + startDate + "' AND '" + endDate + "' ";
+        queryString +=
+          "WHERE `order_created_at` BETWEEN '" +
+          startDate +
+          "' AND '" +
+          endDate +
+          "' ";
       }
 
-      queryString += "LIMIT " + defaultStartAt + ",100";
-      
+      queryString += "LIMIT " + defaultStartAt + "," + defaultMax;
+
       /**
        * @return {CommissionsDetails[]}
        */
