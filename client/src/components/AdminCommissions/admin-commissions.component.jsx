@@ -8,7 +8,14 @@ import TableQueries from "./table-queries.component";
 import { fetchComForTable } from "../../utils/table";
 import { SelectColumnFilter } from "../../libs/table";
 
-import { SubmissionContainer, TabArea } from "../SharedStyle/styled.component";
+import {
+  SubmissionContainer,
+  TabArea,
+  TabHeader,
+  TabSubLink,
+  TabSubTitle,
+  TabTitle,
+} from "../SharedStyle/styled";
 
 const TABLE_COLUMNS = [
   {
@@ -183,6 +190,12 @@ class AdminCommissions extends Component {
     const { token } = this.props;
     return (
       <SubmissionContainer>
+        <TabHeader>
+          <TabTitle>Commissions</TabTitle>
+          <TabSubLink to={`/admin/commissions/payouts`}>
+            <TabSubTitle>Payouts</TabSubTitle>
+          </TabSubLink>
+        </TabHeader>
         <TabArea>
           <TableQueries
             handleDateFilter={this.handleDateFilter}
