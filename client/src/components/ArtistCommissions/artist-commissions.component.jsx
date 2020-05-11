@@ -8,7 +8,7 @@ import { fetchComForTable } from "../../utils/table";
 import { SelectColumnFilter } from "../../libs/table";
 
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
-import { SubmissionContainer, TabArea } from "../SharedStyle/styled.component";
+import { SubmissionContainer, TabArea } from "../SharedStyle/styled";
 
 const TABLE_COLUMNS = [
   {
