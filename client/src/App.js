@@ -37,13 +37,7 @@ function App() {
           component={AdminArtSubmissionsPage}
         />
         <Route
-          exact
           path="/admin/commissions"
-          component={AdminCommissionsPage}
-        />
-        <Route
-          exact
-          path="/admin/commissions/payouts"
           component={AdminCommissionsPage}
         />
       </Switch>
