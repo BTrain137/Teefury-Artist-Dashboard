@@ -3,6 +3,7 @@ import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 import Nav from "../../components/Nav";
 import AdminCommissions from "../../components/AdminCommissions";
+import AdminPayout from "../../components/AdminPayout";
 
 import { PageContainer, PageWrapper } from "../SharedStyle/style";
 
@@ -17,9 +18,9 @@ const AdminCommissionsPage = () => {
             <AdminCommissions />
           </PageWrapper>
         </Route>
-        <Route exact path={`${path}/payout`}> 
+        <Route exact path={`${path}/payouts`}> 
           <PageWrapper>
-            <AdminCommissions />
+            <AdminPayout />
           </PageWrapper>
         </Route>
       </Switch>

@@ -58,7 +58,7 @@ router.put(
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     const { dbRowIds, isPaid, startAt } = req.body;
-    const defaultStartAt = startAt ? startAt : 1;
+    const defaultStartAt = startAt ? startAt : 0;
 
     let ids = "`id`=" + dbRowIds.shift();
 
@@ -109,7 +109,6 @@ router.post(
     // const defaultStartAt = startAt ? startAt * defaultMax : 0;
     let conn;
 
-    console.log(defaultStartAt);
     try {
       conn = await pool.getConnection();
       let queryString =
@@ -137,6 +136,104 @@ router.post(
 
       res.status(200).json({ commissionsDetailsArr });
       // res.sendStatus(200)
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/commissions/payouts",
+  passport.authenticate("jwt-admin"),
+  async (req, res, next) => {
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+      const queryString = "SELECT * FROM payouts";
+
+      const commissionsPayouts = await pool.query(queryString);
+      conn.end();
+
+      res.status(200).json({ commissionsPayouts });
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/commissions/payout",
+  passport.authenticate("jwt-admin"),
+  async (req, res, next) => {
+    const { rowData } = req.body;
+    const { commissions_payout, product_type } = rowData;
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+      const queryString =
+        "INSERT INTO `payouts` (`product_type`, `commissions_payout`) VALUES (?,?)";
+      const queryValue = [product_type, commissions_payout];
+
+      const result = await pool.query(queryString, queryValue);
+      conn.end();
+
+      rowData.id = result.insertId;
+
+      res.status(200).json({ tableRowData: rowData });
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+router.put(
+  "/commissions/payout",
+  passport.authenticate("jwt-admin"),
+  async (req, res, next) => {
+    const { rowData } = req.body;
+    const { id, product_type, commissions_payout } = rowData;
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+      const queryString =
+        "UPDATE `payouts` SET `product_type`=?, `commissions_payout`=? WHERE `id`=?";
+      const queryValue = [product_type, commissions_payout, id];
+
+      const { affectedRows } = await pool.query(queryString, queryValue);
+      conn.end();
+
+      res.status(200).json({ tableRowData: rowData });
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+router.delete(
+  "/commissions/payout",
+  passport.authenticate("jwt-admin"),
+  async (req, res, next) => {
+    const { rowData } = req.body;
+    const { id } = rowData;
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+      const queryString = "INSERT  WHERE `id`=?";
+
+      const result = await pool.query(queryString, [id]);
+      conn.end();
+
+      console.log(result);
+
+      res.status(200).json({ tableRowData: rowData });
     } catch (error) {
       conn.end();
       next(error);

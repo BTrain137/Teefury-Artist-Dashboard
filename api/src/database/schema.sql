@@ -63,3 +63,11 @@ CREATE TABLE `orders` (
   `commissions_paid` BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY(`id`)
 );
+
+DROP TABLE IF EXISTS `payouts`;
+CREATE TABLE `payouts` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `product_type` VARCHAR(20),
+  `commissions_payout` FLOAT(4,2),
+  PRIMARY KEY(`id`)
+);

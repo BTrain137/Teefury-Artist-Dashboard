@@ -40,6 +40,7 @@ export const TabSubTitle = styled.h2`
 export const TabSubLink = styled(Link)`
   text-decoration: none;
   color: white;
+  margin-right: 33px;
 `;
 
 export const TabArea = styled.div`
