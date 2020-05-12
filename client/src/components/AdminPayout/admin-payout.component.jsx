@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
-import ComplexTable from "./complexTable";
+import PayoutTable from "./payoutTable.component";
 
 import {
   SubmissionContainer,
@@ -104,7 +104,7 @@ const AdminPayout = ({ token }) => {
       </TabHeader>
       <TabArea>
         {tableRowsData.length ? (
-          <ComplexTable
+          <PayoutTable
             tableRowsData={tableRowsData}
             tableColumn={tableColumn}
             handleRowUpdate={handleRowUpdate}
