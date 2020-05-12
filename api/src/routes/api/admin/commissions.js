@@ -13,6 +13,12 @@ import pool from "../../../database/connection";
  *   product_type:String,
  *   commissions_paid:Boolean,
  * }} CommissionsDetails
+ * 
+ * @typedef {{
+ *   id: Number,
+ *   commissions_payout: String,
+ *   product_type: String
+ * }} CommissionsPayouts
  *
  */
 
@@ -152,7 +158,10 @@ router.get(
     try {
       conn = await pool.getConnection();
       const queryString = "SELECT * FROM payouts";
-
+      
+      /**
+       * @return {CommissionsPayouts[]}
+       */
       const commissionsPayouts = await pool.query(queryString);
       conn.end();
 
@@ -178,6 +187,9 @@ router.post(
         "INSERT INTO `payouts` (`product_type`, `commissions_payout`) VALUES (?,?)";
       const queryValue = [product_type, commissions_payout];
 
+      /**
+       * @return {CommissionsDetails}
+       */
       const result = await pool.query(queryString, queryValue);
       conn.end();
 
@@ -230,8 +242,6 @@ router.delete(
 
       const result = await pool.query(queryString, [id]);
       conn.end();
-
-      console.log(result);
 
       res.status(200).json({ tableRowData: rowData });
     } catch (error) {
