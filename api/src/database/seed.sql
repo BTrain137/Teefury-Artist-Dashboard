@@ -14,16 +14,17 @@ INSERT INTO `payouts` (`product_type`, `commissions_payout`)
 VALUES ("Tee", 2.00),
  ("Sweatshirt", 2.00),
  ("Tank", 2.00),
+ ("Blanket", 2.00),
+ ("Towel", 2.00),
+ ("Leggings", 2.00),
+ ("Gallery", 2.00),
+ ("Pin", 0.50),
  ("ODAD-Tee", 1.00),
  ("ODAD-Sweatshirt", 1.00),
  ("ODAD-Tank", 1.00),
  ("Weekly-Tee", 1.00),
- ("Weekly-Tank", 1.00),
- ("Pin", 0.50),
- ("Blanket", 1.00),
- ("Towel", 1.00),
- ("Leggings", 1.00),
- ("Gallery", 2.00);
+ ("Weekly-Sweatshirt", 1.00),
+ ("Weekly-Tank", 1.00);
 
 -- Update One
 -- UPDATE `artist_profile` SET `first_name`="Henry", `last_name`="Loco" WHERE `artist_name`="locoMotive";
