@@ -8,7 +8,9 @@ import { selectSubmissionsError } from "../../redux/submissions/submissions.sele
 
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 import { ArtistArtCard as ArtCard } from "../ArtCards";
+// eslint-disable-next-line
 import { Form, Input } from "../FormInput";
+// eslint-disable-next-line
 import { ReactComponent as MagnifyGlassIcon } from "../../assets/magnify-glass.svg";
 import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
 
@@ -20,7 +22,9 @@ import {
   TabTitle,
   TabArea,
   FilterHeader,
+  // eslint-disable-next-line
   SearchBoxWrapper,
+  // eslint-disable-next-line
   SearchBtn,
   AdjustableIconWrapper,
   FilterContainer,
