@@ -99,6 +99,7 @@ class ArtistSubmissions extends Component {
   };
 
   render() {
+    // eslint-disable-next-line
     const { search, isShowingFilter, filterBy, allSubmissions } = this.state;
 
     const { token } = this.props;
