@@ -5,9 +5,11 @@ import { createStructuredSelector } from "reselect";
 
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
+// eslint-disable-next-line
 import { Form, Input } from "../FormInput";
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 import { AdminArtCart as ArtCard } from "../ArtCards";
+// eslint-disable-next-line
 import { ReactComponent as MagnifyGlassIcon } from "../../assets/magnify-glass.svg";
 import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
 
@@ -15,7 +17,9 @@ import {
   SubmissionContainer,
   TabArea,
   FilterHeader,
+  // eslint-disable-next-line
   SearchBoxWrapper,
+  // eslint-disable-next-line
   SearchBtn,
   AdjustableIconWrapper,
   FilterContainer,
@@ -111,7 +115,7 @@ class AdminApproval extends Component {
       <SubmissionContainer>
         <TabArea>
           <FilterHeader>
-            <SearchBoxWrapper>
+            {/* <SearchBoxWrapper>
               <Form style={{ marginTop: "0" }}>
                 <Input
                   name="search"
@@ -124,7 +128,7 @@ class AdminApproval extends Component {
                   <MagnifyGlassIcon />
                 </SearchBtn>
               </Form>
-            </SearchBoxWrapper>
+            </SearchBoxWrapper> */}
             <AdjustableIconWrapper onClick={this.toggleFilterArea}>
               <AdjustablesIcon />
             </AdjustableIconWrapper>
@@ -181,7 +185,7 @@ class AdminApproval extends Component {
                 );
               })
             ) : (
-              <h2>Woops Something went wrong.</h2>
+              <h2>No {filterBy} To Be Viewed</h2>
             )}
           </ArtCardContainer>
         </TabArea>
