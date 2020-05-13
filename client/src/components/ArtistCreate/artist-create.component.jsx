@@ -356,6 +356,16 @@ class CreateArtist extends Component {
               <ButtonMd type="button" onClick={this.handleClick}>
                 Cancel
               </ButtonMd>
+              <span
+                style={{
+                  color: "red",
+                  marginTop: "20px",
+                  display: "inline-block",
+                }}
+              >
+                *
+              </span>
+              required
             </div>
           </div>
         </Form>
@@ -369,7 +379,8 @@ const mapDispatchToProps = (dispatch) => ({
   createArtistProfileStart: (reqBody) =>
     dispatch(createArtistProfileStart({ reqBody })),
   clearReduxArtistErrors: () => dispatch(clearArtistErrors()),
-  artistErrorMsg: ({ ...errObj }) => dispatch(artistProfileFailure({ ...errObj })),
+  artistErrorMsg: ({ ...errObj }) =>
+    dispatch(artistProfileFailure({ ...errObj })),
   logOut: () => dispatch(logoutStart()),
 });
 

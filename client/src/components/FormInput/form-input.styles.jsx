@@ -31,6 +31,13 @@ const inputStyled = css`
 
 export const InputStyled = styled.input`
   ${inputStyled}
+
+  ${(props) =>
+    props.required
+      ? css`
+          border: 2px solid red;
+        `
+      : null}
 `;
 
 export const TextAreaStyled = styled.textarea`

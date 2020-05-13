@@ -53,6 +53,13 @@ export const Terms = styled.span`
   margin-left: 13px;
   font-size: 12px;
   font-weight: bold;
+  margin-top: -8px;
+
+  &::before {
+    content: "*";
+    font-size: 20px;
+    color: red;
+  }
 `;
 
 export const LinkToTerm = styled(Link)`
