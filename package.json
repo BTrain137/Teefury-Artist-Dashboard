@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel ./api/src -d ./api/dist",
     "client": "cd client && npm start",
-    "deploy": "cd network && pm2 deploy production --force",
+    "deploy-production": "cd network && pm2 deploy production",
     "deploy-stage-setup": "cd network && pm2 deploy stage setup",
     "deploy-stage": "pm2 deploy ./network/ecosystem.config.js stage update",
     "install": "cd client && npm install",
