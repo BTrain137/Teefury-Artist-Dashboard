@@ -24,11 +24,15 @@ const Nav = ({ userAccount }) => (
     </Title>
     <Subtitle>Dashboard</Subtitle>
     <NavWrapper>
-      <NavItemLink to="/artist/profile" pathToMatch="/profile" Icon={HouseIcon}>
-        Home
-      </NavItemLink>
       {userAccount.isAdmin ? (
         <>
+          <NavItemLink
+            to="/admin/profile"
+            pathToMatch="/profile"
+            Icon={HouseIcon}
+          >
+            Home
+          </NavItemLink>
           <NavItemLink
             to="/admin/art-submissions"
             pathToMatch="/art-submissions"
@@ -47,6 +51,13 @@ const Nav = ({ userAccount }) => (
       ) : (
         <>
           <NavItemLink
+            to="/artist/profile"
+            pathToMatch="/profile"
+            Icon={HouseIcon}
+          >
+            Home
+          </NavItemLink>
+          <NavItemLink
             to="/artist/submissions"
             pathToMatch="/submissions"
             Icon={ComputerIcon}
@@ -60,13 +71,13 @@ const Nav = ({ userAccount }) => (
           >
             Commissions
           </NavItemLink>
-          <NavItemLink
+          {/* <NavItemLink
             to="/artist/notifications"
             pathToMatch="/notifications"
             Icon={BellIcon}
           >
             Notifications
-          </NavItemLink>
+          </NavItemLink> */}
         </>
       )}
       <NavItemStyle Icon={SignoutIcon}>

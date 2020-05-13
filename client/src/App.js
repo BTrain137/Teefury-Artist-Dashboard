@@ -9,6 +9,7 @@ import {
 import ArtistProfilePage from "./pages/ArtistProfilePage/artist-profile-page.component";
 import ArtistSubmissionPage from "./pages/ArtistSubmissionPage";
 import ArtistCommissions from "./pages/ArtistCommissions";
+import AdminProfile from "./pages/AdminProfilePage";
 import AdminArtSubmissionsPage from "./pages/AdminArtSubmissions";
 import AdminCommissionsPage from "./pages/AdminCommissions";
 
@@ -32,6 +33,10 @@ function App() {
           component={ArtistProfilePage}
         />
         {/* Admin Routes TODO: Secure Routes */}
+        <Route
+          path="/admin/profile"
+          component={AdminProfile}
+        />
         <Route
           path="/admin/art-submissions"
           component={AdminArtSubmissionsPage}

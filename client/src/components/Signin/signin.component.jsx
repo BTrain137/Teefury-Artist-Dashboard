@@ -113,6 +113,13 @@ class Signin extends Component {
       artistProfile && artistProfile.artistName ? true : false;
 
     if (hasCreatedUserAccount) {
+      // Admin
+      if(userAccount.isAdmin) {
+        history.push("/admin/profile");
+        return false;
+      }
+
+      // Artist
       if (hasCreatedArtistProfile) {
         history.push("/artist/profile");
         return false;
