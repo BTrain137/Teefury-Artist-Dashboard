@@ -40,7 +40,6 @@ export default function MaterialTableDemo({
   });
 
   useEffect(() => {
-    console.log(tableRowsData);
     setState({ columns: tableColumn, data: tableRowsData });
   }, [tableColumn, tableRowsData]);
 
