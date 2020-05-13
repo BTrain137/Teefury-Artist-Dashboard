@@ -16,12 +16,12 @@ VALUES ("btran@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjE
 INSERT INTO `users` (`username_contact_email`, `password`, `is_admin`)
 VALUES ("artist-btran@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false),
 ("artist-lance@digmeepartners.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false),
-("artist-chris@digmeepartners.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
+("artist-chris@digmeepartners.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false),
 ("artist-ppatel@digmeepartners.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false),
 ("artist-marissa@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK",  false),
-("artist-psandoval@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK",  true),
-("artist-ithiessen@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK",  true),
-("artist-rminjares@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
+("artist-psandoval@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK",  false),
+("artist-ithiessen@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK",  false),
+("artist-rminjares@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false),
 ("artist-joyce@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false);
 
 -- Artist accounts
