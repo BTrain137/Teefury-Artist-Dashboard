@@ -104,6 +104,7 @@ class AdminApproval extends Component {
 
   render() {
     const {
+      // eslint-disable-next-line
       search,
       isShowingFilter,
       filterBy,
