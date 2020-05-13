@@ -56,10 +56,11 @@ CREATE TABLE `orders` (
   `order_id` BIGINT,
   `order_created_at` DATETIME,
   `product_title` TEXT,
-  `quantity` TINYINT,
-  `vendor` VARCHAR(30),
-  `product_type` VARCHAR(20),
   `variant_sku` TEXT,
+  `vendor` VARCHAR(30),
+  `quantity` TINYINT,
+  `product_type` VARCHAR(20),
+  `comissions_payout` FLOAT(4,2),
   `commissions_paid` BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY(`id`)
 );
