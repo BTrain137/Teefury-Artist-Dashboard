@@ -13,6 +13,7 @@ import {
   updateUserStart,
   clearUserError,
   updateUserFailure,
+  logoutStart,
 } from "../../redux/user/user.action";
 import { selectArtistProfile } from "../../redux/artist/artist.selector";
 import {
@@ -83,7 +84,7 @@ class ArtistProfile extends Component {
 
   componentDidMount() {
     const { userAccount, artistProfile } = this.props;
-    if(this._redirectUser(userAccount, artistProfile)) {
+    if (this._redirectUser(userAccount, artistProfile)) {
       this.setState({ ...artistProfile });
     }
   }
@@ -268,7 +269,7 @@ class ArtistProfile extends Component {
   };
 
   _redirectUser = (userAccount, artistProfile) => {
-    const { history } = this.props;
+    const { history, logOut } = this.props;
     const hasCreatedUserAccount =
       userAccount && userAccount.contactEmail ? true : false;
     const hasCreatedArtistProfile =
@@ -282,6 +283,7 @@ class ArtistProfile extends Component {
         return false;
       }
     } else {
+      logOut();
       history.push("/");
       return false;
     }
@@ -512,6 +514,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(updateUserFailure({ ...errObj })),
   artistErrorMsg: ({ ...errObj }) =>
     dispatch(artistProfileFailure({ ...errObj })),
+  logOut: () => dispatch(logoutStart()),
 });
 
 export default withRouter(

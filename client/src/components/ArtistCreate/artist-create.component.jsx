@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
 import { areArtistFormFieldsValid } from "../../utils";
-import { deleteUserStart } from "../../redux/user/user.action";
+import { deleteUserStart, logoutStart } from "../../redux/user/user.action";
 import { selectUserAccount } from "../../redux/user/user.selector";
 import {
   createArtistProfileStart,
@@ -167,7 +167,7 @@ class CreateArtist extends Component {
   }
 
   _redirectUser = (userAccount, artistProfile) => {
-    const { history } = this.props;
+    const { history, logOut } = this.props;
     const hasCreatedUserAccount =
       userAccount && userAccount.contactEmail ? true : false;
     const hasCreatedArtistProfile =
@@ -181,6 +181,7 @@ class CreateArtist extends Component {
         return true;
       }
     } else {
+      logOut();
       history.push("/");
       return false;
     }
@@ -369,6 +370,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(createArtistProfileStart({ reqBody })),
   clearReduxArtistErrors: () => dispatch(clearArtistErrors()),
   artistErrorMsg: ({ ...errObj }) => dispatch(artistProfileFailure({ ...errObj })),
+  logOut: () => dispatch(logoutStart()),
 });
 
 const mapStateToProps = createStructuredSelector({
