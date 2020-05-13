@@ -108,7 +108,7 @@ class ArtistSubmissions extends Component {
         </TabHeader>
         <TabArea>
           <FilterHeader>
-            <SearchBoxWrapper>
+            {/* <SearchBoxWrapper>
               <Form style={{ marginTop: "0" }}>
                 <Input
                   name="search"
@@ -121,7 +121,7 @@ class ArtistSubmissions extends Component {
                   <MagnifyGlassIcon />
                 </SearchBtn>
               </Form>
-            </SearchBoxWrapper>
+            </SearchBoxWrapper> */}
             <AdjustableIconWrapper onClick={this.toggleFilterArea}>
               <AdjustablesIcon />
             </AdjustableIconWrapper>
