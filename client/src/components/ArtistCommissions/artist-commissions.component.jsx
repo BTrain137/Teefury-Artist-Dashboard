@@ -47,6 +47,7 @@ class ArtistCommissions extends Component {
     this.state = {
       tableData: [],
       errorMsg: "",
+      loading: true,
     };
   }
 
@@ -68,7 +69,7 @@ class ArtistCommissions extends Component {
 
       const tableData = await fetchComForTable(reqBody, token);
 
-      this.setState({ tableData });
+      this.setState({ tableData, loading: false });
     } catch (error) {
       this.setState({
         errorMsg:
@@ -78,7 +79,7 @@ class ArtistCommissions extends Component {
   };
 
   render() {
-    const { tableData, errorMsg } = this.state;
+    const { tableData, errorMsg, loading } = this.state;
     return (
       <SubmissionContainer>
         <TabArea>
@@ -87,15 +88,27 @@ class ArtistCommissions extends Component {
           ) : errorMsg ? (
             <h2>{errorMsg}</h2>
           ) : (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                padding: "50px",
-              }}
-            >
-              <img className="rotating" src={teefuryBirdLogo} alt="tee bird" />
-            </div>
+            <>
+              {loading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "50px",
+                  }}
+                >
+                  <img
+                    className="rotating"
+                    src={teefuryBirdLogo}
+                    alt="tee bird"
+                  />{" "}
+                </div>
+              ) : (
+                <h2 style={{ textAlign: "center" }}>
+                  Sorry you don't have any commissions yet.
+                </h2>
+              )}
+            </>
           )}
         </TabArea>
       </SubmissionContainer>
