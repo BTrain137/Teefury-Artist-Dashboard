@@ -1,4 +1,5 @@
-import React, { useEffect, useHistory } from "react";
+import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
