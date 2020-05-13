@@ -38,19 +38,21 @@ const ArtistArtCard = ({
 
   return (
     <CardContainer>
-      <CardWrapper>
+      <CardWrapper style={{ margin: "20px 10px" }}>
         <ImgCard
           src={imageSrc ? imageSrc : teefuryBirdLogo}
           alt="test"
           loaded={imageSrc ? true : false}
         />
         <Figcaption>
-          <ArtTitle>{title.toUpperCase()}</ArtTitle>
+          <ArtTitle style={{ fontSize: "16px" }}>
+            {title.toUpperCase()}
+          </ArtTitle>
           <Caption>Artist:</Caption>
           <ArtHeaders>{artistName}</ArtHeaders>
           <Caption>Submitted on:</Caption>
           <ArtHeaders style={{ fontSize: "14px" }}>
-            {new Date(createdAt).toLocaleString("en-US")}
+            {new Date(createdAt).toLocaleDateString()}
           </ArtHeaders>
         </Figcaption>
         <Link to={`/admin/art-submissions/review/${id}`}>
