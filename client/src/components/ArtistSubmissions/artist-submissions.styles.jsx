@@ -51,7 +51,7 @@ export const TabArea = styled.div`
 
 export const FilterHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   position: relative;
 `;
 
