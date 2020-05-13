@@ -31,6 +31,13 @@ export const H3 = styled.h3`
   margin-top: 0;
 `;
 
+export const H4 = styled.h4`
+  margin-top: 50px;
+  margin-bottom: 10px;
+  font-size: 33px;
+  text-transform: uppercase;
+`;
+
 export const Img = styled.img`
   width: 24px;
   display: inline-flex;

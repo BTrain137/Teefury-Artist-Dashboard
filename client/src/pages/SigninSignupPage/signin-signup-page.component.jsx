@@ -1,9 +1,10 @@
 import React from "react"
-import CreateArtist from "../../components/ArtistCreate/artist-create.component";
-import Signup from "../../components/Signup/signup.component";
-import Signin from "../../components/Signin/signin.component";
 
-import { SignInSignUpContainer } from "./signin-signup-page.styles";
+import CreateArtist from "../../components/ArtistCreate";
+import Signup from "../../components/Signup";
+import Signin from "../../components/Signin";
+
+import { SignInSignUpContainer } from "../SharedStyle/style";
 
 export const SignUpPage = () => (
   <SignInSignUpContainer>

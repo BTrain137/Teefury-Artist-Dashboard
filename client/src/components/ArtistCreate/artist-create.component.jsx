@@ -222,7 +222,7 @@ class CreateArtist extends Component {
               type="text"
               name="artistName"
               label="Artist Name"
-              placeholder="@Artist Name"
+              placeholder="Artist Name"
               style={{ fontSize: "21px" }}
               handleChange={this.handleChange}
               value={artistName}
@@ -354,7 +354,7 @@ class CreateArtist extends Component {
                 Create Profile
               </ButtonMd>
               <ButtonMd type="button" onClick={this.handleClick}>
-                Take me back
+                Cancel
               </ButtonMd>
             </div>
           </div>

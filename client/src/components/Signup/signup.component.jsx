@@ -17,10 +17,11 @@ import {
   H1,
   H2,
   H3,
+  H4,
   Img,
   ErrorMessages,
   SpaceHolder,
-} from "./signup.styles.jsx";
+} from "../SharedStyle/signin-signout.styles";
 import logo from "../../assets/logo.png";
 
 class Signup extends Component {
@@ -129,7 +130,7 @@ class Signup extends Component {
           Tee<b>Fury</b>
         </H2>
         <H3>Dashboard</H3>
-
+        <H4>Sign Up</H4>
         <Form onSubmit={this.handleSubmit} onKeyPress={this.handleFormKeyPress}>
           {formEmailError ? (
             <ErrorMessages>{formEmailError}</ErrorMessages>
