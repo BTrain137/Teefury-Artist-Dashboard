@@ -1,7 +1,7 @@
 USE `artist_dashboard`;
 
 -- Admin users
-INSERT INTO `users` (`username_contact_email`, `password`, `is_admin`);
+INSERT INTO `users` (`username_contact_email`, `password`, `is_admin`)
 VALUES ("btran@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
 ("lance@digmeepartners.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
 ("chris@digmeepartners.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
@@ -52,6 +52,6 @@ VALUES ("Tee", 2.00),
  ("ODAD-Tank", 1.00),
  ("Weekly-Tee", 1.00),
  ("Weekly-Sweatshirt", 1.00),
- ("Weekly-Tank", 1.00);
+ ("Weekly-Tank", 1.00),
  ("Grab Bag", 0.00),
  ("none", 0.00);
