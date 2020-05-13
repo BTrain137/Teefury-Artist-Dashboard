@@ -227,6 +227,7 @@ class CreateArtist extends Component {
               handleChange={this.handleChange}
               value={artistName}
               required
+              border
             />
             <FormInput
               type="text"
@@ -237,6 +238,7 @@ class CreateArtist extends Component {
               handleChange={this.handleChange}
               value={firstName}
               required
+              border
             />
             <FormInput
               type="text"
@@ -247,6 +249,7 @@ class CreateArtist extends Component {
               handleChange={this.handleChange}
               value={lastName}
               required
+              border
             />
             <FormInput
               type="email"
@@ -267,6 +270,7 @@ class CreateArtist extends Component {
               handleChange={this.handleChange}
               value={paypalEmail}
               required
+              border
             />
             <FormInput
               type="text"

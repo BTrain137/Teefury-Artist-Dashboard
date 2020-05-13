@@ -33,9 +33,16 @@ export const InputStyled = styled.input`
   ${inputStyled}
 
   ${(props) =>
-    props.required
+    props.border
       ? css`
           border: 2px solid red;
+        `
+      : null}
+
+  ${(props) =>
+    props.disabled
+      ? css`
+          cursor: not-allowed;
         `
       : null}
 `;
