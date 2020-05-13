@@ -9,7 +9,7 @@ import {
   CardFooter,
 } from "./art-submissions-card.styles";
 
-const ArtistArtCard = ({ token, previewArt, delay, status, id }) => {
+const ArtistArtCard = ({ token, previewArt, delay, status, id, title }) => {
   const [imageSrc, setImageSrc] = useState("");
 
   useEffect(() => {
@@ -35,6 +35,7 @@ const ArtistArtCard = ({ token, previewArt, delay, status, id }) => {
           alt="test"
           loaded={imageSrc ? true : false}
         />
+        <p className="title">{title}</p>
         {status === "PENDING" ? (
           <Link to={`/artist/submissions/edit/${id}`}>
             <CardFooter>VIEW OR EDIT</CardFooter>

@@ -7,9 +7,25 @@ export const CardWrapper = styled.figure`
   transition: transform 0.2s ease-in-out;
   display: flex;
 
+  .title {
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: -16px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    border-radius: 28px 28px 0 0;
+    display: none;
+  }
+
   &:hover {
     transform: scale(1.2);
 
+    .title,
     figcaption {
       display: initial;
     }

@@ -83,7 +83,7 @@ export const AdjustableIconWrapper = styled.div`
 
 export const FilterContainer = styled.div`
   position: absolute;
-  bottom: -220px;
+  bottom: -250px;
   right: -20px;
   z-index: 5;
   max-width: 170px;
