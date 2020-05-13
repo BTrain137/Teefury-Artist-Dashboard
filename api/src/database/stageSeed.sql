@@ -26,15 +26,15 @@ VALUES ("artist-btran@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j
 
 -- Artist accounts
 INSERT INTO `artist_profile` (`artist_name`, `first_name`, `last_name`, `username_contact_email`, `paypal_email`, `phone`, `social_facebook`, `social_instagram`, `social_twitter`, `international`)
-VALUES ("BryanTran", "Bryan", "Tran", "artist-btran@teefury.com", "artist-btran@teefury.com", "", "", "", "", false),
-("LanceStern", "Lance", "Stern", "artist-lance@digmeepartners.com", "artist-lance@digmeepartners.com", "", "", "", "", false),
-("ChrisBeason", "Chris", "Beason", "artist-chris@digmeepartners.com", "chris@digmeepartners.com", "", "", "", "", false),
-("ParulPatel", "Parul", "Patel", "artist-ppatel@digmeepartners.com", "ppatel@digmeepartners.com", "", "", "", "", false),
-("MarissaTucker", "Marissa", "Tucker", "artist-marissa@teefury.com", "marissa@teefury.com",  "", "", "", "", false),
-("PedroSandoval", "Pedro", "Sandoval", "artist-psandoval@teefury.com", "psandoval@teefury.com",  "", "", "", "", false),
-("IsabelThiessen", "Isabel", "Thiessen", "artist-ithiessen@teefury.com", "ithiessen@teefury.com",  "", "", "", "", false),
-("RebeccaMinjares", "Rebecca", "Minajares", "artist-rminjares@teefury.com", "rminjares@teefury.com", "", "", "", "", false),
-("JoyceArmstrong", "Joyce", "Armstrong", "artist-joyce@teefury.com", "joyce@teefury.com", "", "", "", "", false);
+VALUES ("Raffiti", "Bryan", "Tran", "artist-btran@teefury.com", "artist-btran@teefury.com", "", "", "", "", false),
+("DoOomcat", "Lance", "Stern", "artist-lance@digmeepartners.com", "artist-lance@digmeepartners.com", "", "", "", "", false),
+("xMorfina", "Chris", "Beason", "artist-chris@digmeepartners.com", "chris@digmeepartners.com", "", "", "", "", false),
+("Kat_Haynes", "Parul", "Patel", "artist-ppatel@digmeepartners.com", "ppatel@digmeepartners.com", "", "", "", "", false),
+("vp021", "Marissa", "Tucker", "artist-marissa@teefury.com", "marissa@teefury.com",  "", "", "", "", false),
+("otisframpton", "Pedro", "Sandoval", "artist-psandoval@teefury.com", "psandoval@teefury.com",  "", "", "", "", false),
+("eduely", "Isabel", "Thiessen", "artist-ithiessen@teefury.com", "ithiessen@teefury.com",  "", "", "", "", false),
+("beware1984", "Rebecca", "Minajares", "artist-rminjares@teefury.com", "rminjares@teefury.com", "", "", "", "", false),
+("Geekydog", "Joyce", "Armstrong", "artist-joyce@teefury.com", "joyce@teefury.com", "", "", "", "", false);
 
 
 -- Comissions payout
@@ -55,3 +55,24 @@ VALUES ("Tee", 2.00),
  ("Weekly-Tank", 1.00),
  ("Grab Bag", 0.00),
  ("none", 0.00);
+
+
+lance@digmeepartners.com
+chris@digmeepartners.com
+ppatel@digmeepartners.com
+marissa@teefury.com
+psandoval@teefury.com
+ithiessen@teefury.com
+rminjares@teefury.com
+joyce@teefury.com
+
+
+artist-btran@teefury.com          - Raffiti 
+artist-lance@digmeepartners.com   - DoOomcat 
+artist-chris@digmeepartners.com   - xMorfina 
+artist-ppatel@digmeepartners.com  - Kat_Haynes 
+artist-marissa@teefury.com        - vp021 
+artist-psandoval@teefury.com      - otisframpton 
+artist-ithiessen@teefury.com      - eduely 
+artist-rminjares@teefury.com      - beware1984 
+artist-joyce@teefury.com          - Geekydog 
