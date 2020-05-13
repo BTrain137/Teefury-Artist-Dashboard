@@ -38,8 +38,9 @@ router.post(
       conn = await pool.getConnection();
       const queryString =
         "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
-        "`vendor`, `product_type`, `order_id` as `commissions_amount`, `commissions_paid` " +
+        "`vendor`, `product_type`, `quantity`, `commissions_amount`, `commissions_paid` " +
         "FROM `orders` " +
+        "ORDER BY `order_created_at` DESC " + 
         "LIMIT " +
         defaultStartAt +
         "," +
@@ -119,7 +120,7 @@ router.post(
       conn = await pool.getConnection();
       let queryString =
         "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
-        "`vendor`, `product_type`, `order_id` as `commissions_amount`, `commissions_paid` " +
+        "`vendor`, `product_type`, `commissions_amount`, `commissions_paid` " +
         "FROM `orders` ";
 
       if (startDate && endDate) {
@@ -130,6 +131,7 @@ router.post(
           endDate +
           "' ";
       }
+      queryString += "ORDER BY `order_created_at` DESC ";
 
       // queryString += "LIMIT " + defaultStartAt + "," + defaultMax;
       queryString += "LIMIT 0," + defaultMax;
