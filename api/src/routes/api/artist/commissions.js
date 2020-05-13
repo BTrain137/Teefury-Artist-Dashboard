@@ -33,7 +33,7 @@ router.get(
       conn = await pool.getConnection();
       const queryString =
         "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
-        "`vendor`, `product_type`, `order_id` as `commissions_amount`, `commissions_paid` " +
+        "`vendor`, `product_type`, `commissions_amount`, `commissions_paid` " +
         "FROM `orders` WHERE `vendor`=?";
 
       /**
