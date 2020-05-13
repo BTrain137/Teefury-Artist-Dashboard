@@ -28,6 +28,16 @@ VALUES ("Tee", 2.00),
  ("Grab Bag", 0.00),
  ("none", 0.00);
 
+ 
+-- 
+SELECT `orders`.`order`, `orders`.`order_id`, `orders`.`order_created_at`, `orders`.`product_title`, 
+`orders`.`vendor`, `orders`.`variant_sku`, `orders`.`quantity`, `orders`.`product_type`, 
+`payouts`.`commissions_payout`, `orders`.`commissions_paid` 
+FROM `orders` INNER JOIN  `payouts` 
+ON `orders`.`product_type`=`payouts`.`product_type`
+ORDER BY `order_created_at` ASC;
+
+
 -- Update One
 -- UPDATE `artist_profile` SET `first_name`="Henry", `last_name`="Loco" WHERE `artist_name`="locoMotive";
 
