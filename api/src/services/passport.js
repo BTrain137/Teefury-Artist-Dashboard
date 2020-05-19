@@ -1,5 +1,6 @@
 import passport from "passport";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import { secret, BCRYPT_SALT_ROUNDS } from "./jwtConfig";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
@@ -7,14 +8,14 @@ import pool from "../database/connection.js";
 
 /**
  * req.user for JWT token
- * @typedef {{ 
+ * @typedef {{
  *   id:Number,
  *   is_admin:Boolean,
  *   contactEmail:String,
  *   cleanArtistName:String
  *   artistName:String,
  * }}JWTReqUser
- * 
+ *
  * Values inside of the JWT token
  * @typedef {{
  *   id:Number,
@@ -135,6 +136,76 @@ passport.use(
       done(error);
     }
   })
+);
+
+const passResetOpt = {
+  usernameField: "contactEmail",
+  passwordField: "contactEmail",
+  session: false,
+};
+
+passport.use(
+  "forgot-password",
+  new LocalStrategy(
+    passResetOpt,
+    async (usernameField, passwordField, done) => {
+      let conn;
+      try {
+        conn = await pool.getConnection();
+
+        const [
+          user,
+        ] = await pool.query(
+          "SELECT `id`, `is_admin`, `username_contact_email` AS `contactEmail` " +
+            "FROM `users`  WHERE `username_contact_email`=?",
+          [usernameField]
+        );
+
+        if (!user) {
+          console.log(usernameField);
+          conn.end();
+          return done(null, false, {
+            message: "User Does Not Exist.",
+            status: 404,
+          });
+        }
+
+        const token = crypto.randomBytes(20).toString("hex");
+        // After 5 days
+        const tokenExpiration = Date.now() + 5 * 24 * 60 * 60;
+
+        const {
+          affectedRows,
+        } = await pool.query(
+          "UPDATE `users` SET `reset_password_token`=?, " +
+            "`reset_password_expires`=? " +
+            "WHERE `username_contact_email`=?",
+          [token, tokenExpiration, usernameField]
+        );
+
+        if (affectedRows > 1) {
+          console.error(contactEmail);
+        }
+
+        const [
+          userWithResetToken,
+        ] = await pool.query(
+          "SELECT `id`, `is_admin`, `username_contact_email` AS `contactEmail`, " +
+            "`reset_password_token` AS `resetPasswordToken`, " +
+            "`reset_password_expires` AS `resetPasswordExpires` " +
+            "FROM `users`  WHERE `username_contact_email`=?",
+          [usernameField]
+        );
+
+        conn.end();
+        return done(null, userWithResetToken);
+      } catch (error) {
+        conn.end();
+        console.log("error.message: ", error.message);
+        done(error);
+      }
+    }
+  )
 );
 
 const JWTOpts = {
@@ -258,7 +329,7 @@ passport.use(
       );
       conn.end();
 
-      if(!user.is_admin) {
+      if (!user.is_admin) {
         return done(null, false, {
           message: "Not Admin",
           status: 401,

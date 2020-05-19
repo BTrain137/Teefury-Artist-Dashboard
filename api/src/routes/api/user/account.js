@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import pool from "../../../database/connection";
 import { secret, BCRYPT_SALT_ROUNDS } from "../../../services/jwtConfig.js";
 import { cleanStringShopify } from "../../../utils/cleanData";
+import { resetEmail } from "../../../services/email";
 
 /**
  * Complete Artist Profile
@@ -148,6 +149,26 @@ router.post("/signin", (req, res, next) => {
       token,
       ...userProfile,
     });
+  })(req, res, next);
+});
+
+router.post("/forgot-password", (req, res, next) => {
+  passport.authenticate("forgot-password", async (err, user, info) => {
+    if (err) return next(err);
+
+    if (!user) {
+      const { status, message } = info;
+      return res.status(status || 401).json({ status, message });
+    }
+
+    const { contactEmail, resetPasswordToken } = user;
+
+    try {
+      const result = await resetEmail(contactEmail, resetPasswordToken);
+      res.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
   })(req, res, next);
 });
 
