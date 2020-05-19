@@ -3,7 +3,7 @@ import React from "react";
 import CreateArtist from "../../components/ArtistCreate";
 import Signup from "../../components/Signup";
 import Signin from "../../components/Signin";
-import ResetPassword from "../../components/ResetPassword";
+import ForgotPassword from "../../components/ForgotPassword";
 
 import { SignInSignUpContainer } from "../SharedStyle/style";
 
@@ -25,8 +25,8 @@ export const CreateArtistPage = () => (
   </SignInSignUpContainer>
 );
 
-export const ResetPasswordPage = () => (
+export const ForgotPasswordPage = () => (
   <SignInSignUpContainer>
-    <ResetPassword />
+    <ForgotPassword />
   </SignInSignUpContainer>
 );

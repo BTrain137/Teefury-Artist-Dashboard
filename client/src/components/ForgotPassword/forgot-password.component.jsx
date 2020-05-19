@@ -18,7 +18,7 @@ import {
 } from "../SharedStyle/signin-signout.styles";
 import logo from "../../assets/logo.png";
 
-const ResetPassword = () => {
+const ForgotPassword = () => {
   const [state, setState] = useState({
     contactEmail: "",
     errorMessage: "",
@@ -132,4 +132,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ForgotPassword;
