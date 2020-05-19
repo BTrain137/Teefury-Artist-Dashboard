@@ -201,6 +201,8 @@ class Signin extends Component {
           </Form>
           <div style={{ marginTop: "20px" }}>
             <Link to="/signup">Don't have an account? Sign Up!</Link>
+            <br /> <br />
+            <Link to="/reset">Forgot your password?</Link>
           </div>
         </SignUpContainer>
       );

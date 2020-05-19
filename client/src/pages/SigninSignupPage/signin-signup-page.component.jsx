@@ -1,8 +1,9 @@
-import React from "react"
+import React from "react";
 
 import CreateArtist from "../../components/ArtistCreate";
 import Signup from "../../components/Signup";
 import Signin from "../../components/Signin";
+import ResetPassword from "../../components/ResetPassword";
 
 import { SignInSignUpContainer } from "../SharedStyle/style";
 
@@ -22,4 +23,10 @@ export const CreateArtistPage = () => (
   <SignInSignUpContainer>
     <CreateArtist />
   </SignInSignUpContainer>
-)
+);
+
+export const ResetPasswordPage = () => (
+  <SignInSignUpContainer>
+    <ResetPassword />
+  </SignInSignUpContainer>
+);

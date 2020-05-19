@@ -5,10 +5,12 @@ import {
   SignUpPage,
   SignInPage,
   CreateArtistPage,
+  ResetPasswordPage,
 } from "./pages/SigninSignupPage/signin-signup-page.component";
 import ArtistProfilePage from "./pages/ArtistProfilePage/artist-profile-page.component";
 import ArtistSubmissionPage from "./pages/ArtistSubmissionPage";
 import ArtistCommissions from "./pages/ArtistCommissions";
+
 import AdminProfile from "./pages/AdminProfilePage";
 import AdminArtSubmissionsPage from "./pages/AdminArtSubmissions";
 import AdminCommissionsPage from "./pages/AdminCommissions";
@@ -22,6 +24,7 @@ function App() {
       <Switch>
         <Route exact path="/" component={SignInPage} />
         <Route exact path="/signup" component={SignUpPage} />
+        <Route exact path="/reset" component={ResetPasswordPage} />
         {/* Artist Routes */}
         <Route exact path="/artist/create" component={CreateArtistPage} />
         <Route exact path="/artist/profile" component={ArtistProfilePage} />

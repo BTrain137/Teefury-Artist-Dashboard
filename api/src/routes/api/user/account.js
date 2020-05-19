@@ -165,7 +165,10 @@ router.post("/forgot-password", (req, res, next) => {
 
     try {
       const result = await resetEmail(contactEmail, resetPasswordToken);
-      res.sendStatus(200);
+      res.status(200).json({
+        message: "Reset Email Sent success",
+        status: 200,
+      });
     } catch (error) {
       next(error);
     }
