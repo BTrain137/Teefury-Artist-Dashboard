@@ -11,6 +11,8 @@ CREATE TABLE `users` (
   `username_contact_email` VARCHAR(255) UNIQUE,
   `password` BINARY(60),
   `is_admin` BOOLEAN NOT NULL DEFAULT 0,
+  `reset_password_token` varchar(255) DEFAULT NULL,
+  `reset_password_expires` BIGINT DEFAULT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`)
