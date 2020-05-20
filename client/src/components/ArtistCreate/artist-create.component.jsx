@@ -349,7 +349,7 @@ class CreateArtist extends Component {
                 </label>
                 <Terms>
                   I have read and accepted <br />
-                  <LinkToTerm to="/artist/profile">
+                  <LinkToTerm to="/terms-and-conditions" target="_blank">
                     terms and conditions
                   </LinkToTerm>
                 </Terms>

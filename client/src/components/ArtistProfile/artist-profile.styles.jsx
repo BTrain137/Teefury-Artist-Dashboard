@@ -47,7 +47,9 @@ export const ProfileInfo = styled.p`
   font-weight: bold;
   display: flex;
   justify-content: center;
-  margin: 35% 0;
+  margin: 35% auto;
+  padding: 0 10px;
+  word-break: break-all;
 
   .icon {
     width: 30px;
