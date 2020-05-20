@@ -25,7 +25,7 @@ VALUES ("artist-btran@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j
 ("artist-joyce@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false);
 
 -- Artist accounts
-INSERT INTO `artist_profile` (`artist_name`, `first_name`, `last_name`, `username_contact_email`, `paypal_email`, `phone`, `social_facebook`, `social_instagram`, `social_twitter`, `international`)
+INSERT INTO `artist_profile` (`artist_name`, `first_name`, `last_name`, `username_contact_email`, `paypal_email`, `phone`, `social_facebook`, `social_instagram`, `social_twitter`, `is_international`)
 VALUES ("Raffiti", "Bryan", "Tran", "artist-btran@teefury.com", "artist-btran@teefury.com", "", "", "", "", false),
 ("DoOomcat", "Lance", "Stern", "artist-lance@digmeepartners.com", "artist-lance@digmeepartners.com", "", "", "", "", false),
 ("xMorfina", "Chris", "Beason", "artist-chris@digmeepartners.com", "chris@digmeepartners.com", "", "", "", "", false),
