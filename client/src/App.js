@@ -12,6 +12,7 @@ import ArtistProfilePage from "./pages/ArtistProfilePage/artist-profile-page.com
 import ArtistSubmissionPage from "./pages/ArtistSubmissionPage";
 import ArtistCommissions from "./pages/ArtistCommissions";
 import HomePage from "./pages/HomePage";
+import TermsAndConditions from "./pages/TermsConditionPage";
 
 import AdminProfile from "./pages/AdminProfilePage";
 import AdminArtSubmissionsPage from "./pages/AdminArtSubmissions";
@@ -28,6 +29,7 @@ function App() {
         <Route exact path="/signin" component={SignInPage} />
         <Route exact path="/signup" component={SignUpPage} />
         <Route exact path="/forgot-password" component={ForgotPasswordPage} />
+        <Route exact path="/terms-and-conditions" component={TermsAndConditions} />
         <Route path="/reset-password/:token" component={ResetPasswordPage} />
         {/* Artist Routes */}
         <Route exact path="/artist/create" component={CreateArtistPage} />

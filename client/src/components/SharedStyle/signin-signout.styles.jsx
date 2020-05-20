@@ -55,3 +55,8 @@ export const SpaceHolder = styled.span`
   height: 25px;
   display: inline-block;
 `;
+
+export const P = styled.p`
+  margin-top: 0;
+  margin-bottom: 0;
+`;

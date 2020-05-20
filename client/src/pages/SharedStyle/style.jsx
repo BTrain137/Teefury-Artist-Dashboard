@@ -17,3 +17,7 @@ export const PageContainer = styled.main`
 export const PageWrapper = styled.section`
   flex-basis: 80%;
 `;
+
+export const Space = styled.div`
+  height: 40px;
+`;
