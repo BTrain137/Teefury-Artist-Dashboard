@@ -8,7 +8,7 @@ USE `artist_dashboard`;
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `username_contact_email` VARCHAR(255) UNIQUE,
+  `username_contact_email` VARCHAR(191) UNIQUE,
   `password` BINARY(60),
   `is_admin` BOOLEAN NOT NULL DEFAULT 0,
   `reset_password_token` varchar(255) DEFAULT NULL,
