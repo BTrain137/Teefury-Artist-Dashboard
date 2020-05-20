@@ -100,7 +100,7 @@ const ForgotPassword = () => {
         <Img src={logo} alt="Teefury Logo" />
         Tee<b>Fury</b>
       </H2>
-      <H3>Dashboard</H3>
+      <H3>Artist Dashboard</H3>
       <H4>FORGOT PASSWORD</H4>
       <span style={{ display: "block", minHeight: "40px" }}>
         <h5 style={{ color: "red" }}>{successMessage}</h5>

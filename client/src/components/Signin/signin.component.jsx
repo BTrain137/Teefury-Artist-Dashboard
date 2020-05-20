@@ -155,7 +155,7 @@ class Signin extends Component {
             <Img src={logo} alt="Teefury Logo" />
             Tee<b>Fury</b>
           </H2>
-          <H3>Dashboard</H3>
+          <H3>Artist Dashboard</H3>
           <H4>Sign In</H4>
           <Form
             onSubmit={this.handleSubmit}

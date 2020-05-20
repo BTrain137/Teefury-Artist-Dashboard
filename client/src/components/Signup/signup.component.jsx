@@ -129,7 +129,7 @@ class Signup extends Component {
           <Img src={logo} alt="Teefury Logo" />
           Tee<b>Fury</b>
         </H2>
-        <H3>Dashboard</H3>
+        <H3>Artist Dashboard</H3>
         <H4>Sign Up</H4>
         <Form onSubmit={this.handleSubmit} onKeyPress={this.handleFormKeyPress}>
           {formEmailError ? (

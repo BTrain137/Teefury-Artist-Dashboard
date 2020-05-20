@@ -11,6 +11,7 @@ import {
 import ArtistProfilePage from "./pages/ArtistProfilePage/artist-profile-page.component";
 import ArtistSubmissionPage from "./pages/ArtistSubmissionPage";
 import ArtistCommissions from "./pages/ArtistCommissions";
+import HomePage from "./pages/HomePage";
 
 import AdminProfile from "./pages/AdminProfilePage";
 import AdminArtSubmissionsPage from "./pages/AdminArtSubmissions";
@@ -23,6 +24,7 @@ function App() {
     <>
       <GlobalStyle />
       <Switch>
+        <Route exact path="/" component={HomePage} />
         <Route exact path="/signin" component={SignInPage} />
         <Route exact path="/signup" component={SignUpPage} />
         <Route exact path="/forgot-password" component={ForgotPasswordPage} />
