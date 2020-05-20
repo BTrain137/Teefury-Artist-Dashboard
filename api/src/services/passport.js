@@ -138,7 +138,7 @@ passport.use(
   })
 );
 
-const passResetOpt = {
+const passForgotOpt = {
   usernameField: "contactEmail",
   passwordField: "contactEmail",
   session: false,
@@ -147,7 +147,7 @@ const passResetOpt = {
 passport.use(
   "forgot-password",
   new LocalStrategy(
-    passResetOpt,
+    passForgotOpt,
     async (usernameField, passwordField, done) => {
       let conn;
       try {
@@ -171,8 +171,8 @@ passport.use(
         }
 
         const token = crypto.randomBytes(20).toString("hex");
-        // After 5 days
-        const tokenExpiration = Date.now() + 5 * 24 * 60 * 60;
+        const now = new Date();
+        const tokenExpiration = now.setDate(now.getDate() + 5);
 
         const {
           affectedRows,
@@ -199,6 +199,89 @@ passport.use(
 
         conn.end();
         return done(null, userWithResetToken);
+      } catch (error) {
+        conn.end();
+        console.log("error.message: ", error.message);
+        done(error);
+      }
+    }
+  )
+);
+
+const passResetOpt = {
+  usernameField: "password",
+  passwordField: "password",
+  passReqToCallback: true,
+  session: false,
+};
+
+passport.use(
+  "reset-password",
+  new LocalStrategy(
+    passResetOpt,
+    async (req, usernameField, passwordField, done) => {
+      const { token } = req.body;
+      const now = Date.now();
+      let conn;
+      try {
+        conn = await pool.getConnection();
+
+        const [
+          user,
+        ] = await pool.query(
+          "SELECT `id`, `is_admin`, `username_contact_email` AS `contactEmail`, " +
+            "`reset_password_expires` AS `resetPasswordExpires` " +
+            "FROM `users`  WHERE `reset_password_token`=?",
+          [token]
+        );
+
+        if (!user) {
+          conn.end();
+          return done(null, false, {
+            message: "Password reset link my have been used already. Reset a new link.",
+            status: 404,
+          });
+        }
+
+        const { id, resetPasswordExpires } = user;
+
+        if (now > resetPasswordExpires) {
+          conn.end();
+          return done(null, false, {
+            message: "Password reset link is too old please request a new one.",
+            status: 404,
+          });
+        }
+
+        const hashedPassword = await bcrypt.hash(
+          passwordField,
+          BCRYPT_SALT_ROUNDS
+        );
+
+        const {
+          affectedRows,
+        } = await pool.query(
+          "UPDATE `users` SET `reset_password_token`=?, " +
+            "`reset_password_expires`=?, `password`=? " +
+            "WHERE `id`=?",
+          [null, null, hashedPassword, id]
+        );
+
+        if (affectedRows > 1) {
+          console.error(contactEmail);
+        }
+
+        const [
+          newUser,
+        ] = await pool.query(
+          "SELECT `id`, `is_admin`, `password`, " +
+            "`username_contact_email` AS `contactEmail` " +
+            "FROM `users` WHERE `id`=?",
+          [id]
+        );
+
+        conn.end();
+        return done(null, newUser);
       } catch (error) {
         conn.end();
         console.log("error.message: ", error.message);

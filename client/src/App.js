@@ -6,6 +6,7 @@ import {
   SignInPage,
   CreateArtistPage,
   ForgotPasswordPage,
+  ResetPasswordPage,
 } from "./pages/SigninSignupPage/signin-signup-page.component";
 import ArtistProfilePage from "./pages/ArtistProfilePage/artist-profile-page.component";
 import ArtistSubmissionPage from "./pages/ArtistSubmissionPage";
@@ -25,6 +26,7 @@ function App() {
         <Route exact path="/" component={SignInPage} />
         <Route exact path="/signup" component={SignUpPage} />
         <Route exact path="/forgot-password" component={ForgotPasswordPage} />
+        <Route path="/reset-password/:token" component={ResetPasswordPage} />
         {/* Artist Routes */}
         <Route exact path="/artist/create" component={CreateArtistPage} />
         <Route exact path="/artist/profile" component={ArtistProfilePage} />

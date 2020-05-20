@@ -21,9 +21,7 @@ import { resetEmail } from "../../../services/email";
  *    social_twitter:String,
  *    isInternational:Boolean,
  *  }} ArtistProfile
- */
-
-/**
+ *
  * @typedef {{
  *   contactEmail:String,
  *   isAdmin:Boolean,
@@ -172,6 +170,26 @@ router.post("/forgot-password", (req, res, next) => {
     } catch (error) {
       next(error);
     }
+  })(req, res, next);
+});
+
+router.post("/reset-password", (req, res, next) => {
+  passport.authenticate("reset-password", async (err, user, info) => {
+    if (err) return next(err);
+
+    if (!user) {
+      const { status, message } = info;
+      return res.status(status || 401).json({ status, message });
+    }
+
+    const { token, ...userProfile } = await reqLogin(req, user, next);
+
+    res.status(200).send({
+      auth: true,
+      message: "User Found & Logged In",
+      token,
+      ...userProfile,
+    });
   })(req, res, next);
 });
 

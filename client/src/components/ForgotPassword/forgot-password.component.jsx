@@ -101,7 +101,7 @@ const ForgotPassword = () => {
         Tee<b>Fury</b>
       </H2>
       <H3>Dashboard</H3>
-      <H4>RESET PASSWORD</H4>
+      <H4>FORGOT PASSWORD</H4>
       <span style={{ display: "block", minHeight: "40px" }}>
         <h5 style={{ color: "red" }}>{successMessage}</h5>
         {errorMessage ? <ErrorMessages>{errorMessage}</ErrorMessages> : null}
