@@ -172,7 +172,17 @@ class Signup extends Component {
           </ButtonMd>
         </Form>
         <div style={{ marginTop: "20px" }}>
-          <Link to="/">Already have an account? Login.</Link>
+          <Link
+            to="/signin"
+            style={{
+              textTransform: "uppercase",
+              fontSize: "15px",
+              fontFamily: "sans-serif",
+              fontWeight: "bold",
+            }}
+          >
+            Already have an account? Login.
+          </Link>
         </div>
       </SignUpContainer>
     );

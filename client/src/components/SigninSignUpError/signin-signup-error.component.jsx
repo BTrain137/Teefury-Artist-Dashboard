@@ -22,6 +22,7 @@ const SignInSignUpError = ({ error }) => {
 
     const MSG_TO_ARTIST = `Artist! Please send this email from the same inbox you are requesting the password to be reset.\nFor your account security sender email must match ${contactEmail}.\nMissed match sender email and account email will be ignored.`;
     const EMAIL_BODY = `Hello Teefury Team,\n\nPlease reset the password associated to the email, ${contactEmail}\n\n${MSG_TO_ARTIST}\n\nThank you!`;
+    // eslint-disable-next-line
     const RESET_EMAIL_URL = encodeURI(
       `mailto:${TEEFURY_EMAIL}?subject=${EMAIL_SUBJECT}&body=${EMAIL_BODY}`
     );
@@ -32,9 +33,9 @@ const SignInSignUpError = ({ error }) => {
         {/* User not found 404 || Password incorrect not Authorized 401 || Conflict 409 */}
         {status === 404 || status === 401 || status === 409 ? (
           <ErrorMessages>
-            <a target="_blank" rel="noopener noreferrer" href={RESET_EMAIL_URL}>
+            <a target="_blank" rel="noopener noreferrer" href={"/forgot-password"}>
               {" "}
-              Reset Password
+              Forgot Password
             </a>
           </ErrorMessages>
         ) : null}

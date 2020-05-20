@@ -126,7 +126,17 @@ const ForgotPassword = () => {
         </ButtonMd>
       </Form>
       <div style={{ marginTop: "20px" }}>
-        <Link to="/signup">Don't have an account? Sign Up!</Link>
+        <Link
+          to="/signin"
+          style={{
+            textTransform: "uppercase",
+            fontSize: "18px",
+            fontFamily: "sans-serif",
+            fontWeight: "bold",
+          }}
+        >
+          Sign In!
+        </Link>
       </div>
     </SignUpContainer>
   );

@@ -23,7 +23,7 @@ function App() {
     <>
       <GlobalStyle />
       <Switch>
-        <Route exact path="/" component={SignInPage} />
+        <Route exact path="/signin" component={SignInPage} />
         <Route exact path="/signup" component={SignUpPage} />
         <Route exact path="/forgot-password" component={ForgotPasswordPage} />
         <Route path="/reset-password/:token" component={ResetPasswordPage} />

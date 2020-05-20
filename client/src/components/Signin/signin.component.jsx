@@ -115,7 +115,7 @@ class Signin extends Component {
 
     if (hasCreatedUserAccount) {
       // Admin
-      if(userAccount.isAdmin) {
+      if (userAccount.isAdmin) {
         history.push("/admin/profile");
         return false;
       }
@@ -191,6 +191,14 @@ class Signin extends Component {
               value={password}
               required
             />
+            <div style={{ marginTop: "-9px" }}>
+              <Link
+                to="/forgot-password"
+                style={{ fontSize: "12px", marginLeft: "-90px" }}
+              >
+                Forgot your password?
+              </Link>
+            </div>
             <ButtonMd
               type="submit"
               disabled={isDisableSubmit}
@@ -200,9 +208,17 @@ class Signin extends Component {
             </ButtonMd>
           </Form>
           <div style={{ marginTop: "20px" }}>
-            <Link to="/signup">Don't have an account? Sign Up!</Link>
-            <br /> <br />
-            <Link to="/forgot-password">Forgot your password?</Link>
+            <Link
+              style={{
+                textTransform: "uppercase",
+                fontSize: "15px",
+                fontFamily: "sans-serif",
+                fontWeight: "bold",
+              }}
+              to="/signup"
+            >
+              Don't have an account? Sign Up!
+            </Link>
           </div>
         </SignUpContainer>
       );
