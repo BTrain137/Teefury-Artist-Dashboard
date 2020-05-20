@@ -30,7 +30,8 @@ CREATE TABLE `artist_profile` (
   `social_facebook` TEXT,
   `social_instagram` TEXT,
   `social_twitter` TEXT,
-  `international` BOOLEAN,
+  `social_tumblr` TEXT,
+  `is_international` BOOLEAN,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`)

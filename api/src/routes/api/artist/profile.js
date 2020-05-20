@@ -40,14 +40,13 @@ router.get("/profile", passport.authenticate("jwt"), async (req, res, next) => {
         "`social_facebook` AS `socialFacebook`, " +
         "`social_instagram` AS `socialInstagram`, " +
         "`social_twitter` AS `socialTwitter`, " +
-        "`international` FROM `artist_profile` " +
+        "`is_international` FROM `artist_profile` " +
         "WHERE `username_contact_email`=?",
       [contactEmail]
     );
     conn.end();
 
-    artistProfile.isInternational = artistProfile.international ? true : false;
-    delete artistProfile.international;
+    artistProfile.isInternational = artistProfile.is_international ? true : false;
 
     /**
      * @return {ArtistProfile}
@@ -93,7 +92,7 @@ router.post(
         "INSERT INTO `artist_profile` " +
           "(`artist_name`, `first_name`, `last_name`, `username_contact_email`, " +
           "`paypal_email`, `phone`, `social_facebook`, `social_instagram`, " +
-          "`social_twitter`, `international`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "`social_twitter`, `is_international`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           artistName,
           firstName,
@@ -125,16 +124,15 @@ router.post(
           "`social_facebook` AS `socialFacebook`, " +
           "`social_instagram` AS `socialInstagram`, " +
           "`social_twitter` AS `socialTwitter`, " +
-          "`international` FROM `artist_profile` " +
+          "`is_international` FROM `artist_profile` " +
           "WHERE `username_contact_email`=?",
         [contactEmail]
       );
       conn.end();
 
-      artistProfile.isInternational = artistProfile.international
+      artistProfile.isInternational = artistProfile.is_international
         ? true
         : false;
-      delete artistProfile.international;
 
       jwtToken.cleanArtistName = cleanStringShopify(artistProfile.artistName);
       jwtToken.artistName = artistProfile.artistName;
@@ -189,7 +187,7 @@ router.put("/profile", passport.authenticate("jwt"), async (req, res, next) => {
     } = await pool.query(
       "UPDATE `artist_profile` SET `first_name`=?, `last_name`=?, " +
         "`paypal_email`=?, `phone`=?, `social_facebook`=?, `social_instagram`=?, " +
-        "`social_twitter`=?, `international`=? WHERE `artist_name`=?",
+        "`social_twitter`=?, `is_international`=? WHERE `artist_name`=?",
       [
         firstName,
         lastName,
@@ -220,14 +218,13 @@ router.put("/profile", passport.authenticate("jwt"), async (req, res, next) => {
         "`social_facebook` AS `socialFacebook`, " +
         "`social_instagram` AS `socialInstagram`, " +
         "`social_twitter` AS `socialTwitter`, " +
-        "`international` FROM `artist_profile` " +
+        "`is_international` FROM `artist_profile` " +
         "WHERE `username_contact_email`=?",
       [contactEmail]
     );
     conn.end();
 
-    artistProfile.isInternational = artistProfile.international ? true : false;
-    delete artistProfile.international;
+    artistProfile.isInternational = artistProfile.is_international ? true : false;
 
     res.status(200).json({
       message: "Artist Profile Updated.",

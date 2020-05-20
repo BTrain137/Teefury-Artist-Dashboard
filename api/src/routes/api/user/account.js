@@ -80,17 +80,16 @@ const reqLogin = (req, user, next) => {
               "`social_facebook` AS `socialFacebook`, " +
               "`social_instagram` AS `socialInstagram`, " +
               "`social_twitter` AS `socialTwitter`, " +
-              "`international` FROM `artist_profile` " +
+              "`is_international` FROM `artist_profile` " +
               "WHERE `username_contact_email`=?",
             [contactEmail]
           );
           conn.end();
 
           if (artistProfile) {
-            artistProfile.isInternational = artistProfile.international
+            artistProfile.isInternational = artistProfile.is_international
               ? true
               : false;
-            delete artistProfile.international;
 
             userProfile.artistProfile = artistProfile;
             jwtToken.cleanArtistName = cleanStringShopify(
