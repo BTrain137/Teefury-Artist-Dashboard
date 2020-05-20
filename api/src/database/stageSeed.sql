@@ -57,22 +57,22 @@ VALUES ("Tee", 2.00),
  ("none", 0.00);
 
 
-lance@digmeepartners.com
-chris@digmeepartners.com
-ppatel@digmeepartners.com
-marissa@teefury.com
-psandoval@teefury.com
-ithiessen@teefury.com
-rminjares@teefury.com
-joyce@teefury.com
+-- lance@digmeepartners.com
+-- chris@digmeepartners.com
+-- ppatel@digmeepartners.com
+-- marissa@teefury.com
+-- psandoval@teefury.com
+-- ithiessen@teefury.com
+-- rminjares@teefury.com
+-- joyce@teefury.com
 
 
-artist-btran@teefury.com          - Raffiti 
-artist-lance@digmeepartners.com   - DoOomcat 
-artist-chris@digmeepartners.com   - xMorfina 
-artist-ppatel@digmeepartners.com  - Kat_Haynes 
-artist-marissa@teefury.com        - vp021 
-artist-psandoval@teefury.com      - otisframpton 
-artist-ithiessen@teefury.com      - eduely 
-artist-rminjares@teefury.com      - beware1984 
-artist-joyce@teefury.com          - Geekydog 
+-- artist-btran@teefury.com          - Raffiti 
+-- artist-lance@digmeepartners.com   - DoOomcat 
+-- artist-chris@digmeepartners.com   - xMorfina 
+-- artist-ppatel@digmeepartners.com  - Kat_Haynes 
+-- artist-marissa@teefury.com        - vp021 
+-- artist-psandoval@teefury.com      - otisframpton 
+-- artist-ithiessen@teefury.com      - eduely 
+-- artist-rminjares@teefury.com      - beware1984 
+-- artist-joyce@teefury.com          - Geekydog 
