@@ -71,7 +71,6 @@ class ArtistCommissions extends Component {
       };
 
       const tableData = await fetchComForTable(reqBody, token);
-      console.log(tableData);
 
       this.setState({ tableData, loading: false });
     } catch (error) {
