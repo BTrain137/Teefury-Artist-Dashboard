@@ -63,7 +63,7 @@ class AdminApproval extends Component {
     const filteredSubmissions = this.state.originalSubmissionsArr.filter(
       (sub) => {
         if (filter === "NEW") return sub;
-        else return sub.status === filter;
+        else return sub.status.toUpperCase() === filter.toUpperCase();
       }
     );
 
