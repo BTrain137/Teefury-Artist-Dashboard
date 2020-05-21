@@ -27,7 +27,7 @@ const HomePage = () => (
     <H3>Artist Dashboard</H3>
     <SpaceHolder />
     <Welcome>Welcome To Our</Welcome>
-    <Welcome>Teefury Artist Community</Welcome>
+    <Welcome>New Teefury Artist Dashboard</Welcome>
     <SpaceHolder style={{ display: "block" }} />
     <img src={homepageImage} alt="home" style={{ maxWidth: "900px" }} />
     <LinksContainer>
