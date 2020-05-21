@@ -5,6 +5,18 @@ VALUES ("locoMotive", "Tom", "Thomas", "bryan89tran@yahoo.com", "bryan89tran@yah
 INSERT INTO `users` (`username_contact_email`)
 VALUES ("bryan89tran@yahoo.com");
 
+-- Insert Admin accounts
+INSERT INTO `users` (`username_contact_email`, `is_admin`)
+VALUES ("btran@teefury.com", true),
+("lance@digmeepartners.com", true),
+("chris@digmeepartners.com", true),
+("ppatel@digmeepartners.com", true),
+("marissa@teefury.com", true),
+("psandoval@teefury.com", true),
+("ithiessen@teefury.com", true),
+("rminjares@teefury.com", true),
+("joyce@teefury.com", true);
+
 -- Comissions payout
 INSERT INTO `payouts` (`product_type`, `commissions_payout`)
 VALUES ("Tee", 2.00),

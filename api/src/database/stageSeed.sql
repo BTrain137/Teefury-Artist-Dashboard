@@ -1,16 +1,16 @@
 USE `artist_dashboard`;
 
 -- Admin users
-INSERT INTO `users` (`username_contact_email`, `password`, `is_admin`)
-VALUES ("btran@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
-("lance@digmeepartners.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
-("chris@digmeepartners.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
-("ppatel@digmeepartners.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
-("marissa@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
-("psandoval@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
-("ithiessen@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
-("rminjares@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true),
-("joyce@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", true);
+INSERT INTO `users` (`username_contact_email`, `is_admin`)
+VALUES ("btran@teefury.com", true),
+("lance@digmeepartners.com", true),
+("chris@digmeepartners.com", true),
+("ppatel@digmeepartners.com", true),
+("marissa@teefury.com", true),
+("psandoval@teefury.com", true),
+("ithiessen@teefury.com", true),
+("rminjares@teefury.com", true),
+("joyce@teefury.com", true);
 
 -- Artist users
 INSERT INTO `users` (`username_contact_email`, `password`, `is_admin`)
