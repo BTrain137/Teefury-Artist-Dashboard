@@ -35,7 +35,6 @@ export function* createArtistProfile({ payload: { reqBody } }) {
 export function* getArtistProfile() {
   try {
     const token = yield select(selectUserJWTToken);
-    console.log({token});
     const {
       data: { artistProfile },
     } = yield axios.get("/api/artist/profile", {
