@@ -71,7 +71,7 @@ export const resetEmail = (artistEmail, token) => {
     });
 
     const htmlContent =
-      "You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
+      "You are receiving this because we received a request to reset the password on your account.\n\n" +
       "Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n" +
       `http://artists.teefury.com/reset-password/${token}\n\n` +
       "If you did not request this, please ignore this email and your password will remain unchanged.\n";
