@@ -183,7 +183,7 @@ class ArtistSubmissions extends Component {
                 );
               })
             ) : (
-              <h2>Hey Do you don't have any artwork Submit some!</h2>
+              <h2>Sorry you don't have any commissions yet.</h2>
             )}
           </ArtCardContainer>
         </TabArea>

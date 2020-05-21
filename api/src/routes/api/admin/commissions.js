@@ -43,7 +43,7 @@ router.get(
         " 00:00:00' AND '" +
         todaysDate +
         " 23:59:59' " +
-        "ORDER BY `order_created_at` ASC ";
+        "ORDER BY `order_created_at` DESC ";
 
       /**
        * @return {CommissionsDetails[]}
@@ -65,7 +65,6 @@ router.put(
   async (req, res, next) => {
     const { dbRowIds, isPaid, startDate, endDate } = req.body;
 
-    console.log(startDate, endDate);
     const todaysDate = cleanDate();
     const start = startDate ? startDate : todaysDate;
     const end = endDate ? endDate : todaysDate;
@@ -96,7 +95,8 @@ router.put(
         start +
         " 00:00:00' AND '" +
         end +
-        " 23:59:59' ";
+        " 23:59:59' " +
+        "ORDER BY `order_created_at` DESC ";
 
       /**
        * @return {CommissionsDetails[]}

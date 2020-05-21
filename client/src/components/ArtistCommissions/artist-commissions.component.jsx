@@ -4,6 +4,7 @@ import { createStructuredSelector } from "reselect";
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 import { ArtistTable } from "../Table";
+import TableQueries from "../Table/table-queries.component";
 import { fetchComForTable } from "../../utils/table";
 import { SelectColumnFilter } from "../../libs/table";
 
@@ -48,6 +49,8 @@ class ArtistCommissions extends Component {
       tableData: [],
       errorMsg: "",
       loading: true,
+      startDate: new Date(),
+      endDate: new Date(),
     };
   }
 
@@ -68,6 +71,7 @@ class ArtistCommissions extends Component {
       };
 
       const tableData = await fetchComForTable(reqBody, token);
+      console.log(tableData);
 
       this.setState({ tableData, loading: false });
     } catch (error) {
@@ -78,11 +82,43 @@ class ArtistCommissions extends Component {
     }
   };
 
+  handleDateFilter = async ({ startDate, endDate }) => {
+    const { token } = this.props;
+    const reqBody = {
+      url: "/api/artist/commissions/dates",
+      method: "POST",
+      data: {
+        startDate,
+        endDate,
+      },
+    };
+    try {
+      const tableData = await fetchComForTable(reqBody, token);
+
+      this.setState({
+        tableData,
+        startDate,
+        endDate,
+        loading: false,
+      });
+    } catch (error) {
+      this.setState({
+        errorMsg:
+          "We Could not find any records. Let us know if its a mistake.",
+      });
+    }
+  };
+
   render() {
-    const { tableData, errorMsg, loading } = this.state;
+    const { tableData, errorMsg, loading, startDate, endDate } = this.state;
     return (
       <SubmissionContainer>
         <TabArea>
+          <TableQueries
+            handleDateFilter={this.handleDateFilter}
+            globalStartDate={startDate}
+            globalEndDate={endDate}
+          />
           {tableData.length > 1 ? (
             <ArtistTable columns={TABLE_COLUMNS} data={tableData} />
           ) : errorMsg ? (

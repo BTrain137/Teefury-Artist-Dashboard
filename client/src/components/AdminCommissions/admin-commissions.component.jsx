@@ -4,7 +4,7 @@ import { createStructuredSelector } from "reselect";
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 import { AdminTable } from "../Table";
-import TableQueries from "./table-queries.component";
+import TableQueries from "../Table/table-queries.component";
 import { fetchComForTable } from "../../utils/table";
 import { SelectColumnFilter } from "../../libs/table";
 
@@ -68,7 +68,6 @@ class AdminCommissions extends Component {
 
     this.state = {
       tableData: [],
-      maxDisplay: 1000,
       startDate: new Date(),
       endDate: new Date(),
     };
