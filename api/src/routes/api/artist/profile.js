@@ -5,6 +5,8 @@ import pool from "../../../database/connection";
 import { secret } from "../../../services/jwtConfig";
 import { cleanStringShopify } from "../../../utils/cleanData";
 
+import main from "../../../services/cron";
+
 /**
  * Complete Artist Profile
  * @typedef {{
@@ -264,12 +266,23 @@ router.delete(
   }
 );
 
-router.get("/test-artist-profile", passport.authenticate("jwt"), (req, res) => {
-  console.log(req.user);
-  res.status(200).send({
-    message: "artist found in db",
-    isAuth: req.isAuthenticated(),
-  });
+router.get("/test-artist-profile", (req, res) => {
+  main()
+    .then((success) => {
+      console.log("Success", success);
+      res.status(200).send({
+        message: "artist found in db",
+        isAuth: req.isAuthenticated(),
+      });
+    })
+    .catch((error) => {
+      console.log("error", error);
+      console.log(req.user);
+      res.status(200).send({
+        message: "artist found in db",
+        isAuth: req.isAuthenticated(),
+      });
+    });
 });
 
 export default router;
