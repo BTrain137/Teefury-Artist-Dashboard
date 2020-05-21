@@ -2,6 +2,7 @@
 // pm2 start ./network/ecosystem.config.js --env production
 // pm2 start ./network/ecosystem.config.js --env dev
 // ll /root/.pm2/logs/
+// pm2 logs --timestamp
 
 module.exports = {
   apps: [
@@ -10,6 +11,7 @@ module.exports = {
       cwd: "/var/www/artist-dashboard/source",
       script: "npm start",
       max_memory_restart: "200M",
+      time: true,
       env_dev: {
         NODE_ENV: "development",
       },
@@ -22,7 +24,9 @@ module.exports = {
       cwd: "/var/www/stage-artist-dashboard/source",
       script: "npm start",
       max_memory_restart: "200M",
+      time: true,
       env_production: {
+        PORT: 4001,
         NODE_ENV: "production",
       },
     },
