@@ -72,7 +72,7 @@ const storeEdgesIntoDatabase = function (edges) {
         const [
           queryResult,
         ] = await pool.query(
-          "SELECT EXISTS(SELECT * FROM `orders_test` WHERE `order`=?)",
+          "SELECT EXISTS(SELECT * FROM `orders` WHERE `order`=?)",
           [name]
         );
 
@@ -134,7 +134,7 @@ const storeEdgesIntoDatabase = function (edges) {
           }
 
           const queryString =
-            "INSERT INTO `orders_test` (`order`, " +
+            "INSERT INTO `orders` (`order`, " +
             "`order_id`, `order_created_at`, `product_title`, `variant_sku`, " +
             "`vendor`, `quantity`, `product_type`, `commissions_amount`) " +
             "VALUES (?,?,?,?,?,?,?,?,?)";
