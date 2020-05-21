@@ -109,6 +109,14 @@ passport.use(
         });
       }
 
+      if(!user.password) {
+        conn.end();
+        return done(null, false, {
+          message: "Activate your account by resetting your password.",
+          status: 405,
+        });
+      }
+
       const doesPasswordMatch = await bcrypt.compare(
         password,
         user.password.toString("utf-8")

@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "passport";
 import pool from "../../../database/connection";
+import { cleanDate } from "../../../utils/cleanData";
 
 /**
  * Database quires return an array. Even if 1 item exist.
@@ -13,7 +14,7 @@ import pool from "../../../database/connection";
  *   product_type:String,
  *   commissions_paid:Boolean,
  * }} CommissionsDetails
- * 
+ *
  * @typedef {{
  *   id: Number,
  *   commissions_payout: String,
@@ -24,27 +25,25 @@ import pool from "../../../database/connection";
 
 const router = express.Router();
 
-router.post(
+router.get(
   "/commissions",
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
-    const { startAt, maxDisplay } = req.body;
-    const defaultStartAt = startAt ? startAt : 1;
-    const defaultMax = maxDisplay ? maxDisplay : 1000;
-
     let conn;
 
+    const todaysDate = cleanDate();
     try {
       conn = await pool.getConnection();
       const queryString =
         "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
         "`vendor`, `product_type`, `quantity`, `commissions_amount`, `commissions_paid` " +
         "FROM `orders` " +
-        "ORDER BY `order_created_at` DESC " + 
-        "LIMIT " +
-        defaultStartAt +
-        "," +
-        defaultMax;
+        "WHERE `order_created_at` BETWEEN '" +
+        todaysDate +
+        " 00:00:00' AND '" +
+        todaysDate +
+        " 23:59:59' " +
+        "ORDER BY `order_created_at` ASC ";
 
       /**
        * @return {CommissionsDetails[]}
@@ -64,8 +63,12 @@ router.put(
   "/commissions/update",
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
-    const { dbRowIds, isPaid, startAt } = req.body;
-    const defaultStartAt = startAt ? startAt : 0;
+    const { dbRowIds, isPaid, startDate, endDate } = req.body;
+
+    console.log(startDate, endDate);
+    const todaysDate = cleanDate();
+    const start = startDate ? startDate : todaysDate;
+    const end = endDate ? endDate : todaysDate;
 
     let ids = "`id`=" + dbRowIds.shift();
 
@@ -89,9 +92,11 @@ router.put(
         "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
         "`vendor`, `product_type`, `order_id` as `commissions_amount`, `commissions_paid` " +
         "FROM `orders` " +
-        "LIMIT " +
-        defaultStartAt +
-        ",100";
+        "WHERE `order_created_at` BETWEEN '" +
+        start +
+        " 00:00:00' AND '" +
+        end +
+        " 23:59:59' ";
 
       /**
        * @return {CommissionsDetails[]}
@@ -111,9 +116,7 @@ router.post(
   "/commissions/dates",
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
-    const { startAt, startDate, endDate, maxDisplay } = req.body;
-    const defaultMax = maxDisplay ? maxDisplay : 1000;
-    // const defaultStartAt = startAt ? startAt * defaultMax : 0;
+    const { startDate, endDate } = req.body;
     let conn;
 
     try {
@@ -127,14 +130,12 @@ router.post(
         queryString +=
           "WHERE `order_created_at` BETWEEN '" +
           startDate +
-          "' AND '" +
+          " 00:00:00' AND '" +
           endDate +
-          "' ";
+          " 23:59:59' ";
       }
-      queryString += "ORDER BY `order_created_at` DESC ";
 
-      // queryString += "LIMIT " + defaultStartAt + "," + defaultMax;
-      queryString += "LIMIT 0," + defaultMax;
+      queryString += "ORDER BY `order_created_at` DESC ";
 
       /**
        * @return {CommissionsDetails[]}
@@ -160,7 +161,7 @@ router.get(
     try {
       conn = await pool.getConnection();
       const queryString = "SELECT * FROM payouts";
-      
+
       /**
        * @return {CommissionsPayouts[]}
        */

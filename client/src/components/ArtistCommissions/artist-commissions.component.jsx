@@ -32,12 +32,12 @@ const TABLE_COLUMNS = [
     accessor: "commissions_amount",
     disableFilters: true,
   },
-  {
-    Header: "Paid or Unpaid",
-    accessor: "commissions_paid",
-    Filter: SelectColumnFilter,
-    filter: "includes",
-  },
+  // {
+  //   Header: "Paid or Unpaid",
+  //   accessor: "commissions_paid",
+  //   Filter: SelectColumnFilter,
+  //   filter: "includes",
+  // },
 ];
 
 class ArtistCommissions extends Component {

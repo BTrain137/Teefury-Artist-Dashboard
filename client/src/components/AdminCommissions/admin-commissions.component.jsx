@@ -71,8 +71,6 @@ class AdminCommissions extends Component {
       maxDisplay: 1000,
       startDate: new Date(),
       endDate: new Date(),
-      hasNewDatesAssigned: false,
-      startAt: 0,
     };
   }
 
@@ -86,13 +84,9 @@ class AdminCommissions extends Component {
 
   getAllCommissions = async () => {
     const { token } = this.props;
-    const { maxDisplay } = this.state;
     const reqBody = {
       url: "/api/admin/commissions",
-      method: "POST",
-      data: {
-        maxDisplay,
-      },
+      method: "GET",
     };
 
     const tableData = await fetchComForTable(reqBody, token);
@@ -102,14 +96,12 @@ class AdminCommissions extends Component {
 
   handleDateFilter = async ({ startDate, endDate }) => {
     const { token } = this.props;
-    const { maxDisplay } = this.state;
     const reqBody = {
       url: "/api/admin/commissions/dates",
       method: "POST",
       data: {
         startDate,
         endDate,
-        maxDisplay,
       },
     };
 
@@ -119,74 +111,12 @@ class AdminCommissions extends Component {
       tableData,
       startDate,
       endDate,
-      hasNewDatesAssigned: true,
-      startAt: 1,
     });
   };
 
-  handleMaxDisplay = async (maxDisplay) => {
-    const { hasNewDatesAssigned, startDate, endDate } = this.state;
-    const { token } = this.props;
-    let reqBody = {
-      url: "/api/admin/commissions/dates",
-      method: "POST",
-      data: {
-        maxDisplay,
-      },
-    };
-
-    if (hasNewDatesAssigned) {
-      reqBody.data = {
-        ...reqBody.data,
-        startDate,
-        endDate,
-      };
-    }
-
-    const tableData = await fetchComForTable(reqBody, token);
-
-    this.setState({ tableData, maxDisplay, startAt: 1 });
-  };
-
-  handlePagDBNext = async (isPaginate) => {
-    const { startAt, maxDisplay } = this.state;
-    let newStartAt = 0;
-    const { hasNewDatesAssigned, startDate, endDate } = this.state;
-    const { token } = this.props;
-    let reqBody = {
-      url: "/api/admin/commissions/dates",
-      method: "POST",
-      data: {
-        maxDisplay,
-      },
-    };
-
-    if (hasNewDatesAssigned) {
-      reqBody.data = {
-        ...reqBody.data,
-        startDate,
-        endDate,
-      };
-    }
-
-    if (isPaginate) {
-      newStartAt = startAt + 1;
-      reqBody.data = {
-        ...reqBody.data,
-        startAt: newStartAt,
-      };
-    }
-
-    const tableData = await fetchComForTable(reqBody, token);
-    this.setState({
-      tableData,
-      maxDisplay,
-      startAt: isPaginate ? newStartAt : startAt,
-    });
-  };
 
   render() {
-    const { tableData, maxDisplay, startDate, endDate } = this.state;
+    const { tableData, startDate, endDate } = this.state;
     const { token } = this.props;
     return (
       <SubmissionContainer>
@@ -199,9 +129,6 @@ class AdminCommissions extends Component {
         <TabArea>
           <TableQueries
             handleDateFilter={this.handleDateFilter}
-            handleMaxDisplay={this.handleMaxDisplay}
-            handlePagDBNext={this.handlePagDBNext}
-            globalMaxDisplay={maxDisplay}
             globalStartDate={startDate}
             globalEndDate={endDate}
           />
@@ -211,7 +138,8 @@ class AdminCommissions extends Component {
               setTableData={this.setTableData}
               data={tableData}
               token={token}
-              maxDisplay={maxDisplay}
+              globalStartDate={startDate}
+              globalEndDate={endDate}
             />
           ) : (
             <h2> No Records Found </h2>

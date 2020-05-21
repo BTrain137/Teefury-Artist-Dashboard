@@ -41,7 +41,6 @@ const TableToolbar = ({
   markedAsUnpaid,
   exportCSV,
   totalRecords,
-  maxDisplay,
 }) => {
   const classes = useToolbarStyles();
 
@@ -61,12 +60,7 @@ const TableToolbar = ({
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Commissions:{" "}
-          <small>
-            {+totalRecords === +maxDisplay
-              ? `Over ${maxDisplay} records there could be more`
-              : `${totalRecords} Total Records Found`}
-          </small>
+          Commissions: <small>{`${totalRecords} Total Records Found`}</small>
         </Typography>
       )}
 

@@ -7,11 +7,8 @@ import "react-date-range/dist/theme/default.css"; // theme css f
 
 const TableQueries = ({
   handleDateFilter,
-  handleMaxDisplay,
-  handlePagDBNext,
   globalStartDate,
   globalEndDate,
-  globalMaxDisplay,
 }) => {
   const [dates, setDates] = useState({
     startDate: globalStartDate,
@@ -21,11 +18,9 @@ const TableQueries = ({
 
   const [state, setState] = useState({
     isDateOpen: false,
-    isMaxDisplay: false,
-    maxDisplay: globalMaxDisplay,
   });
 
-  const { isDateOpen, isMaxDisplay, maxDisplay } = state;
+  const { isDateOpen } = state;
 
   const handleChange = (item) => {
     setDates(item.selection);
@@ -36,10 +31,6 @@ const TableQueries = ({
     const start = new Date(startDate).toLocaleDateString("en-CA");
     const end = new Date(endDate).toLocaleDateString("en-CA");
     handleDateFilter({ startDate: start, endDate: end });
-  };
-
-  const handleMaxDisplayChange = (event) => {
-    setState({ ...state, maxDisplay: event.currentTarget.value });
   };
 
   return (
@@ -85,51 +76,6 @@ const TableQueries = ({
           </ButtonSm>
         )}
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        {isMaxDisplay ? (
-          <>
-            <input
-              type="number"
-              onChange={handleMaxDisplayChange}
-              value={maxDisplay}
-            />
-            <div style={{ paddingTop: "30px" }}>
-              <ButtonSm onClick={() => handleMaxDisplay(maxDisplay)}>
-                Update
-              </ButtonSm>
-              <ButtonSm
-                style={{ marginLeft: "20px" }}
-                onClick={() => setState({ ...state, isMaxDisplay: false })}
-              >
-                X
-              </ButtonSm>
-            </div>
-          </>
-        ) : (
-          <ButtonSm onClick={() => setState({ ...state, isMaxDisplay: true })}>
-            Edit Max Display
-          </ButtonSm>
-        )}
-      </div>
-      {/* <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-          <ButtonSm
-            onClick={() => handlePagDBNext(true)}
-          >
-            Get Next {maxDisplay}
-          </ButtonSm>
-      </div> */}
     </div>
   );
 };
