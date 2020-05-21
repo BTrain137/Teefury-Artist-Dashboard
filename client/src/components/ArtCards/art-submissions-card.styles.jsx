@@ -1,6 +1,8 @@
 import styled, { css } from "styled-components";
 
-export const CardContainer = styled.div``;
+export const CardContainer = styled.div`
+  max-width: 400px;
+`;
 
 export const CardWrapper = styled.figure`
   position: relative;

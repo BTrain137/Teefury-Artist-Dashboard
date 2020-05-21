@@ -30,7 +30,7 @@ import {
   FilterContainer,
   FilterBtn,
   ArtCardContainer,
-} from "./artist-submissions.styles";
+} from "../SharedStyle/art-submissions.styles";
 
 class ArtistSubmissions extends Component {
   constructor(props) {

@@ -25,7 +25,7 @@ import {
   FilterContainer,
   FilterBtn,
   ArtCardContainer,
-} from "./admin-art-submissions.styles";
+} from "../SharedStyle/art-submissions.styles";
 
 class AdminApproval extends Component {
   constructor(props) {

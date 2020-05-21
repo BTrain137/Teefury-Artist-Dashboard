@@ -38,7 +38,7 @@ const ArtistArtCard = ({
 
   return (
     <CardContainer>
-      <CardWrapper style={{ margin: "20px 10px" }}>
+      <CardWrapper style={{ margin: "18px 15px" }}>
         <ImgCard
           src={imageSrc ? imageSrc : teefuryBirdLogo}
           alt="test"

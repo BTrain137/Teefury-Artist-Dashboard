@@ -1,8 +1,45 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { Link } from "react-router-dom";
 
 export const SubmissionContainer = styled.div`
   width: 90%;
   margin: 40px auto;
+`;
+
+export const TabHeader = styled.header`
+  display: flex;
+  justify-content: center;
+`;
+
+const tabTitle = css`
+  margin: 0;
+  padding: 20px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 17px;
+  border-radius: 15px 15px 0 0;
+  font-family: sans-serif;
+  min-width: 170px;
+  text-align: center;
+  cursor: pointer;
+`;
+
+export const TabTitle = styled.h1`
+  ${tabTitle}
+  box-shadow: 0px -7px 17px 0px rgba(0, 0, 0, 0.2);
+  color: #6a6a6a;
+`;
+
+export const TabSubTitle = styled.h2`
+  ${tabTitle}
+  background-color: #DEDDDD;
+  color: #fff;
+  margin-right: 33px;
+`;
+
+export const TabSubLink = styled(Link)`
+  text-decoration: none;
+  color: white;
 `;
 
 export const TabArea = styled.div`
@@ -14,7 +51,7 @@ export const TabArea = styled.div`
 
 export const FilterHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   position: relative;
 `;
 
