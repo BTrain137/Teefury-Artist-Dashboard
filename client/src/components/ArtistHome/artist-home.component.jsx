@@ -1,7 +1,7 @@
 import React from "react";
 
 const ArtistHome = () => (
-  <section style={{ maxWidth: "480px", marginTop: "20%", padding: "0 20px" }}>
+  <section style={{ maxWidth: "480px", padding: "0 20px" }}>
     <h1>Welcome to the new TeeFury Artist Dashboard</h1>
     <p>
       This is still a work in progress, so we appreciate your patience.

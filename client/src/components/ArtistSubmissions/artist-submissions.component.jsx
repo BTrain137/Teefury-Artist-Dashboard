@@ -183,7 +183,11 @@ class ArtistSubmissions extends Component {
                 );
               })
             ) : (
-              <h2>Sorry you don't have any commissions yet.</h2>
+              <h2>
+                Sorry you don't have any{" "}
+                {filterBy === "new" || filterBy === "pending" ? "" : filterBy}{" "}
+                submissions yet.
+              </h2>
             )}
           </ArtCardContainer>
         </TabArea>

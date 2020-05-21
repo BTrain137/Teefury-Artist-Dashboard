@@ -42,7 +42,7 @@ const ForgotPassword = () => {
       });
       setState({
         ...state,
-        successMessage: "Please Check your inbox for the rest email.",
+        successMessage: "Please Check your inbox for the reset password email.",
         errorMessage: "",
         isDisableSubmit: true,
       });
@@ -120,7 +120,9 @@ const ForgotPassword = () => {
         <ButtonMd
           type="submit"
           disabled={isDisableSubmit}
-          style={{ width: "190px", height: "44px" }}
+          // IE polyfill
+          // eslint-disable-next-line
+          style={{ width: "220px", width: "fit-content" }}
         >
           {isLoading ? <LoadingIcon /> : "Reset Password"}
         </ButtonMd>

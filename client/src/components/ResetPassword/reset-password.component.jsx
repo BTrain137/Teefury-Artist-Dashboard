@@ -175,7 +175,9 @@ const ResetPassword = ({ loginUser }) => {
         <ButtonMd
           type="submit"
           disabled={isDisableSubmit}
-          style={{ width: "190px", height: "44px" }}
+          // IE polyfill
+          // eslint-disable-next-line
+          style={{ width: "220px", width: "fit-content" }}
         >
           {isLoading ? <LoadingIcon /> : "Reset Password"}
         </ButtonMd>

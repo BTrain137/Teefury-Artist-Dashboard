@@ -42,6 +42,7 @@ import {
   ProfileInfo,
   FormInputStyled,
 } from "./artist-profile.styles";
+import logo from "../../assets/logo.png";
 
 class ArtistProfile extends Component {
   constructor(props) {
@@ -202,7 +203,7 @@ class ArtistProfile extends Component {
       phoneNumber: phoneNumber ? phoneNumber.trim() : "",
       socialFacebook: socialFacebook ? socialFacebook.trim() : "",
       socialInstagram: socialInstagram ? socialInstagram.trim() : "",
-      socialTwitter: socialTwitter ? socialTwitter.trim() :  "",
+      socialTwitter: socialTwitter ? socialTwitter.trim() : "",
       isInternational,
       hasAcceptTerms: true,
     };
@@ -315,7 +316,11 @@ class ArtistProfile extends Component {
     return (
       <ArtistProfileContainer>
         <ProfileImg
-          style={{ backgroundImage: "url(http://placekitten.com/g/300/300)" }}
+          style={{
+            backgroundImage: `url(${logo})`,
+            backgroundSize: "150px",
+            backgroundPosition: "center",
+          }}
         />
         {isEditMode ? (
           <>
