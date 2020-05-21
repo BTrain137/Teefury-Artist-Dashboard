@@ -31,7 +31,18 @@ const UserError = ({ error, children }) => {
             <li key={i} dangerouslySetInnerHTML={{ __html: errMsg }} />
           ))
         ) : (
-          <li>Sorry Something Went Wrong.</li>
+          <>
+            <li>
+              If you are changing your contact email. Please use a valid email
+            </li>
+            <li>
+              If you are changing your password. Please match the password.
+            </li>
+            <li>
+              If you are changing your password. Password must be at least 5
+              characters long.
+            </li>
+          </>
         )}
       </ErrorList>
     );

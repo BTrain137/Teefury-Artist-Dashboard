@@ -16,9 +16,10 @@ const ArtistErrorMessages = ({ error, children }) => {
     const { messages: errorMessage } = error;
     const messages = [];
     if (!errorMessage) {
+      messages.push("Required Fields: Artist Name");
       messages.push("Required Fields: First Name");
       messages.push("Required Fields: Last Name");
-      messages.push("Required Fields: Paypal Email");
+      messages.push("Required Fields: Valid Paypal Email");
     }
     return (
       <ErrorList>
@@ -32,7 +33,7 @@ const ArtistErrorMessages = ({ error, children }) => {
             <li>Required Fields: Artist Name</li>
             <li>Required Fields: First Name</li>
             <li>Required Fields: Last Name</li>
-            <li>Required Fields: Paypal Email</li>
+            <li>Required Fields: Valid Paypal Email</li>
           </>
         )}
       </ErrorList>
