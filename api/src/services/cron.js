@@ -9,5 +9,8 @@ cron.schedule("0 15 * * * *", () => {
   const date = cleanDate(now);
   processOrders(date, startTime, endTime)
     .then(console.log)
-    .catch((error) => console.log("error", error));
+    .catch((error) =>
+      // TODO: post to slack
+      console.log(`CRON ERROR: -- ${date} ${startTime} ${endTime} :`, error)
+    );
 });
