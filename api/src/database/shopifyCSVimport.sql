@@ -4,6 +4,8 @@
 -- Remove time stamp " -4:00," from csv. MariaDB will throw an error
 -- Import the csv into database
 -- Be sure to align the columns correctly. product_type and a few others might fill something else in its spot
+-- After import must run run a program to get all product types
+-- Then join the payout table with the orders table
 
 -- Alter table to accept shopify orders.
 
@@ -65,6 +67,16 @@ ALTER TABLE `orders`
 ALTER TABLE `orders`
   CHANGE COLUMN `quantity` `17. Lineitem quantity` 
     int(4) DEFAULT NULL;
+
+
+-- Join orders with payouts
+
+SELECT `orders`.`order`, `orders`.`order_id`, `orders`.`order_created_at`, `orders`.`product_title`, 
+`orders`.`vendor`, `orders`.`variant_sku`, `orders`.`quantity`, `orders`.`product_type`, 
+`payouts`.`commissions_payout`, `orders`.`commissions_paid` 
+FROM `orders` INNER JOIN  `payouts` 
+ON `orders`.`product_type`=`payouts`.`product_type`
+ORDER BY `order_created_at` ASC;
 
 
 -- Helpful tabel creation to accept shopfiy orders
