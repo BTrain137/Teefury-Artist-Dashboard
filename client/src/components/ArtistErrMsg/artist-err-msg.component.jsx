@@ -14,10 +14,11 @@ import { ErrorTitle, ErrorList, FormTitle } from "./artist-err-msg.styles";
 const ArtistErrorMessages = ({ error, children }) => {
   if (error) {
     const { messages } = error;
+    console.log({ messages });
     return (
       <ErrorList>
         <ErrorTitle>Please Correct Error(s)</ErrorTitle>
-        {messages.length > 0 ? messages.map((errMsg, i) => (
+        {messages && messages.length > 0 ? messages.map((errMsg, i) => (
           <li key={i} dangerouslySetInnerHTML={{ __html: errMsg }} />
         )) : <li > Sorry! Something went wrong please let us know!</li>}
       </ErrorList>

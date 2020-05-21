@@ -14,11 +14,10 @@ import { ErrorTitle, ErrorList, FormTitle } from "./error-msgs.styles";
 const UserError = ({ error, children }) => {
   if (error) {
     const { messages } = error;
-    console.log("UserError: ", { messages });
     return (
       <ErrorList>
         <ErrorTitle>Please Correct Error(s)</ErrorTitle>
-        {messages.length > 0 ? (
+        {messages && messages.length > 0 ? (
           messages.map((errMsg, i) => (
             <li key={i} dangerouslySetInnerHTML={{ __html: errMsg }} />
           ))
