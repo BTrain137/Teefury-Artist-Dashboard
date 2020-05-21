@@ -7,6 +7,7 @@ cron.schedule("0 15 * * * *", () => {
   const now = new Date();
   const [startTime, endTime] = startAndEndTime(now);
   const date = cleanDate(now);
+  console.log(`Cron: ${date}, ${startTime}, ${endTime}`);
   processOrders(date, startTime, endTime)
     .then(console.log)
     .catch((error) =>

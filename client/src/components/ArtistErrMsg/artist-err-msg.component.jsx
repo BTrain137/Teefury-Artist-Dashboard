@@ -15,18 +15,26 @@ const ArtistErrorMessages = ({ error, children }) => {
   if (error) {
     const { messages: errorMessage } = error;
     const messages = [];
-    if(!errorMessage) {
+    if (!errorMessage) {
       messages.push("Required Fields: First Name");
       messages.push("Required Fields: Last Name");
-      messages.push("Required Fields: Paypal Email");
       messages.push("Required Fields: Paypal Email");
     }
     return (
       <ErrorList>
         <ErrorTitle>Please Correct Error(s)</ErrorTitle>
-        {messages && messages.length > 0 ? messages.map((errMsg, i) => (
-          <li key={i} dangerouslySetInnerHTML={{ __html: errMsg }} />
-        )) : <li > Sorry! Something went wrong please let us know!</li>}
+        {messages && messages.length > 0 ? (
+          messages.map((errMsg, i) => (
+            <li key={i} dangerouslySetInnerHTML={{ __html: errMsg }} />
+          ))
+        ) : (
+          <>
+            <li>Required Fields: Artist Name</li>
+            <li>Required Fields: First Name</li>
+            <li>Required Fields: Last Name</li>
+            <li>Required Fields: Paypal Email</li>
+          </>
+        )}
       </ErrorList>
     );
   } else {

@@ -13,7 +13,16 @@ import { ErrorTitle, ErrorList, FormTitle } from "./error-msgs.styles";
  */
 const UserError = ({ error, children }) => {
   if (error) {
-    const { messages } = error;
+    const { messages: errorMessage } = error;
+
+    const messages = [];
+    if (!errorMessage) {
+      messages.push("Required Fields: First Name");
+      messages.push("Required Fields: Last Name");
+      messages.push("Required Fields: Paypal Email");
+      messages.push("Required Fields: Paypal Email");
+    }
+
     return (
       <ErrorList>
         <ErrorTitle>Please Correct Error(s)</ErrorTitle>
