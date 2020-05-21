@@ -9,7 +9,7 @@ cron.schedule("0 15 * * * *", () => {
   const date = cleanDate(now);
   console.log(`Cron: ${date}, ${startTime}, ${endTime}`);
   processOrders(date, startTime, endTime)
-    .then(console.log)
+    .then(success => console.log(`CRON Success: -- ${date} ${startTime} ${endTime} :`, success))
     .catch((error) =>
       // TODO: post to slack
       console.log(`CRON ERROR: -- ${date} ${startTime} ${endTime} :`, error)
