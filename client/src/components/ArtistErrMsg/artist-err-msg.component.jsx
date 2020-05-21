@@ -13,8 +13,14 @@ import { ErrorTitle, ErrorList, FormTitle } from "./artist-err-msg.styles";
  */
 const ArtistErrorMessages = ({ error, children }) => {
   if (error) {
-    const { messages } = error;
-    console.log({ messages });
+    const { messages: errorMessage } = error;
+    const messages = [];
+    if(!errorMessage) {
+      messages.push("Required Fields: First Name");
+      messages.push("Required Fields: Last Name");
+      messages.push("Required Fields: Paypal Email");
+      messages.push("Required Fields: Paypal Email");
+    }
     return (
       <ErrorList>
         <ErrorTitle>Please Correct Error(s)</ErrorTitle>
