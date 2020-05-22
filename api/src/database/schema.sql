@@ -46,7 +46,7 @@ CREATE TABLE `submissions` (
   `description` VARCHAR(255), 
   `art_file` VARCHAR(200),
   `preview_art` VARCHAR(200),
-  `status` VARCHAR(100) NOT NULL DEFAULT "Pending",
+  `status` VARCHAR(100) NOT NULL DEFAULT "PENDING",
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`)
