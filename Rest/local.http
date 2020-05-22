@@ -1,11 +1,6 @@
-
+# TODO: do queries correctly
 GET http://localhost:3001/api/admin/order-pull?inputDate=2020-05-21&end=23
 
 ###
 
 GET http://localhost:3001/api/admin/order-pull
-
-
-###
-# Production
-GET http://artists.teefury.com//api/admin/order-pull

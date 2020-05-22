@@ -3,7 +3,7 @@ import processOrders from "../libs/processOrdersFromShopify";
 import { cleanDate, startAndEndTime } from "../utils/cleanData";
 
 // At the 15 minute mark of every hour
-cron.schedule("0 11 * * * *", async () => {
+cron.schedule("0 15 * * * *", async () => {
   const now = new Date();
   const { startDate, startHour, endDate, endHour } = startAndEndTime(now);
 
