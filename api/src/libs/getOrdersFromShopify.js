@@ -3,13 +3,20 @@ import buildAxiosQuery from "../utils/buildAxiosQuery";
 /**
  * @summary  Get all orders from shopify to upload onto database 1 time
  * @param   {String} cursor     Shopify's graphQLs cursor
- * @param   {String} date       Date: 2020-05-13
- * @param   {String} startTime  Start of the hour
- * @param   {String} endTime    End of the hour
+ * @param   {String} startDate  Date: 2020-05-13
+ * @param   {String} startHour  Start of the hour
+ * @param   {String} endDate    End of the hour
+ * @param   {String} endHour    End of the hour
  * @returns {Promise<>}
  */
 
-const getOrdersFromShopify = (cursor = "", date, startTime, endTime) => {
+const getOrdersFromShopify = (
+  cursor = "",
+  startDate,
+  startHour,
+  endDate,
+  endHour
+) => {
   return new Promise(async (resolve, reject) => {
     try {
       const query = `
@@ -50,7 +57,7 @@ const getOrdersFromShopify = (cursor = "", date, startTime, endTime) => {
       if (cursor) {
         variables.cursor = cursor;
       } else {
-        variables.query = `created_at:>='${date}T${startTime}:00:00-04:00' AND created_at:<='${date}T${endTime}:00:00-04:00'`;
+        variables.query = `created_at:>='${startDate}T${startHour}:00:00-04:00' AND created_at:<='${endDate}T${endHour}:00:00-04:00'`;
       }
 
       const response = await buildAxiosQuery(query, variables);

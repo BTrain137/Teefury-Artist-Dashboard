@@ -143,12 +143,28 @@ export const cleanDatePerviousDay = (input) => {
 /**
  * @description The the start and end of the hours
  * @param  {String} [input] Input date string
- * @return {Array} First index is start second index is end
+ * @return {{ startDate:String, endDate:String, startHour:String, endHour:string }} The date starting and ending time
  * @example
- * // 2020-05-21T16:18:05.726Z
- * // '5/21/2020, 12:18:05' - New York time
+ * //
+ * // 2020-05-22T00:51:53.701Z
+ * // '5/21/2020, 9:51:53' - New York time
  * startAndEndTime(); 
- * // [ '11', '12' ]
+ * // {
+ * //   startDate: '2020-5-21',
+ * //   endDate: '2020-5-21',
+ * //   startHour: '19',
+ * //   endHour: '20'
+ * // }
+ * //
+ * // 2020-05-22T04:51:06.954Z
+ * // '5/21/2020, 9:51:53' - New York time
+ * startAndEndTime(); 
+ * // {
+ * //   startDate: '2020-5-21',
+ * //   startHour: '23',
+ * //   endDate: '2020-5-22',
+ * //   endHour: '00'
+ * // }
  */
 export const startAndEndTime = (input) => {
   const dateInput = input ? new Date(input) : new Date();
@@ -157,6 +173,10 @@ export const startAndEndTime = (input) => {
     timeZone: "America/New_York",
   });
   const [endHour] = endTime.split(":");
+  const endDate = dateInput.toLocaleDateString("en-US", {
+    hour12: false,
+    timeZone: "America/New_York",
+  });
 
   dateInput.setHours(dateInput.getHours() - 1);
 
@@ -164,8 +184,16 @@ export const startAndEndTime = (input) => {
     hour12: false,
     timeZone: "America/New_York",
   });
-
   const [startHour] = startTime.split(":");
+  const startDate = dateInput.toLocaleDateString("en-US", {
+    hour12: false,
+    timeZone: "America/New_York",
+  });
 
-  return [startHour, endHour];
+  return {
+    startDate: cleanDate(startDate),
+    endDate: cleanDate(endDate),
+    startHour,
+    endHour,
+  };
 };

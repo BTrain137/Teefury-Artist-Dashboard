@@ -1,9 +1,6 @@
 import getOrdersFromShopify from "../libs/getOrdersFromShopify";
 import pool from "../database/connection.js";
-import {
-  cleanDateAndTime,
-  cleanIDGraphql,
-} from "../utils/cleanData";
+import { cleanDateAndTime, cleanIDGraphql } from "../utils/cleanData";
 import consoleColor from "../utils/consoleColor";
 
 const { NODE_ENV } = process.env;
@@ -118,19 +115,21 @@ const storeEdgesIntoDatabase = function (edges) {
               "SELECT `commissions_payout` FROM `payouts` WHERE `product_type`=?",
               [productType]
             );
-            
-            if(!commissionsAmount) {
-              console.log("==============================");
-              console.error(
-                `${name}, ${cleanIDGraphql(
-                  orderId
-                )}, ${cleanDateAndTime(
-                  createdAt
-                )}, ${productTitle}, ${variantSku}, ${vendor}, ${quantity}, ${productType}, ${commissionsPayout}`
-              );
-              return reject("Product Type Not Found")
+
+            if (!commissionsAmount) {
+              // TODO: Alert admins product type doesn't exist in the table
+              if (NODE_ENV === "development") {
+                console.log("==============================");
+                console.error(
+                  `${name}, ${cleanIDGraphql(orderId)}, ${cleanDateAndTime(
+                    createdAt
+                  )}, ${productTitle}, ${variantSku}, ${vendor}, ${quantity}, ${productType}, ${commissionsPayout}`
+                );
+              }
             }
-            commissionsPayout = commissionsAmount.commissions_payout;
+            commissionsPayout = commissionsAmount
+              ? commissionsAmount.commissions_payout
+              : null;
           }
 
           const queryString =
@@ -179,20 +178,26 @@ const storeEdgesIntoDatabase = function (edges) {
  * @description Process orders from shopify. Takes order data in via graphql
  *              Loops through the line items and gets its commission payouts from another table
  *              Then stores each line item in the database
- * @param  {String} date      The date to process the 
- * @param  {String} startTime 
+ * @param  {String} date      The date to process the
+ * @param  {String} startTime
  * @param  {String} endTime
- * 
+ *
  */
 
-const main = async (date, startTime, endTime) => {
+const main = async ({ startDate, startHour, endDate, endHour }) => {
   let cursor = "";
   let keepLooping = true;
   try {
     while (keepLooping) {
       const {
         orders: { pageInfo, edges },
-      } = await getOrdersFromShopify(cursor, date, startTime, endTime);
+      } = await getOrdersFromShopify(
+        cursor,
+        startDate,
+        startHour,
+        endDate,
+        endHour
+      );
       const hasNextPage = pageInfo.hasNextPage;
       cursor = await storeEdgesIntoDatabase(edges);
 

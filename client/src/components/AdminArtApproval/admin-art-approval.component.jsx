@@ -201,7 +201,7 @@ class ArtistSubmitArt extends Component {
                 </DownloadLink>
               </BtnArtSubmitLoading>
             </SubmitCard>
-            <SubmitCard>
+            <SubmitCard style={{ maxWidth: "355px" }}>
               <h4 style={{ color: "#fff" }}>Description box</h4>
               <div>
                 <CaptionTitle>Artist:</CaptionTitle>

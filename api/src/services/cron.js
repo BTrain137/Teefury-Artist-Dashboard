@@ -3,15 +3,14 @@ import processOrders from "../libs/processOrdersFromShopify";
 import { cleanDate, startAndEndTime } from "../utils/cleanData";
 
 // At the 15 minute mark of every hour
-cron.schedule("0 15 * * * *", () => {
+cron.schedule("0 11 * * * *", async () => {
   const now = new Date();
-  const [startTime, endTime] = startAndEndTime(now);
-  const date = cleanDate(now);
-  console.log(`Cron: ${date}, ${startTime}, ${endTime}`);
-  processOrders(date, startTime, endTime)
-    .then(success => console.log(`CRON Success: -- ${date} ${startTime} ${endTime} :`, success))
-    .catch((error) =>
-      // TODO: post to slack
-      console.log(`CRON ERROR: -- ${date} ${startTime} ${endTime} :`, error)
-    );
+  const { startDate, startHour, endDate, endHour } = startAndEndTime(now);
+
+  const output = `${startDate} ${startHour} ${endDate} ${endHour}`;
+  try {
+    await processOrders({ startDate, startHour, endDate, endHour });
+  } catch (error) {
+    console.log(`CRON ERROR: -- ${output} :`, error);
+  }
 });

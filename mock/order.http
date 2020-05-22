@@ -1,5 +1,5 @@
 
-GET http://localhost:3001/api/admin/order-pull?inputDate=2020-05-21&start=13&end=14
+GET http://localhost:3001/api/admin/order-pull?inputDate=2020-05-21&end=23
 
 ###
 
