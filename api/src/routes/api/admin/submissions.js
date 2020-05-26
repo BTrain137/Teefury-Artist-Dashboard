@@ -1,7 +1,6 @@
 import express from "express";
 import passport from "passport";
 import pool from "../../../database/connection";
-import { sendMail } from "../../../services/email";
 
 /**
  * Database quires return an array. Even if 1 item exist.
@@ -19,12 +18,10 @@ import { sendMail } from "../../../services/email";
 
 const router = express.Router();
 
-router.post(
+router.get(
   "/submissions",
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
-    const { startAt } = req.body;
-
     let conn;
 
     try {
@@ -33,10 +30,9 @@ router.post(
         "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
         "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
         "`created_at` AS `createdAt` FROM `submissions` " +
-        "ORDER BY `created_at` DESC " +
-        "LIMIT " +
-        startAt +
-        ",100 ";
+        // TODO: To query only for specific status. Currently retrieving all status.
+        // TODO: implement a pagination on "DELETE" "APPROVED" "REVIEWED"
+        "ORDER BY `created_at` DESC ";
 
       /**
        * @return {SubmissionDetails[]}
@@ -105,21 +101,6 @@ router.post(
       res.sendStatus(202);
     } catch (error) {
       conn.end();
-      next(error);
-    }
-  }
-);
-
-router.get(
-  "/submissions/test",
-  // passport.authenticate("jwt-admin"),
-  async (req, res, next) => {
-    try {
-      const success = await sendMail("crazy_azndriver@yahoo.com", "What up");
-      console.log("success", success);
-      res.sendStatus(202);
-    } catch (error) {
-      console.log("error ", error);
       next(error);
     }
   }
