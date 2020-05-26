@@ -38,6 +38,8 @@ class ArtistSubmitArt extends Component {
       artFileDownload: "",
       artistName: "",
       artistEmail: "",
+      firstName: "",
+      lastName: "",
       createdAt: "",
       description: "",
       id: null,
@@ -66,22 +68,52 @@ class ArtistSubmitArt extends Component {
     event.preventDefault();
   };
 
-  clickEnlargeImg = (event) => {
+  clickEnlargeImg = () => {
     this.setState({ isEnlargeImg: !this.state.isEnlargeImg });
   };
 
   _loadArtwork = async () => {
     try {
-      const submissionDetails = await this._getSubmittedArtwork();
-      const { previewArt, artFile } = submissionDetails;
-      const artPreviewImg = await this._createBlob(previewArt);
-      const artFileDownload = await this._createBlob(artFile);
+      const submissionDetailsAll = await this._getSubmittedArtwork();
+      const {
+        previewArt,
+        artFile,
+        ...submissionDetails
+      } = submissionDetailsAll;
+      this._loadPreviewArt(previewArt);
+      this._loadPSDFile(artFile);
 
-      this.setState({ ...submissionDetails, artPreviewImg, artFileDownload });
+      this.setState({ ...submissionDetails });
     } catch (error) {
       Swal.fire({
         icon: "error",
         text: "Sorry Something went wrong, Please check back later.",
+        showConfirmButton: false,
+      });
+    }
+  };
+
+  _loadPSDFile = async (artFile) => {
+    try {
+      const artFileDownload = await this._createBlob(artFile);
+      this.setState({ artFileDownload });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        text: "Sorry could not lot PSD file",
+        showConfirmButton: false,
+      });
+    }
+  };
+
+  _loadPreviewArt = async (previewArt) => {
+    try {
+      const artPreviewImg = await this._createBlob(previewArt);
+      this.setState({ artPreviewImg });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        text: "Sorry could not load art preview file",
         showConfirmButton: false,
       });
     }
@@ -130,6 +162,10 @@ class ArtistSubmitArt extends Component {
         }
       );
       this.setState({ status: value });
+      Swal.fire({
+        icon: "success",
+        title: "Status Changed to " + value,
+      });
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -144,6 +180,8 @@ class ArtistSubmitArt extends Component {
       artFileDownload,
       artistName,
       artistEmail,
+      firstName,
+      lastName,
       createdAt,
       description,
       status,
@@ -206,6 +244,14 @@ class ArtistSubmitArt extends Component {
               <div>
                 <CaptionTitle>Artist:</CaptionTitle>
                 <GreyTextArea>@{artistName}</GreyTextArea>
+                <CaptionTitle>Name:</CaptionTitle>
+                <GreyTextArea style={{ fontSize: "15px" }}>
+                  {firstName} {lastName}
+                </GreyTextArea>
+                <CaptionTitle>Email:</CaptionTitle>
+                <GreyTextArea style={{ fontSize: "15px" }}>
+                  {artistEmail}
+                </GreyTextArea>
                 <CaptionTitle>Title:</CaptionTitle>
                 <GreyTextArea>{title}</GreyTextArea>
                 <CaptionTitle>Description:</CaptionTitle>
