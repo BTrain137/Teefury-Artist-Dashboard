@@ -23,16 +23,22 @@ router.get(
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     let conn;
+    const { status } = req.query;
 
     try {
       conn = await pool.getConnection();
-      const queryString =
+      let queryString =
         "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
         "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
-        "`created_at` AS `createdAt` FROM `submissions` " +
-        // TODO: To query only for specific status. Currently retrieving all status.
+        "`created_at` AS `createdAt` FROM `submissions` ";
+        
+        if(status) {
+          queryString += "WHERE `status`='" + status + "' ";
+        }
+
+        queryString +=  "ORDER BY `created_at` DESC ";
+
         // TODO: implement a pagination on "DELETE" "APPROVED" "REVIEWED"
-        "ORDER BY `created_at` DESC ";
 
       /**
        * @return {SubmissionDetails[]}
