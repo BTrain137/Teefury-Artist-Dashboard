@@ -82,7 +82,7 @@ router.get(
         "`submissions`.`art_file` AS `artFile`, `submissions`.`preview_art` AS `previewArt`, `submissions`.`status`, " +
         "`submissions`.`created_at` AS `createdAt` " +
         "FROM `submissions` INNER JOIN `artist_profile` " +
-        "ON `submissions`.`username_contact_email`=`artist_profile`.`username_contact_email` "
+        "ON `submissions`.`username_contact_email`=`artist_profile`.`username_contact_email` " +
         "WHERE `submissions`.`id`=?";
 
       /**
