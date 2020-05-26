@@ -102,8 +102,8 @@ class ArtistSubmissions extends Component {
   };
 
   render() {
-    // eslint-disable-next-line
     const {
+      // eslint-disable-next-line
       search,
       isShowingFilter,
       filterBy,
