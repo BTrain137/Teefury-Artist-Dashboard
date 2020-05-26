@@ -13,6 +13,18 @@ import pool from "../../../database/connection";
  *   status:String,
  *   title:String,
  * }} SubmissionDetails
+ * 
+ * @typedef {{a
+ *   firstName:String,
+ *   lastName:String,
+ *   artFile:String,
+ *   artistName:String,
+ *   artistEmail:String,
+ *   description:String,
+ *   previewArt:String,
+ *   status:String,
+ *   title:String,
+ * }} SubmissionDetailsEdit
  *
  */
 
@@ -64,13 +76,17 @@ router.get(
     try {
       conn = await pool.getConnection();
       const queryString =
-        "SELECT `id`, `username_contact_email` AS `artistEmail`, " +
-        "`artist_name` AS `artistName`, `title`, `description`, " +
-        "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
-        "`created_at` AS `createdAt` FROM `submissions` " +
-        "WHERE `id`=?";
+        "SELECT `submissions`.`id`, `submissions`.`username_contact_email` AS `artistEmail`, " +
+        "`artist_profile`.`first_name` AS `firstName`, `artist_profile`.`last_name` AS `lastName`, " +
+        "`submissions`.`artist_name` AS `artistName`, `submissions`.`title`, `description`, " +
+        "`submissions`.`art_file` AS `artFile`, `submissions`.`preview_art` AS `previewArt`, `submissions`.`status`, " +
+        "`submissions`.`created_at` AS `createdAt` " +
+        "FROM `submissions` INNER JOIN `artist_profile` " +
+        "ON `submissions`.`username_contact_email`=`artist_profile`.`username_contact_email` "
+        "WHERE `submissions`.`id`=?";
+
       /**
-       * @return {SubmissionDetails}
+       * @return {SubmissionDetailsEdit}
        */
       const [submissionDetails] = await pool.query(queryString, [submissionId]);
 
