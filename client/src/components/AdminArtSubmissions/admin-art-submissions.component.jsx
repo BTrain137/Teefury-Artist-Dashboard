@@ -32,10 +32,9 @@ class AdminApproval extends Component {
     super(props);
 
     this.state = {
-      startAt: 0,
       search: "",
       isShowingFilter: false,
-      filterBy: "PENDING",
+      filterBy: "NEW",
       imageSrc: teefuryBirdLogo,
       originalSubmissionsArr: [],
       filteredSubmissions: [],
@@ -47,7 +46,7 @@ class AdminApproval extends Component {
   }
 
   componentWillUnmount() {
-    this.setState({ filteredSubmissions: [] });
+    this.setState({ filteredSubmissions: [], originalSubmissionsArr: [] });
   }
 
   handleChange = (event) => {
@@ -62,8 +61,7 @@ class AdminApproval extends Component {
 
     const filteredSubmissions = this.state.originalSubmissionsArr.filter(
       (sub) => {
-        if (filter === "NEW") return sub;
-        else return sub.status.toUpperCase() === filter.toUpperCase();
+        return sub.status.toUpperCase() === filter.toUpperCase();
       }
     );
 
@@ -81,23 +79,18 @@ class AdminApproval extends Component {
 
   _getAllSubmissions = async () => {
     const { token } = this.props;
-    const { startAt } = this.state;
     const {
       data: { submissionsDetailsArr },
-    } = await axios.post(
-      "/api/admin/submissions",
-      { startAt },
-      {
-        headers: { Authorization: `JWT ${token}` },
-      }
-    );
+    } = await axios.get("/api/admin/submissions", {
+      headers: { Authorization: `JWT ${token}` },
+    });
 
-    const onLoadFilterPending = submissionsDetailsArr.filter(
-      (sub) => sub.status.toUpperCase() === "PENDING"
+    const onLoadFilter = submissionsDetailsArr.filter(
+      (sub) => sub.status.toUpperCase() === "NEW"
     );
 
     this.setState({
-      filteredSubmissions: onLoadFilterPending,
+      filteredSubmissions: onLoadFilter,
       originalSubmissionsArr: submissionsDetailsArr,
     });
   };

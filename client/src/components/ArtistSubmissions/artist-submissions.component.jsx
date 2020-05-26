@@ -39,10 +39,10 @@ class ArtistSubmissions extends Component {
     this.state = {
       search: "",
       isShowingFilter: false,
-      filterBy: "new",
+      filterBy: "NEW",
       imageSrc: teefuryBirdLogo,
       originalSubmissionsArr: [],
-      allSubmissions: [],
+      filteredSubmissions: [],
       submissionCard: null,
     };
   }
@@ -52,7 +52,7 @@ class ArtistSubmissions extends Component {
   }
 
   componentWillUnmount() {
-    this.setState({ allSubmissions: [] });
+    this.setState({ filteredSubmissions: [], originalSubmissionsArr: [] });
   }
 
   handleChange = (event) => {
@@ -67,15 +67,14 @@ class ArtistSubmissions extends Component {
 
     const filteredSubmissions = this.state.originalSubmissionsArr.filter(
       (sub) => {
-        if (filter === "new") return sub;
-        else return sub.status.toUpperCase() === filter.toUpperCase();
+        return sub.status.toUpperCase() === filter.toUpperCase();
       }
     );
 
     this.setState({
       filterBy: filter,
       isShowingFilter: false,
-      allSubmissions: filteredSubmissions,
+      filteredSubmissions: filteredSubmissions,
     });
   };
 
@@ -92,15 +91,24 @@ class ArtistSubmissions extends Component {
       headers: { Authorization: `JWT ${token}` },
     });
 
+    const onLoadFilter = submissionsDetailsArr.filter(
+      (sub) => sub.status.toUpperCase() === "NEW"
+    );
+
     this.setState({
-      allSubmissions: submissionsDetailsArr,
+      filteredSubmissions: onLoadFilter,
       originalSubmissionsArr: submissionsDetailsArr,
     });
   };
 
   render() {
     // eslint-disable-next-line
-    const { search, isShowingFilter, filterBy, allSubmissions } = this.state;
+    const {
+      search,
+      isShowingFilter,
+      filterBy,
+      filteredSubmissions,
+    } = this.state;
 
     const { token } = this.props;
     return (
@@ -133,36 +141,36 @@ class ArtistSubmissions extends Component {
             {isShowingFilter ? (
               <FilterContainer>
                 <FilterBtn
-                  data-filter="new"
-                  className={filterBy === "new" ? "selected" : ""}
+                  data-filter="NEW"
+                  className={filterBy === "NEW" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
                   NEW
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="pending"
-                  className={filterBy === "pending" ? "selected" : ""}
+                  data-filter="PENDING"
+                  className={filterBy === "PENDING" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
                   PENDING
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="reviewed"
-                  className={filterBy === "reviewed" ? "selected" : ""}
+                  data-filter="REVIEWED"
+                  className={filterBy === "REVIEWED" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
                   REVIEWED
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="approved"
-                  className={filterBy === "approved" ? "selected" : ""}
+                  data-filter="APPROVED"
+                  className={filterBy === "APPROVED" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
                   APPROVED
                 </FilterBtn>
                 <FilterBtn
-                  data-filter="declined"
-                  className={filterBy === "declined" ? "selected" : ""}
+                  data-filter="DECLINED"
+                  className={filterBy === "DECLINED" ? "selected" : ""}
                   onClick={this.handleClick}
                 >
                   DECLINED
@@ -171,8 +179,8 @@ class ArtistSubmissions extends Component {
             ) : null}
           </FilterHeader>
           <ArtCardContainer>
-            {allSubmissions.length > 0 ? (
-              allSubmissions.map((submissionDetails, i) => {
+            {filteredSubmissions.length > 0 ? (
+              filteredSubmissions.map((submissionDetails, i) => {
                 return (
                   <ArtCard
                     key={i}
@@ -184,9 +192,8 @@ class ArtistSubmissions extends Component {
               })
             ) : (
               <h2>
-                Sorry you don't have any{" "}
-                {filterBy === "new" || filterBy === "pending" ? "" : filterBy}{" "}
-                submissions yet.
+                You don't have any {filterBy.toLocaleLowerCase()} submissions
+                currently.
               </h2>
             )}
           </ArtCardContainer>
