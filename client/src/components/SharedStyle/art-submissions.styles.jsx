@@ -115,7 +115,6 @@ export const FilterBtn = styled.button`
 `;
 
 export const ArtCardContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 `;

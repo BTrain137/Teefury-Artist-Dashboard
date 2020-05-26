@@ -45,7 +45,7 @@ export const ImgCard = styled.img`
           max-height: 210px;
         `}
   border-radius: 25px;
-  height: 100%;
+  max-width: 140px;
 `;
 
 export const CardFooter = styled.figcaption`

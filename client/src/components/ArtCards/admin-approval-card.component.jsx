@@ -13,7 +13,7 @@ import {
   ArtHeaders,
 } from "./art-submissions-card.styles";
 
-const ArtistArtCard = ({
+const AdminArtCard = ({
   token,
   previewArt,
   id,
@@ -63,4 +63,4 @@ const ArtistArtCard = ({
   );
 };
 
-export default ArtistArtCard;
+export default AdminArtCard;
