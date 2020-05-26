@@ -37,6 +37,9 @@ FROM `orders` INNER JOIN  `payouts`
 ON `orders`.`product_type`=`payouts`.`product_type`
 ORDER BY `order_created_at` ASC;
 
+-- Update pending to new status in submissions
+UPDATE `submissions` SET `status`="NEW" WHERE `status`="PENDING";
+
 
 -- Update One
 -- UPDATE `artist_profile` SET `first_name`="Henry", `last_name`="Loco" WHERE `artist_name`="locoMotive";
