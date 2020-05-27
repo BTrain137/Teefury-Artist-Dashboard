@@ -98,8 +98,21 @@ class ArtistSubmitArt extends Component {
     // Make sure `file.name` matches our extensions criteria
     if (!/\.(jpe?g|png)$/i.test(file.name)) return;
 
-    const artPreviewImg = await this._generatePreviewImg(file);
-    this.setState({ artPreviewImg, isDisableSubmit: false });
+    // Make sure `file.size` does not excess 512 kb
+    if (file.size > 512000) {
+      Swal.fire({
+        icon: "error",
+        text: "Sorry your file is too large! Please limit your image size to less than 512 KB.",
+        showConfirmButton: true
+      });
+
+      // Reset the form so the user can try again
+      this._resetForm();
+    } else {
+      const artPreviewImg = await this._generatePreviewImg(file);
+      this.setState({ artPreviewImg, isDisableSubmit: false });
+    };
+
   };
 
   onChangeArtFile = (event) => {
