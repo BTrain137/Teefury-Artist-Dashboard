@@ -31,7 +31,7 @@ app.use("/public", express.static(path.join(__dirname, "../../public")));
 // Art files submitted by artist
 // /api/art-submissions/<ArtistName>/imageFile.psd
 app.use("/api/art-submissions", [
-  passport.authenticate("jwt-submissions"),
+  // passport.authenticate("jwt-submissions"),
   express.static(path.join(__dirname, "../../art-submissions")),
 ]);
 

@@ -57,8 +57,6 @@ class ArtistSubmitArt extends Component {
     this._loadArtwork();
   }
 
-  componentDidUpdate() {}
-
   handleChange = (event) => {
     const { name, value } = event.target;
     this.setState({ [name]: value, isDisableSubmit: false });
@@ -80,10 +78,16 @@ class ArtistSubmitArt extends Component {
         artFile,
         ...submissionDetails
       } = submissionDetailsAll;
-      this._loadPreviewArt(previewArt);
-      this._loadPSDFile(artFile);
+      // this._loadPreviewArt(previewArt);
+      // this._loadPSDFile(artFile);
 
-      this.setState({ ...submissionDetails });
+      this.setState({
+        ...submissionDetails,
+        artPreviewImg: previewArt,
+        artFileDownload: artFile,
+        artFile,
+      });
+
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -234,7 +238,7 @@ class ArtistSubmitArt extends Component {
                 textAlign="center"
                 style={{ width: "95px", height: "45px" }}
               >
-                <DownloadLink href={artFileDownload} download>
+                <DownloadLink href={`http://${window.location.host}${artFileDownload}`} download>
                   {artFile ? "Art File" : <LoadingIcon />}
                 </DownloadLink>
               </BtnArtSubmitLoading>

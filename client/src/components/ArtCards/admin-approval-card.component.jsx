@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
@@ -21,27 +22,28 @@ const AdminArtCard = ({
   title,
   createdAt,
 }) => {
-  const [imageSrc, setImageSrc] = useState("");
+  // eslint-disable-next-line
+  const [imageSrc, setImageSrc] = useState(previewArt);
 
-  useEffect(() => {
-    const fetchImage = () => {
-      fetch(previewArt, { headers: { Authorization: `JWT ${token}` } })
-        .then((res) => {
-          return res.blob();
-        })
-        .then((blob) => {
-          setImageSrc(URL.createObjectURL(blob));
-        });
-    };
-    fetchImage();
-  }, [token, previewArt]);
+  // useEffect(() => {
+  //   const fetchImage = () => {
+  //     fetch(previewArt, { headers: { Authorization: `JWT ${token}` } })
+  //       .then((res) => {
+  //         return res.blob();
+  //       })
+  //       .then((blob) => {
+  //         setImageSrc(URL.createObjectURL(blob));
+  //       });
+  //   };
+  //   fetchImage();
+  // }, [token, previewArt]);
 
   return (
     <CardContainer>
       <CardWrapper style={{ margin: "18px 15px" }}>
         <ImgCard
           src={imageSrc ? imageSrc : teefuryBirdLogo}
-          alt="test"
+          alt={title}
           loaded={imageSrc ? true : false}
         />
         <Figcaption>
