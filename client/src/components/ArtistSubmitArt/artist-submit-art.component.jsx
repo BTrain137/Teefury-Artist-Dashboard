@@ -94,16 +94,16 @@ class ArtistSubmitArt extends Component {
     if (file.size > 512000) {
       Swal.fire({
         icon: "error",
-        text: "Sorry your file is too large! Please limit your image size to less than 512 KB.",
-        showConfirmButton: true
+        text:
+          "Sorry your file is too large! Please limit your image size to less than 512 KB.",
+        showConfirmButton: true,
       });
 
-      this._resetForm();
-    } else {
-      const artPreviewImg = await this._generatePreviewImg(file);
-      this.setState({ artPreviewImg, isDisableSubmit: false });
-    };
+      return;
+    }
 
+    const artPreviewImg = await this._generatePreviewImg(file);
+    this.setState({ artPreviewImg, isDisableSubmit: false });
   };
 
   onChangeArtFile = (event) => {

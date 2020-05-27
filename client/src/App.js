@@ -29,7 +29,11 @@ function App() {
         <Route exact path="/signin" component={SignInPage} />
         <Route exact path="/signup" component={SignUpPage} />
         <Route exact path="/forgot-password" component={ForgotPasswordPage} />
-        <Route exact path="/terms-and-conditions" component={TermsAndConditions} />
+        <Route
+          exact
+          path="/terms-and-conditions"
+          component={TermsAndConditions}
+        />
         <Route path="/reset-password/:token" component={ResetPasswordPage} />
         {/* Artist Routes */}
         <Route exact path="/artist/create" component={CreateArtistPage} />
@@ -42,18 +46,12 @@ function App() {
           component={ArtistProfilePage}
         />
         {/* Admin Routes TODO: Secure Routes */}
-        <Route
-          path="/admin/profile"
-          component={AdminProfile}
-        />
+        <Route path="/admin/profile" component={AdminProfile} />
         <Route
           path="/admin/art-submissions"
           component={AdminArtSubmissionsPage}
         />
-        <Route
-          path="/admin/commissions"
-          component={AdminCommissionsPage}
-        />
+        <Route path="/admin/commissions" component={AdminCommissionsPage} />
       </Switch>
     </>
   );
