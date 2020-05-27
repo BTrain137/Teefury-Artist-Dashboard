@@ -43,7 +43,7 @@ class AdminApproval extends Component {
   async componentDidMount() {
     const { filterBy } = this.state;
     const submissionsDetailsArr = await this._getSubmissions(filterBy);
-    this.setState({ submissionsDetailsArr }); 
+    this.setState({ submissionsDetailsArr });
   }
 
   componentWillUnmount() {
@@ -157,7 +157,7 @@ class AdminApproval extends Component {
               </FilterContainer>
             ) : null}
           </FilterHeader>
-          <ArtCardContainer>
+          <ArtCardContainer items={submissionsDetailsArr.length}>
             {submissionsDetailsArr.length > 0 ? (
               submissionsDetailsArr.map((submissionDetails, i) => {
                 return (

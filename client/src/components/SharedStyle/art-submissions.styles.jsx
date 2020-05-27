@@ -115,6 +115,15 @@ export const FilterBtn = styled.button`
 `;
 
 export const ArtCardContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  ${(p) =>
+    p.items > 0
+      ? css`
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+        `
+      : css`
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+        `}
 `;
