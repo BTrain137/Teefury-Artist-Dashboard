@@ -106,7 +106,6 @@ class ArtistSubmitArt extends Component {
         showConfirmButton: true
       });
 
-      // Reset the form so the user can try again
       this._resetForm();
     } else {
       const artPreviewImg = await this._generatePreviewImg(file);
