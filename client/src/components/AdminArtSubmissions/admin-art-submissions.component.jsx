@@ -36,18 +36,17 @@ class AdminApproval extends Component {
       isShowingFilter: false,
       filterBy: "NEW",
       imageSrc: teefuryBirdLogo,
-      submissionsDetailsArr: [],
+      originalSubmissionsArr: [],
+      filteredSubmissions: [],
     };
   }
 
-  async componentDidMount() {
-    const { filterBy } = this.state;
-    const submissionsDetailsArr = await this._getSubmissions(filterBy);
-    this.setState({ submissionsDetailsArr });
+  componentDidMount() {
+    this._getAllSubmissions();
   }
 
   componentWillUnmount() {
-    this.setState({ submissionsDetailsArr: [] });
+    this.setState({ filteredSubmissions: [], originalSubmissionsArr: [] });
   }
 
   handleChange = (event) => {
@@ -55,17 +54,21 @@ class AdminApproval extends Component {
     this.setState({ [name]: value });
   };
 
-  handleClick = async (event) => {
+  handleClick = (event) => {
     const {
       dataset: { filter },
     } = event.target;
 
-    const submissionsDetailsArr = await this._getSubmissions(filter);
+    const filteredSubmissions = this.state.originalSubmissionsArr.filter(
+      (sub) => {
+        return sub.status.toUpperCase() === filter.toUpperCase();
+      }
+    );
 
     this.setState({
       filterBy: filter,
       isShowingFilter: false,
-      submissionsDetailsArr,
+      filteredSubmissions: filteredSubmissions,
     });
   };
 
@@ -74,16 +77,22 @@ class AdminApproval extends Component {
     this.setState({ isShowingFilter: !isShowingFilter });
   };
 
-  _getSubmissions = async (status) => {
+  _getAllSubmissions = async () => {
     const { token } = this.props;
-    const url = `/api/admin/submissions${status ? `?status=${status}` : ""}`;
     const {
       data: { submissionsDetailsArr },
-    } = await axios.get(url, {
+    } = await axios.get("/api/admin/submissions", {
       headers: { Authorization: `JWT ${token}` },
     });
 
-    return submissionsDetailsArr;
+    const onLoadFilter = submissionsDetailsArr.filter(
+      (sub) => sub.status.toUpperCase() === "NEW"
+    );
+
+    this.setState({
+      filteredSubmissions: onLoadFilter,
+      originalSubmissionsArr: submissionsDetailsArr,
+    });
   };
 
   render() {
@@ -92,7 +101,7 @@ class AdminApproval extends Component {
       search,
       isShowingFilter,
       filterBy,
-      submissionsDetailsArr,
+      filteredSubmissions,
     } = this.state;
 
     const { token } = this.props;
@@ -157,9 +166,9 @@ class AdminApproval extends Component {
               </FilterContainer>
             ) : null}
           </FilterHeader>
-          <ArtCardContainer items={submissionsDetailsArr.length}>
-            {submissionsDetailsArr.length > 0 ? (
-              submissionsDetailsArr.map((submissionDetails, i) => {
+          <ArtCardContainer items={filteredSubmissions.length}>
+            {filteredSubmissions.length > 0 ? (
+              filteredSubmissions.map((submissionDetails, i) => {
                 return (
                   <ArtCard
                     key={i}
