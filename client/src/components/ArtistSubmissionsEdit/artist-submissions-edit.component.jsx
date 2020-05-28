@@ -304,6 +304,7 @@ class ArtistSubmitArt extends Component {
                       </IconContainer>
                       <IconTopSubtitle>Click to upload images</IconTopSubtitle>
                       <IconBottomSubtitle style={{ position: "absolute" }}>
+                        Preview images must be under 100kb <br />
                         Recommendation .png or .jpg
                       </IconBottomSubtitle>
                     </ArtPreview>
@@ -323,7 +324,10 @@ class ArtistSubmitArt extends Component {
                 </InputArtFile>
               </label>
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <IconTopSubtitle>ai, psd, or eps at 300 dpi</IconTopSubtitle>
+                <IconTopSubtitle>
+                  Can be a large file <br />
+                  ai, psd, or eps at 300 dpi
+                </IconTopSubtitle>
               </div>
             </SubmitCard>
             <SubmitCard>
