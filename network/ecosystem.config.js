@@ -11,6 +11,7 @@ module.exports = {
       cwd: "/var/www/artist-dashboard/source",
       script: "npm start",
       max_memory_restart: "200M",
+      instances: "MAX",
       time: true,
       env_dev: {
         NODE_ENV: "development",
@@ -24,6 +25,7 @@ module.exports = {
       cwd: "/var/www/stage-artist-dashboard/source",
       script: "npm start",
       max_memory_restart: "200M",
+      instances: 1,
       time: true,
       env_production: {
         PORT: 4001,
