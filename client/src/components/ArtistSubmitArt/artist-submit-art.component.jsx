@@ -90,12 +90,12 @@ class ArtistSubmitArt extends Component {
     // Make sure `file.name` matches our extensions criteria
     if (!/\.(jpe?g|png)$/i.test(file.name)) return;
 
-    // Make sure `file.size` does not excess 512 kb
-    if (file.size > 512000) {
+    // Make sure `file.size` does not exceed 100 kb
+    if (file.size > 100000) {
       Swal.fire({
         icon: "error",
         text:
-          "Sorry your file is too large! Please limit your image size to less than 512 KB.",
+          "Sorry your file is too large! Please limit your image size to less than 100 KB.",
         showConfirmButton: true,
       });
 
