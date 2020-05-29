@@ -40,12 +40,14 @@ export const ImgCard = styled.img`
       ? css`
           box-shadow: 0px 7px 16px 2px rgba(0, 0, 0, 0.2);
           max-height: 250px;
+          max-width: 140px;
         `
       : css`
-          max-height: 210px;
+          max-height: 110px;
+          max-width: 110px
         `}
   border-radius: 25px;
-  max-width: 140px;
+  height: 100%;
 `;
 
 export const CardFooter = styled.figcaption`

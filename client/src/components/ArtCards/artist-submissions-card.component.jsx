@@ -14,7 +14,8 @@ const ArtistArtCard = ({ token, previewArt, delay, status, id, title }) => {
 
   useEffect(() => {
     const fetchImage = () => {
-      fetch(previewArt, { headers: { Authorization: `JWT ${token}` } })
+      const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`;
+      fetch(thumbImg, { headers: { Authorization: `JWT ${token}` } })
         .then((res) => {
           return res.blob();
         })

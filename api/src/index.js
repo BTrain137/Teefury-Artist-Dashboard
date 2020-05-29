@@ -7,6 +7,7 @@ import path from "path";
 import passport from "passport";
 import routes from "./routes";
 import "./services/passport.js";
+import Media from "./services/media.js";
 
 const app = express();
 const { NODE_ENV, PORT } = process.env;
@@ -34,6 +35,15 @@ app.use("/api/art-submissions", [
   // passport.authenticate("jwt-submissions"),
   express.static(path.join(__dirname, "../../art-submissions")),
 ]);
+
+app.get("/api/art-submissions-thumb", (req, res) => {
+  if (req.query.src) {
+    let image = new Media(req.query.src);
+    image.thumb(req, res);
+  } else {
+    res.sendStatus(403);
+  }
+});
 
 app.use((error, req, res, next) => {
   if (NODE_ENV === "development") {

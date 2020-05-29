@@ -23,20 +23,21 @@ const AdminArtCard = ({
   createdAt,
 }) => {
   // eslint-disable-next-line
-  const [imageSrc, setImageSrc] = useState(previewArt);
+  const [imageSrc, setImageSrc] = useState("");
 
-  // useEffect(() => {
-  //   const fetchImage = () => {
-  //     fetch(previewArt, { headers: { Authorization: `JWT ${token}` } })
-  //       .then((res) => {
-  //         return res.blob();
-  //       })
-  //       .then((blob) => {
-  //         setImageSrc(URL.createObjectURL(blob));
-  //       });
-  //   };
-  //   fetchImage();
-  // }, [token, previewArt]);
+  useEffect(() => {
+    const fetchImage = () => {
+      const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`;
+      fetch(thumbImg, { headers: { Authorization: `JWT ${token}` } })
+        .then((res) => {
+          return res.blob();
+        })
+        .then((blob) => {
+          setImageSrc(URL.createObjectURL(blob));
+        });
+    };
+    fetchImage();
+  }, [token, previewArt]);
 
   return (
     <CardContainer>
