@@ -2,6 +2,8 @@ server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
 
+	root /usr/local/nginx/html; 
+
 	server_name artists.teefury.com;
 
 	client_max_body_size 512M;
@@ -15,9 +17,9 @@ server {
 	   proxy_cache_bypass $http_upgrade;
 	}
 
-	error_page 500 502 503 504 /502.html;
-	location = /502.html {
-		root /usr/share/nginx/
+	error_page 500 502 503 504 @maintenance;
+	location @maintenance {
+		rewrite ^(.*)$ /502.html break;
 	}
 
 }
