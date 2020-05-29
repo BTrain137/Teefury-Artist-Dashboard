@@ -1,6 +1,7 @@
 // eslint-disable-next-line
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 
 import {

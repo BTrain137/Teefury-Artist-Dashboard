@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 export const CardContainer = styled.div`
   max-width: 400px;
@@ -34,7 +35,7 @@ export const CardWrapper = styled.figure`
   }
 `;
 
-export const ImgCard = styled.img`
+export const ImgCard = styled(LazyLoadImage)`
   ${(p) =>
     p.loaded
       ? css`
