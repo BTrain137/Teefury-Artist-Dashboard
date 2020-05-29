@@ -23,27 +23,27 @@ const AdminArtCard = ({
   createdAt,
 }) => {
   // eslint-disable-next-line
-  const [imageSrc, setImageSrc] = useState("");
+  const [imageSrc, setImageSrc] = useState(previewArt);
 
-  useEffect(() => {
-    const fetchImage = () => {
-      const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`;
-      fetch(thumbImg, { headers: { Authorization: `JWT ${token}` } })
-        .then((res) => {
-          return res.blob();
-        })
-        .then((blob) => {
-          setImageSrc(URL.createObjectURL(blob));
-        });
-    };
-    fetchImage();
-  }, [token, previewArt]);
+  // useEffect(() => {
+  //   const fetchImage = () => {
+  //     const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`;
+  //     fetch(thumbImg, { headers: { Authorization: `JWT ${token}` } })
+  //       .then((res) => {
+  //         return res.blob();
+  //       })
+  //       .then((blob) => {
+  //         setImageSrc(URL.createObjectURL(blob));
+  //       });
+  //   };
+  //   fetchImage();
+  // }, [token, previewArt]);
 
   return (
     <CardContainer>
       <CardWrapper style={{ margin: "18px 15px" }}>
         <ImgCard
-          src={imageSrc ? imageSrc : teefuryBirdLogo}
+          src={imageSrc ? `/api/art-submissions-thumb/?src=${previewArt.substring(20)}` : teefuryBirdLogo}
           alt={title}
           loaded={imageSrc ? true : false}
         />
