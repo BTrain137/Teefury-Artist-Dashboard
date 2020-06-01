@@ -78,12 +78,12 @@ class ArtistSubmitArt extends Component {
         artFile,
         ...submissionDetails
       } = submissionDetailsAll;
-      // this._loadPreviewArt(previewArt);
+      this._loadPreviewArt(previewArt);
       // this._loadPSDFile(artFile);
 
       this.setState({
         ...submissionDetails,
-        artPreviewImg: previewArt,
+        // artPreviewImg: previewArt,
         artFileDownload: artFile,
         artFile,
       });
@@ -112,7 +112,8 @@ class ArtistSubmitArt extends Component {
 
   _loadPreviewArt = async (previewArt) => {
     try {
-      const artPreviewImg = await this._createBlob(previewArt);
+      const largeThumb = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}&w=500`;
+      const artPreviewImg = await this._createBlob(largeThumb);
       this.setState({ artPreviewImg });
     } catch (error) {
       Swal.fire({

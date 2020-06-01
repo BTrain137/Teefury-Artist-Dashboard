@@ -20,9 +20,11 @@ class Media {
     let mime = extension === "jpeg" || extension === "jpg" ? "jpeg" : "png";
 
     try {
+      let width = (request.query.w && /^\d+$/.test(request.query.w)) ? request.query.w : '80';
+
       response.setHeader("content-type", "image/jpeg");
       response.type(mime);
-      gm(image).resize(80).stream().pipe(response);
+      gm(image).resize(width).stream().pipe(response);
     } catch (error) {
       next(error)
       console.log({ error });
