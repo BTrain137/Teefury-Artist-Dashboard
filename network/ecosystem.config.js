@@ -11,6 +11,7 @@ module.exports = {
       cwd: "/var/www/artist-dashboard/source",
       script: "npm start",
       max_memory_restart: "200M",
+      instances: "MAX",
       time: true,
       env_dev: {
         NODE_ENV: "development",
@@ -24,6 +25,7 @@ module.exports = {
       cwd: "/var/www/stage-artist-dashboard/source",
       script: "npm start",
       max_memory_restart: "200M",
+      instances: 1,
       time: true,
       env_production: {
         PORT: 4001,
@@ -46,7 +48,7 @@ module.exports = {
       user: "root",
       key: "~/.ssh/id_rsa_hetnzer_artist_dashboard_2",
       host: ["95.217.162.146"],
-      ref: "origin/stage",
+      ref: "origin/master",
       path: "/var/www/stage-artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
       "post-deploy":

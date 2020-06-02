@@ -4,6 +4,7 @@ import { cleanDate, startAndEndTime } from "../../../utils/cleanData";
 
 const router = express.Router();
 
+// TODO: end time does nothing currently
 // /api/admin/order-pull?inputDate=2020-05-21&end=14
 router.get("/order-pull", async (req, res, next) => {
   const { inputDate, end } = req.query;

@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 export const CardContainer = styled.div`
   max-width: 400px;
@@ -34,18 +35,20 @@ export const CardWrapper = styled.figure`
   }
 `;
 
-export const ImgCard = styled.img`
+export const ImgCard = styled(LazyLoadImage)`
   ${(p) =>
     p.loaded
       ? css`
           box-shadow: 0px 7px 16px 2px rgba(0, 0, 0, 0.2);
           max-height: 250px;
+          max-width: 140px;
         `
       : css`
-          max-height: 210px;
+          max-height: 110px;
+          max-width: 110px
         `}
   border-radius: 25px;
-  max-width: 140px;
+  height: 100%;
 `;
 
 export const CardFooter = styled.figcaption`

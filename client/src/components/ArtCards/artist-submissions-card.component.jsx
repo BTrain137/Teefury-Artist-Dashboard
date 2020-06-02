@@ -1,3 +1,4 @@
+// eslint-disable-next-line 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
@@ -10,28 +11,30 @@ import {
 } from "./art-submissions-card.styles";
 
 const ArtistArtCard = ({ token, previewArt, delay, status, id, title }) => {
-  const [imageSrc, setImageSrc] = useState("");
+  // eslint-disable-next-line 
+  const [imageSrc, setImageSrc] = useState(previewArt);
 
-  useEffect(() => {
-    const fetchImage = () => {
-      fetch(previewArt, { headers: { Authorization: `JWT ${token}` } })
-        .then((res) => {
-          return res.blob();
-        })
-        .then((blob) => {
-          setTimeout(() => {
-            setImageSrc(URL.createObjectURL(blob));
-          }, (delay * 300 + 500) % 3500);
-        });
-    };
-    fetchImage();
-  }, [token, previewArt, delay]);
+  // useEffect(() => {
+  //   const fetchImage = () => {
+  //     const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`;
+  //     fetch(thumbImg, { headers: { Authorization: `JWT ${token}` } })
+  //       .then((res) => {
+  //         return res.blob();
+  //       })
+  //       .then((blob) => {
+  //         setTimeout(() => {
+  //           setImageSrc(URL.createObjectURL(blob));
+  //         }, (delay * 300 + 500) % 3500);
+  //       });
+  //   };
+  //   fetchImage();
+  // }, [token, previewArt, delay]);
 
   return (
     <CardContainer>
       <CardWrapper>
         <ImgCard
-          src={imageSrc ? imageSrc : teefuryBirdLogo}
+          src={imageSrc ? `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`  : teefuryBirdLogo}
           alt="test"
           loaded={imageSrc ? true : false}
         />

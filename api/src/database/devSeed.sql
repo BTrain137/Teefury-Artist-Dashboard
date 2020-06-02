@@ -42,6 +42,17 @@ ORDER BY `order_created_at` ASC;
 UPDATE `submissions` SET `status`="NEW" WHERE `status`="PENDING";
 
 
+-- Commissions Table
+SELECT `orders`.`order_created_at`, `orders`.`order`, `orders`.`product_title`, 
+`orders`.`vendor`, `orders`.`product_type`, `orders`.`quantity`, `orders`.`commissions_amount`, `orders`.`commissions_paid`, 
+`artist_profile`.`paypal_email`, `artist_profile`.`is_international`
+FROM `orders` INNER JOIN `artist_profile`
+ON `orders`.`vendor`=`artist_profile`.`artist_name`
+WHERE `order_created_at` BETWEEN 
+'2020-5-18 00:00:00' AND '2020-5-24 23:59:59'
+ORDER BY `order_created_at` DESC;
+
+
 -- Update One
 -- UPDATE `artist_profile` SET `first_name`="Henry", `last_name`="Loco" WHERE `artist_name`="locoMotive";
 

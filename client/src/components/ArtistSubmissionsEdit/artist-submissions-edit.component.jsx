@@ -98,12 +98,12 @@ class ArtistSubmitArt extends Component {
     // Make sure `file.name` matches our extensions criteria
     if (!/\.(jpe?g|png)$/i.test(file.name)) return;
 
-    // Make sure `file.size` does not excess 512 kb
-    if (file.size > 512000) {
+    // Make sure `file.size` does not exceed 100 kb
+    if (file.size > 100000) {
       Swal.fire({
         icon: "error",
         text:
-          "Sorry your file is too large! Please limit your image size to less than 512 KB.",
+          "Sorry your file is too large! Please limit your image size to less than 100 KB.",
         showConfirmButton: true,
       });
 
@@ -304,6 +304,7 @@ class ArtistSubmitArt extends Component {
                       </IconContainer>
                       <IconTopSubtitle>Click to upload images</IconTopSubtitle>
                       <IconBottomSubtitle style={{ position: "absolute" }}>
+                        Preview images must be under 100kb <br />
                         Recommendation .png or .jpg
                       </IconBottomSubtitle>
                     </ArtPreview>
@@ -323,7 +324,10 @@ class ArtistSubmitArt extends Component {
                 </InputArtFile>
               </label>
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <IconTopSubtitle>ai, psd, or eps at 300 dpi</IconTopSubtitle>
+                <IconTopSubtitle>
+                  Can be a large file <br />
+                  ai, psd, or eps at 300 dpi
+                </IconTopSubtitle>
               </div>
             </SubmitCard>
             <SubmitCard>
