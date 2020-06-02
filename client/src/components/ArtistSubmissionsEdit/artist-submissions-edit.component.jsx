@@ -142,7 +142,7 @@ class ArtistSubmitArt extends Component {
     Swal.fire({
       icon: "warning",
       text:
-        "Please be patient!!! Don't close this window these are large files.",
+        "Please be patient!!! Don't close this window, these are large files.",
       showConfirmButton: false,
     });
 
