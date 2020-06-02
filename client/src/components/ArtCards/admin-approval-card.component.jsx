@@ -28,35 +28,37 @@ const AdminArtCard = ({
   const [imageSrc, setImageSrc] = useState("");
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const fetchImage = () => {
-      const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`;
-      fetch(thumbImg, { headers: { Authorization: `JWT ${token}` } })
+      const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(
+        20
+      )}`;
+      fetch(thumbImg, { signal, headers: { Authorization: `JWT ${token}` } })
         .then((res) => {
           return res.blob();
         })
         .then((blob) => {
           setImageSrc(URL.createObjectURL(blob));
-        });
+        })
+        .catch((error) => {
+          // console.error(error);
+        })
     };
     fetchImage();
-    
-    return () => {
-      // TODO: fetch abort
-      console.log("unmount");
-      const controller = new AbortController();
-      const signal = controller.signal;
-      console.log(signal);
 
-    }
+    return () => {
+      controller.abort();
+    };
   }, [token, previewArt]);
-  
+
   return (
     <CardContainer>
       <CardWrapper style={{ margin: "18px 15px" }}>
         <ImgCard
           src={imageSrc ? imageSrc : teefuryBirdLogo}
           alt={title}
-          loaded={imageSrc ? true : false}
+          loaded={imageSrc ? "true" : ""}
         />
         <Figcaption>
           <ArtTitle style={{ fontSize: "16px" }}>
