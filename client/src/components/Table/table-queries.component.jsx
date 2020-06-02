@@ -72,7 +72,7 @@ const TableQueries = ({
           </>
         ) : (
           <ButtonSm onClick={() => setState({ ...state, isDateOpen: true })}>
-            Open Calender
+            Open Calendar
           </ButtonSm>
         )}
       </div>
