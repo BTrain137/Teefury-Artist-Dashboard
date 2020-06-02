@@ -204,7 +204,7 @@ class AdminArtApproval extends Component {
         <TabArea>
           <FilterHeader>
             <AdjustableIconWrapper
-              // onClick={}
+              onClick={this.props.closeAdminArtApproval}
             >
               <HighlightOffIcon />
             </AdjustableIconWrapper>
