@@ -6,6 +6,21 @@ export const SubmissionContainer = styled.div`
   margin: 40px auto;
 `;
 
+export const FilterHeader = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+`;
+
+export const AdjustableIconWrapper = styled.div`
+  width: 30px;
+  cursor: pointer;
+
+  path {
+    fill: #1a8488;
+  }
+`;
+
 export const TabArea = styled.div`
   box-shadow: 0px 7px 16px 2px rgba(0, 0, 0, 0.2);
   border-radius: 15px;

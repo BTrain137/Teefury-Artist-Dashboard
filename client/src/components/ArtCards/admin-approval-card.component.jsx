@@ -22,6 +22,7 @@ const AdminArtCard = ({
   artistName,
   title,
   createdAt,
+  openAdminArtApproval,
 }) => {
   // eslint-disable-next-line
   const [imageSrc, setImageSrc] = useState("");
@@ -38,8 +39,17 @@ const AdminArtCard = ({
         });
     };
     fetchImage();
-  }, [token, previewArt]);
+    
+    return () => {
+      // TODO: fetch abort
+      console.log("unmount");
+      const controller = new AbortController();
+      const signal = controller.signal;
+      console.log(signal);
 
+    }
+  }, [token, previewArt]);
+  
   return (
     <CardContainer>
       <CardWrapper style={{ margin: "18px 15px" }}>
@@ -59,9 +69,11 @@ const AdminArtCard = ({
             {new Date(createdAt).toLocaleDateString()}
           </ArtHeaders>
         </Figcaption>
-        <Link to={`/admin/art-submissions/review/${id}`}>
-          <CardFooter>Review Artwork</CardFooter>
-        </Link>
+        {/* <Link to={`/admin/art-submissions/review/${id}`}> */}
+        <CardFooter id={id} onClick={openAdminArtApproval}>
+          Review Artwork
+        </CardFooter>
+        {/* </Link> */}
       </CardWrapper>
     </CardContainer>
   );
