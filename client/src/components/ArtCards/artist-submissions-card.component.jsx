@@ -1,4 +1,4 @@
-// eslint-disable-next-line 
+// eslint-disable-next-line
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
@@ -10,39 +10,60 @@ import {
   CardFooter,
 } from "./art-submissions-card.styles";
 
-const ArtistArtCard = ({ token, previewArt, delay, status, id, title }) => {
-  // eslint-disable-next-line 
-  const [imageSrc, setImageSrc] = useState(previewArt);
+const ArtistArtCard = ({
+  token,
+  previewArt,
+  delay,
+  status,
+  id,
+  title,
+  openSubmissionsEdit,
+}) => {
+  // eslint-disable-next-line
+  const [imageSrc, setImageSrc] = useState("");
 
-  // useEffect(() => {
-  //   const fetchImage = () => {
-  //     const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`;
-  //     fetch(thumbImg, { headers: { Authorization: `JWT ${token}` } })
-  //       .then((res) => {
-  //         return res.blob();
-  //       })
-  //       .then((blob) => {
-  //         setTimeout(() => {
-  //           setImageSrc(URL.createObjectURL(blob));
-  //         }, (delay * 300 + 500) % 3500);
-  //       });
-  //   };
-  //   fetchImage();
-  // }, [token, previewArt, delay]);
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const fetchImage = () => {
+      const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(
+        20
+      )}`;
+      fetch(thumbImg, { signal, headers: { Authorization: `JWT ${token}` } })
+        .then((res) => {
+          return res.blob();
+        })
+        .then((blob) => {
+          setImageSrc(URL.createObjectURL(blob));
+        })
+        .catch((error) => {
+          // console.error(error);
+        });
+    };
+    fetchImage();
+
+    return () => {
+      controller.abort();
+    };
+  }, [token, previewArt]);
 
   return (
     <CardContainer>
       <CardWrapper>
         <ImgCard
-          src={imageSrc ? `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`  : teefuryBirdLogo}
+          src={
+            imageSrc
+              ? `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`
+              : teefuryBirdLogo
+          }
           alt="test"
-          loaded={imageSrc ? true : false}
+          loaded={imageSrc ? "true" : ""}
         />
         <p className="title">{title}</p>
         {status === "PENDING" ? (
-          <Link to={`/artist/submissions/edit/${id}`}>
-            <CardFooter>VIEW OR EDIT</CardFooter>
-          </Link>
+          <CardFooter id={id} onClick={openSubmissionsEdit}>
+            VIEW OR EDIT
+          </CardFooter>
         ) : null}
       </CardWrapper>
     </CardContainer>
