@@ -55,6 +55,11 @@ export const FilterHeader = styled.div`
   position: relative;
 `;
 
+export const StatusHeader = styled.div`
+  position: absolute;
+  right: 42%;
+`;
+
 export const SearchBoxWrapper = styled.div`
   position: relative;
 `;
