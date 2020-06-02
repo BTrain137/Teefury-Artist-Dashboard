@@ -59,8 +59,8 @@ const Nav = ({ userAccount }) => (
             Home
           </NavItemLink>
           <NavItemLink
-            to="/artist/submissions/new"
-            pathToMatch="/submissions/new"
+            to="/artist/submissions/"
+            pathToMatch="/submissions/"
             Icon={ComputerIcon}
           >
             Submissions
