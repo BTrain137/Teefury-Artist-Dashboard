@@ -15,12 +15,12 @@ import { AdminArtCart as ArtCard } from "../ArtCards";
 import { ReactComponent as MagnifyGlassIcon } from "../../assets/magnify-glass.svg";
 import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
 import AdminArtApproval from "../AdminArtApproval";
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import {
   SubmissionContainer,
   TabArea,
   FilterHeader,
+  StatusHeader,
   // eslint-disable-next-line
   SearchBoxWrapper,
   // eslint-disable-next-line
@@ -71,12 +71,12 @@ const AdminArtSubmissions = ({ token }) => {
       headers: { Authorization: `JWT ${token}` },
     });
 
-    console.log(submissionsDetailsArr);
     setState({
       ...state,
       status: status,
       isShowingFilter: false,
       submissionsArr: submissionsDetailsArr,
+      isAdminArtApproval: false,
     });
   };
 
@@ -87,6 +87,13 @@ const AdminArtSubmissions = ({ token }) => {
       ...state,
       id: id,
       isAdminArtApproval: true,
+    });
+  };
+
+  const closeAdminArtApproval = () => {
+    setState({
+      ...state,
+      isAdminArtApproval: false,
     });
   };
 
@@ -102,18 +109,9 @@ const AdminArtSubmissions = ({ token }) => {
 
   return (
     <SubmissionContainer>
-      {/* TODO: Render admin art approval here */}
-      {isAdminArtApproval ? (
-        <>
-        <AdjustableIconWrapper>
-          <HighlightOffIcon />
-        </AdjustableIconWrapper>
-        <AdminArtApproval id={id} />
-        </>
-      ) : (
-        <TabArea>
-          <FilterHeader>
-            {/* <SearchBoxWrapper>
+      <TabArea>
+        <FilterHeader>
+          {/* <SearchBoxWrapper>
               <Form style={{ marginTop: "0" }}>
                 <Input
                   name="search"
@@ -127,49 +125,58 @@ const AdminArtSubmissions = ({ token }) => {
                 </SearchBtn>
               </Form>
             </SearchBoxWrapper> */}
-            <AdjustableIconWrapper onClick={toggleFilterArea}>
-              <AdjustablesIcon />
-            </AdjustableIconWrapper>
-            {isShowingFilter ? (
-              <FilterContainer>
-                <FilterLink
-                  to="/admin/art-submissions/new"
-                  data-filter="NEW"
-                  status={status === "NEW" ? "selected" : ""}
-                >
-                  NEW
-                </FilterLink>
-                <FilterLink
-                  to="/admin/art-submissions/pending"
-                  data-filter="PENDING"
-                  status={status === "PENDING" ? "selected" : ""}
-                >
-                  PENDING
-                </FilterLink>
-                <FilterLink
-                  to="/admin/art-submissions/reviewed"
-                  data-filter="REVIEWED"
-                  status={status === "REVIEWED" ? "selected" : ""}
-                >
-                  REVIEWED
-                </FilterLink>
-                <FilterLink
-                  to="/admin/art-submissions/approved"
-                  data-filter="APPROVED"
-                  status={status === "APPROVED" ? "selected" : ""}
-                >
-                  APPROVED
-                </FilterLink>
-                <FilterLink
-                  to="/admin/art-submissions/declined"
-                  data-filter="DECLINED"
-                  status={status === "DECLINED" ? "selected" : ""}
-                >
-                  DECLINED
-                </FilterLink>
-              </FilterContainer>
-            ) : null}
-          </FilterHeader>
+          <StatusHeader>
+            <h2>{status}</h2>
+          </StatusHeader>
+          <AdjustableIconWrapper onClick={toggleFilterArea}>
+            <AdjustablesIcon />
+          </AdjustableIconWrapper>
+          {isShowingFilter ? (
+            <FilterContainer>
+              <FilterLink
+                to="/admin/art-submissions/new"
+                data-filter="NEW"
+                status={status === "NEW" ? "selected" : ""}
+              >
+                NEW
+              </FilterLink>
+              <FilterLink
+                to="/admin/art-submissions/pending"
+                data-filter="PENDING"
+                status={status === "PENDING" ? "selected" : ""}
+              >
+                PENDING
+              </FilterLink>
+              <FilterLink
+                to="/admin/art-submissions/reviewed"
+                data-filter="REVIEWED"
+                status={status === "REVIEWED" ? "selected" : ""}
+              >
+                REVIEWED
+              </FilterLink>
+              <FilterLink
+                to="/admin/art-submissions/approved"
+                data-filter="APPROVED"
+                status={status === "APPROVED" ? "selected" : ""}
+              >
+                APPROVED
+              </FilterLink>
+              <FilterLink
+                to="/admin/art-submissions/declined"
+                data-filter="DECLINED"
+                status={status === "DECLINED" ? "selected" : ""}
+              >
+                DECLINED
+              </FilterLink>
+            </FilterContainer>
+          ) : null}
+        </FilterHeader>
+        {isAdminArtApproval ? (
+          <AdminArtApproval
+            id={id}
+            closeAdminArtApproval={closeAdminArtApproval}
+          />
+        ) : (
           <ArtCardContainer items={submissionsArr.length}>
             {submissionsArr.length > 0 ? (
               submissionsArr.map((submissionDetails, i) => {
@@ -184,11 +191,11 @@ const AdminArtSubmissions = ({ token }) => {
                 );
               })
             ) : (
-              <h2>No {status} To Be Viewed</h2>
+              <h2>No Artwork to be Viewed</h2>
             )}
           </ArtCardContainer>
-        </TabArea>
-      )}
+        )}
+      </TabArea>
     </SubmissionContainer>
   );
 };

@@ -9,6 +9,7 @@ import { selectSubmissionsError } from "../../redux/submissions/submissions.sele
 
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 import { ArtistArtCard as ArtCard } from "../ArtCards";
+import ArtistSubmissionsEdit from "../ArtistSubmissionsEdit";
 // eslint-disable-next-line
 import { Form, Input } from "../FormInput";
 // eslint-disable-next-line
@@ -23,6 +24,7 @@ import {
   TabTitle,
   TabArea,
   FilterHeader,
+  StatusHeader,
   // eslint-disable-next-line
   SearchBoxWrapper,
   // eslint-disable-next-line
@@ -42,6 +44,8 @@ const ArtistArtSubmissions = ({ token }) => {
     imageSrc: teefuryBirdLogo,
     submissionsArr: [],
     submissionCard: null,
+    id: 0,
+    isSubmissionsEdit: false,
   });
 
   useEffect(() => {
@@ -77,6 +81,24 @@ const ArtistArtSubmissions = ({ token }) => {
       status: status,
       isShowingFilter: false,
       submissionsArr: submissionsDetailsArr,
+      isSubmissionsEdit: false,
+    });
+  };
+
+  const openSubmissionsEdit = (event) => {
+    const { id } = event.target.id;
+
+    setState({
+      ...state,
+      id: id,
+      isSubmissionsEdit: true,
+    });
+  };
+
+  const closeSubmissionsEdit = () => {
+    setState({
+      ...state,
+      isSubmissionsEdit: false,
     });
   };
 
@@ -86,12 +108,14 @@ const ArtistArtSubmissions = ({ token }) => {
     isShowingFilter,
     status,
     submissionsArr,
+    id,
+    isSubmissionsEdit,
   } = state;
 
   return (
     <SubmissionContainer>
       <TabHeader>
-        <TabSubLink to={`/artist/submissions/new`}>
+        <TabSubLink to={`/artist/submissions/`}>
           <TabSubTitle>Submit Artwork</TabSubTitle>
         </TabSubLink>
         <TabTitle>Submissions</TabTitle>
@@ -112,6 +136,9 @@ const ArtistArtSubmissions = ({ token }) => {
                 </SearchBtn>
               </Form>
             </SearchBoxWrapper> */}
+          <StatusHeader>
+            <h2>{status}</h2>
+          </StatusHeader>
           <AdjustableIconWrapper onClick={toggleFilterArea}>
             <AdjustablesIcon />
           </AdjustableIconWrapper>
@@ -155,25 +182,33 @@ const ArtistArtSubmissions = ({ token }) => {
             </FilterContainer>
           ) : null}
         </FilterHeader>
-        <ArtCardContainer>
-          {submissionsArr.length > 0 ? (
-            submissionsArr.map((submissionDetails, i) => {
-              return (
-                <ArtCard
-                  key={i}
-                  {...submissionDetails}
-                  delay={i}
-                  token={token}
-                />
-              );
-            })
-          ) : (
-            <h2>
-              You don't have any {status.toLocaleLowerCase()} submissions
-              currently.
-            </h2>
-          )}
-        </ArtCardContainer>
+        {isSubmissionsEdit ? (
+          <ArtistSubmissionsEdit
+            id={id}
+            closeSubmissionsEdit={closeSubmissionsEdit}
+          />
+        ) : (
+          <ArtCardContainer>
+            {submissionsArr.length > 0 ? (
+              submissionsArr.map((submissionDetails, i) => {
+                return (
+                  <ArtCard
+                    key={i}
+                    {...submissionDetails}
+                    delay={i}
+                    token={token}
+                    openSubmissionsEdit={openSubmissionsEdit}
+                  />
+                );
+              })
+            ) : (
+              <h2>
+                You don't have any {status.toLocaleLowerCase()} submissions
+                currently.
+              </h2>
+            )}
+          </ArtCardContainer>
+        )}
       </TabArea>
     </SubmissionContainer>
   );
