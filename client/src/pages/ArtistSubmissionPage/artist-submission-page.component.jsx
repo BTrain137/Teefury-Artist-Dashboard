@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 import Nav from "../../components/Nav/nav.component";
 import ArtistSubmitArt from "../../components/ArtistSubmitArt";
-import ArtistSubmissions from "../../components/ArtistSubmissions";
+import ArtistArtSubmissions from "../../components/ArtistArtSubmissions";
 import ArtistSubmissionsEdit from "../../components/ArtistSubmissionsEdit";
 
 import {
@@ -22,9 +22,9 @@ const ArtistSubmissionPage = () => {
             <ArtistSubmitArt />
           </SubmissionWrapper>
         </Route>
-        <Route exact path={`${path}/all`}>
+        <Route path={`${path}/:status`}>
           <SubmissionWrapper>
-            <ArtistSubmissions />
+            <ArtistArtSubmissions />
           </SubmissionWrapper>
         </Route>
         <Route path={`${path}/edit/:id`}>

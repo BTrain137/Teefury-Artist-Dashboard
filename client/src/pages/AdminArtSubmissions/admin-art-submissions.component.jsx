@@ -12,11 +12,12 @@ import {
 
 const AdminArtSubmissionsPage = () => {
   const { path } = useRouteMatch();
+
   return (
     <ArtistContainer>
       <Nav />
       <Switch>
-        <Route exact path={`${path}`}>
+        <Route path={`${path}/:status`}>
           <SubmissionWrapper>
             <AdminArtSubmissions />
           </SubmissionWrapper>
