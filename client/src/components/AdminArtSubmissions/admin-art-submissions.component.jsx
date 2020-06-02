@@ -1,7 +1,9 @@
-import React, { Component } from "react";
+// import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import { useLocation, useParams } from "react-router-dom";
 
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
@@ -23,97 +25,73 @@ import {
   SearchBtn,
   AdjustableIconWrapper,
   FilterContainer,
-  FilterBtn,
+  FilterLink,
   ArtCardContainer,
 } from "../SharedStyle/art-submissions.styles";
 
-class AdminApproval extends Component {
-  constructor(props) {
-    super(props);
+const AdminArtSubmissions = ({ token }) => {
+  const params = useParams();
+  const [state, setState] = useState({
+    search: "",
+    isShowingFilter: false,
+    status: "NEW",
+    imageSrc: teefuryBirdLogo,
+    submissionsArr: [],
+  });
 
-    this.state = {
-      search: "",
-      isShowingFilter: false,
-      filterBy: "NEW",
-      imageSrc: teefuryBirdLogo,
-      originalSubmissionsArr: [],
-      filteredSubmissions: [],
-    };
-  }
+  useEffect(() => {
+    const status = _getCurrentPath();
+    _getSubmissions(status);
+  }, [params]);
 
-  componentDidMount() {
-    this._getAllSubmissions();
-  }
-
-  componentWillUnmount() {
-    this.setState({ filteredSubmissions: [], originalSubmissionsArr: [] });
-  }
-
-  handleChange = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    setState({ ...state, [name]: value });
   };
 
-  handleClick = (event) => {
-    const {
-      dataset: { filter },
-    } = event.target;
+  const _getCurrentPath = () => {
+    const status = params.status.toUpperCase();
 
-    const filteredSubmissions = this.state.originalSubmissionsArr.filter(
-      (sub) => {
-        return sub.status.toUpperCase() === filter.toUpperCase();
-      }
-    );
-
-    this.setState({
-      filterBy: filter,
-      isShowingFilter: false,
-      filteredSubmissions: filteredSubmissions,
-    });
+    return status;
   };
 
-  toggleFilterArea = () => {
-    const { isShowingFilter } = this.state;
-    this.setState({ isShowingFilter: !isShowingFilter });
+  const toggleFilterArea = () => {
+    const { isShowingFilter } = state;
+    setState({ ...state, isShowingFilter: !isShowingFilter });
   };
 
-  _getAllSubmissions = async () => {
-    const { token } = this.props;
+  const _getSubmissions = async (status) => {
     const {
       data: { submissionsDetailsArr },
-    } = await axios.get("/api/admin/submissions", {
+    } = await axios.get(`/api/admin/submissions/${status}`, {
       headers: { Authorization: `JWT ${token}` },
     });
 
-    const onLoadFilter = submissionsDetailsArr.filter(
-      (sub) => sub.status.toUpperCase() === "NEW"
-    );
-
-    this.setState({
-      filteredSubmissions: onLoadFilter,
-      originalSubmissionsArr: submissionsDetailsArr,
+    setState({
+      ...state,
+      status: status,
+      isShowingFilter: false,
+      submissionsArr: submissionsDetailsArr,
     });
   };
 
-  render() {
-    const {
-      // eslint-disable-next-line
-      search,
-      isShowingFilter,
-      filterBy,
-      filteredSubmissions,
-    } = this.state;
+  const {
+    // eslint-disable-next-line
+    search,
+    isShowingFilter,
+    status,
+    submissionsArr,
+  } = state;
 
-    const { token } = this.props;
-    return (
-      <SubmissionContainer>
-        <TabArea>
-          <FilterHeader>
-            {/* <SearchBoxWrapper>
+  return (
+    <SubmissionContainer>
+      <TabArea>
+        <FilterHeader>
+          {/* <SearchBoxWrapper>
               <Form style={{ marginTop: "0" }}>
                 <Input
                   name="search"
-                  onChange={this.handleChange}
+                  onChange={handleChange}
                   value={search}
                   placeholder="SEARCH"
                   style={{ fontSize: "15px", fontFamily: "sans-serif" }}
@@ -123,73 +101,73 @@ class AdminApproval extends Component {
                 </SearchBtn>
               </Form>
             </SearchBoxWrapper> */}
-            <AdjustableIconWrapper onClick={this.toggleFilterArea}>
-              <AdjustablesIcon />
-            </AdjustableIconWrapper>
-            {isShowingFilter ? (
-              <FilterContainer>
-                <FilterBtn
-                  data-filter="NEW"
-                  className={filterBy === "NEW" ? "selected" : ""}
-                  onClick={this.handleClick}
-                >
-                  NEW
-                </FilterBtn>
-                <FilterBtn
-                  data-filter="PENDING"
-                  className={filterBy === "PENDING" ? "selected" : ""}
-                  onClick={this.handleClick}
-                >
-                  PENDING
-                </FilterBtn>
-                <FilterBtn
-                  data-filter="REVIEWED"
-                  className={filterBy === "REVIEWED" ? "selected" : ""}
-                  onClick={this.handleClick}
-                >
-                  REVIEWED
-                </FilterBtn>
-                <FilterBtn
-                  data-filter="APPROVED"
-                  className={filterBy === "APPROVED" ? "selected" : ""}
-                  onClick={this.handleClick}
-                >
-                  APPROVED
-                </FilterBtn>
-                <FilterBtn
-                  data-filter="DECLINED"
-                  className={filterBy === "DECLINED" ? "selected" : ""}
-                  onClick={this.handleClick}
-                >
-                  DECLINED
-                </FilterBtn>
-              </FilterContainer>
-            ) : null}
-          </FilterHeader>
-          <ArtCardContainer items={filteredSubmissions.length}>
-            {filteredSubmissions.length > 0 ? (
-              filteredSubmissions.map((submissionDetails, i) => {
-                return (
-                  <ArtCard
-                    key={i}
-                    {...submissionDetails}
-                    delay={i}
-                    token={token}
-                  />
-                );
-              })
-            ) : (
-              <h2>No {filterBy} To Be Viewed</h2>
-            )}
-          </ArtCardContainer>
-        </TabArea>
-      </SubmissionContainer>
-    );
-  }
-}
+          <AdjustableIconWrapper onClick={toggleFilterArea}>
+            <AdjustablesIcon />
+          </AdjustableIconWrapper>
+          {isShowingFilter ? (
+            <FilterContainer>
+              <FilterLink
+                to="/admin/art-submissions/new"
+                data-filter="NEW"
+                status={status === "NEW" ? "selected" : ""}
+              >
+                NEW
+              </FilterLink>
+              <FilterLink
+                to="/admin/art-submissions/pending"
+                data-filter="PENDING"
+                status={status === "PENDING" ? "selected" : ""}
+              >
+                PENDING
+              </FilterLink>
+              <FilterLink
+                to="/admin/art-submissions/reviewed"
+                data-filter="REVIEWED"
+                status={status === "REVIEWED" ? "selected" : ""}
+              >
+                REVIEWED
+              </FilterLink>
+              <FilterLink
+                to="/admin/art-submissions/approved"
+                data-filter="APPROVED"
+                status={status === "APPROVED" ? "selected" : ""}
+              >
+                APPROVED
+              </FilterLink>
+              <FilterLink
+                to="/admin/art-submissions/declined"
+                data-filter="DECLINED"
+                status={status === "DECLINED" ? "selected" : ""}
+              >
+                DECLINED
+              </FilterLink>
+            </FilterContainer>
+          ) : null}
+        </FilterHeader>
+        {/* TODO: Render admin art approval here */}
+        <ArtCardContainer items={submissionsArr.length}>
+          {submissionsArr.length > 0 ? (
+            submissionsArr.map((submissionDetails, i) => {
+              return (
+                <ArtCard
+                  key={i}
+                  {...submissionDetails}
+                  delay={i}
+                  token={token}
+                />
+              );
+            })
+          ) : (
+            <h2>No {status} To Be Viewed</h2>
+          )}
+        </ArtCardContainer>
+      </TabArea>
+    </SubmissionContainer>
+  );
+};
 
 const mapStateToProps = createStructuredSelector({
   token: selectUserJWTToken,
 });
 
-export default connect(mapStateToProps)(AdminApproval);
+export default connect(mapStateToProps)(AdminArtSubmissions);
