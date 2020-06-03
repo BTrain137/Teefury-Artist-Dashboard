@@ -49,6 +49,11 @@ const ArtistArtSubmissions = ({ token }) => {
   });
 
   useEffect(() => {
+    setState({
+      ...state,
+      submissionsArr: [],
+    });
+
     const status = _getCurrentPath();
     _getSubmissions(status);
   }, 
@@ -102,7 +107,11 @@ const ArtistArtSubmissions = ({ token }) => {
     setState({
       ...state,
       isSubmissionsEdit: false,
+      submissionsArr: [],
     });
+
+    const status = _getCurrentPath();
+    _getSubmissions(status);
   };
 
   const {
