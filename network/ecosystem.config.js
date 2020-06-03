@@ -12,6 +12,7 @@ module.exports = {
       script: "npm start",
       max_memory_restart: "200M",
       instances: "MAX",
+      exec_mode: "cluster",
       time: true,
       env_dev: {
         NODE_ENV: "development",
