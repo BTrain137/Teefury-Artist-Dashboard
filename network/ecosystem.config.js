@@ -11,8 +11,7 @@ module.exports = {
       cwd: "/var/www/artist-dashboard/source",
       script: "npm start",
       max_memory_restart: "200M",
-      instances: "MAX",
-      exec_mode: "cluster",
+      instances: 1,
       time: true,
       env_dev: {
         NODE_ENV: "development",
