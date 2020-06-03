@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
@@ -46,8 +46,11 @@ const AdminArtSubmissions = ({ token }) => {
   useEffect(() => {
     const status = _getCurrentPath();
     _getSubmissions(status);
-  }, [params]);
+  }, 
+  // eslint-disable-next-line
+  [params]);
 
+  // eslint-disable-next-line
   const handleChange = (event) => {
     const { name, value } = event.target;
     setState({ ...state, [name]: value });
@@ -55,7 +58,6 @@ const AdminArtSubmissions = ({ token }) => {
 
   const _getCurrentPath = () => {
     const status = params.status.toUpperCase();
-
     return status;
   };
 

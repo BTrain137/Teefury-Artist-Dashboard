@@ -1,6 +1,5 @@
 // eslint-disable-next-line
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 
@@ -71,11 +70,9 @@ const AdminArtCard = ({
             {new Date(createdAt).toLocaleDateString()}
           </ArtHeaders>
         </Figcaption>
-        {/* <Link to={`/admin/art-submissions/review/${id}`}> */}
         <CardFooter id={id} onClick={openAdminArtApproval}>
           Review Artwork
         </CardFooter>
-        {/* </Link> */}
       </CardWrapper>
     </CardContainer>
   );

@@ -51,8 +51,11 @@ const ArtistArtSubmissions = ({ token }) => {
   useEffect(() => {
     const status = _getCurrentPath();
     _getSubmissions(status);
-  }, [params]);
+  }, 
+  // eslint-disable-next-line
+  [params]);
 
+  // eslint-disable-next-line
   const handleChange = (event) => {
     const { name, value } = event.target;
     setState({ ...state, [name]: value });

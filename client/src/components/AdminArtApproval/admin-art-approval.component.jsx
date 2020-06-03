@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
 import Swal from "sweetalert2";
 
@@ -14,7 +13,6 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import EmailTemplate from "./email-template.component";
 
 import {
-  SubmissionContainer,
   TabArea,
   FilterHeader,
   AdjustableIconWrapper,
@@ -130,7 +128,6 @@ class AdminArtApproval extends Component {
   _getSubmittedArtwork = async () => {
     const {
       token,
-      match: { params },
       id
     } = this.props;
     const {
@@ -308,4 +305,4 @@ const mapStateToProps = createStructuredSelector({
   token: selectUserJWTToken,
 });
 
-export default withRouter(connect(mapStateToProps)(AdminArtApproval));
+export default connect(mapStateToProps)(AdminArtApproval);

@@ -24,11 +24,6 @@ import { InputArtFile, BtnArtSubmit, InputArtPreview } from "../Button";
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import {
-  SubmissionContainer,
-  TabHeader,
-  TabTitle,
-  TabSubTitle,
-  TabSubLink,
   TabArea,
   FilterHeader,
   AdjustableIconWrapper,
