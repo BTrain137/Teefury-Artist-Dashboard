@@ -96,7 +96,12 @@ const AdminArtSubmissions = ({ token }) => {
     setState({
       ...state,
       isAdminArtApproval: false,
+      submissionsArr: [],
     });
+
+    // Reset array for admin
+    const status = _getCurrentPath();
+    _getSubmissions(status);
   };
 
   const {
