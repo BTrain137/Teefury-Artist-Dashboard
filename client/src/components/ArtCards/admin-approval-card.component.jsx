@@ -1,6 +1,4 @@
-// eslint-disable-next-line
 import React, { useState, useEffect } from "react";
-
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 
 import {
@@ -23,7 +21,6 @@ const AdminArtCard = ({
   createdAt,
   openAdminArtApproval,
 }) => {
-  // eslint-disable-next-line
   const [imageSrc, setImageSrc] = useState("");
 
   useEffect(() => {
