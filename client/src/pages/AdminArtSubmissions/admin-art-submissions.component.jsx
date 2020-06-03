@@ -3,7 +3,6 @@ import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 import Nav from "../../components/Nav/nav.component";
 import AdminArtSubmissions from "../../components/AdminArtSubmissions";
-import AdminArtApproval from "../../components/AdminArtApproval";
 
 import {
   ArtistContainer,
@@ -20,11 +19,6 @@ const AdminArtSubmissionsPage = () => {
         <Route path={`${path}/:status`}>
           <SubmissionWrapper>
             <AdminArtSubmissions />
-          </SubmissionWrapper>
-        </Route>
-        <Route path={`${path}/review/:id`}>
-          <SubmissionWrapper>
-            <AdminArtApproval />
           </SubmissionWrapper>
         </Route>
       </Switch>
