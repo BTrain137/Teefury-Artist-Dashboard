@@ -1,4 +1,3 @@
-// import React, { Component } from "react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
@@ -6,18 +5,23 @@ import { createStructuredSelector } from "reselect";
 import { useParams } from "react-router-dom";
 
 import { selectUserJWTToken } from "../../redux/user/user.selector";
+import { selectSubmissionsError } from "../../redux/submissions/submissions.selector";
 
+import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
+import { ArtistArtCard as ArtCard } from "../ArtCards";
+import ArtistSubmissionsEdit from "../ArtistSubmissionsEdit";
 // eslint-disable-next-line
 import { Form, Input } from "../FormInput";
-import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
-import { AdminArtCart as ArtCard } from "../ArtCards";
 // eslint-disable-next-line
 import { ReactComponent as MagnifyGlassIcon } from "../../assets/magnify-glass.svg";
 import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
-import AdminArtApproval from "../AdminArtApproval";
 
 import {
   SubmissionContainer,
+  TabHeader,
+  TabSubTitle,
+  TabSubLink,
+  TabTitle,
   TabArea,
   FilterHeader,
   StatusHeader,
@@ -31,7 +35,7 @@ import {
   ArtCardContainer,
 } from "../SharedStyle/art-submissions.styles";
 
-const AdminArtSubmissions = ({ token }) => {
+const ArtistArtSubmissions = ({ token }) => {
   const params = useParams();
   const [state, setState] = useState({
     search: "",
@@ -39,16 +43,12 @@ const AdminArtSubmissions = ({ token }) => {
     status: "NEW",
     imageSrc: teefuryBirdLogo,
     submissionsArr: [],
+    submissionCard: null,
     id: 0,
-    isAdminArtApproval: false,
+    isSubmissionsEdit: false,
   });
 
   useEffect(() => {
-    setState({
-      ...state,
-      submissionsArr: [],
-    });
-
     const status = _getCurrentPath();
     _getSubmissions(status);
   }, 
@@ -63,6 +63,7 @@ const AdminArtSubmissions = ({ token }) => {
 
   const _getCurrentPath = () => {
     const status = params.status.toUpperCase();
+
     return status;
   };
 
@@ -74,7 +75,7 @@ const AdminArtSubmissions = ({ token }) => {
   const _getSubmissions = async (status) => {
     const {
       data: { submissionsDetailsArr },
-    } = await axios.get(`/api/admin/submissions/${status}`, {
+    } = await axios.get(`/api/artist/submissions/${status}`, {
       headers: { Authorization: `JWT ${token}` },
     });
 
@@ -83,30 +84,25 @@ const AdminArtSubmissions = ({ token }) => {
       status: status,
       isShowingFilter: false,
       submissionsArr: submissionsDetailsArr,
-      isAdminArtApproval: false,
+      isSubmissionsEdit: false,
     });
   };
 
-  const openAdminArtApproval = (event) => {
+  const openSubmissionsEdit = (event) => {
     const { id } = event.currentTarget;
 
     setState({
       ...state,
       id: id,
-      isAdminArtApproval: true,
+      isSubmissionsEdit: true,
     });
   };
 
-  const closeAdminArtApproval = () => {
+  const closeSubmissionsEdit = () => {
     setState({
       ...state,
-      isAdminArtApproval: false,
-      submissionsArr: [],
+      isSubmissionsEdit: false,
     });
-
-    // Reset array for admin
-    const status = _getCurrentPath();
-    _getSubmissions(status);
   };
 
   const {
@@ -115,19 +111,25 @@ const AdminArtSubmissions = ({ token }) => {
     isShowingFilter,
     status,
     submissionsArr,
-    isAdminArtApproval,
     id,
+    isSubmissionsEdit,
   } = state;
 
   return (
     <SubmissionContainer>
+      <TabHeader>
+        <TabSubLink to={`/artist/submissions/`}>
+          <TabSubTitle>Submit Artwork</TabSubTitle>
+        </TabSubLink>
+        <TabTitle>Submissions</TabTitle>
+      </TabHeader>
       <TabArea>
         <FilterHeader>
           {/* <SearchBoxWrapper>
               <Form style={{ marginTop: "0" }}>
                 <Input
                   name="search"
-                  onChange={handleChange}
+                  onChange={this.handleChange}
                   value={search}
                   placeholder="SEARCH"
                   style={{ fontSize: "15px", fontFamily: "sans-serif" }}
@@ -146,35 +148,35 @@ const AdminArtSubmissions = ({ token }) => {
           {isShowingFilter ? (
             <FilterContainer>
               <FilterLink
-                to="/admin/art-submissions/new"
+                to="/artist/submissions/new"
                 data-filter="NEW"
                 status={status === "NEW" ? "selected" : ""}
               >
                 NEW
               </FilterLink>
               <FilterLink
-                to="/admin/art-submissions/pending"
+                to="/artist/submissions/pending"
                 data-filter="PENDING"
                 status={status === "PENDING" ? "selected" : ""}
               >
                 PENDING
               </FilterLink>
               <FilterLink
-                to="/admin/art-submissions/reviewed"
+                to="/artist/submissions/reviewed"
                 data-filter="REVIEWED"
                 status={status === "REVIEWED" ? "selected" : ""}
               >
                 REVIEWED
               </FilterLink>
               <FilterLink
-                to="/admin/art-submissions/approved"
+                to="/artist/submissions/approved"
                 data-filter="APPROVED"
                 status={status === "APPROVED" ? "selected" : ""}
               >
                 APPROVED
               </FilterLink>
               <FilterLink
-                to="/admin/art-submissions/declined"
+                to="/artist/submissions/declined"
                 data-filter="DECLINED"
                 status={status === "DECLINED" ? "selected" : ""}
               >
@@ -183,13 +185,13 @@ const AdminArtSubmissions = ({ token }) => {
             </FilterContainer>
           ) : null}
         </FilterHeader>
-        {isAdminArtApproval ? (
-          <AdminArtApproval
+        {isSubmissionsEdit ? (
+          <ArtistSubmissionsEdit
             id={id}
-            closeAdminArtApproval={closeAdminArtApproval}
+            closeSubmissionsEdit={closeSubmissionsEdit}
           />
         ) : (
-          <ArtCardContainer items={submissionsArr.length}>
+          <ArtCardContainer>
             {submissionsArr.length > 0 ? (
               submissionsArr.map((submissionDetails, i) => {
                 return (
@@ -198,12 +200,15 @@ const AdminArtSubmissions = ({ token }) => {
                     {...submissionDetails}
                     delay={i}
                     token={token}
-                    openAdminArtApproval={openAdminArtApproval}
+                    openSubmissionsEdit={openSubmissionsEdit}
                   />
                 );
               })
             ) : (
-              <h2>No Artwork to be Viewed</h2>
+              <h2>
+                You don't have any {status.toLocaleLowerCase()} submissions
+                currently.
+              </h2>
             )}
           </ArtCardContainer>
         )}
@@ -214,6 +219,7 @@ const AdminArtSubmissions = ({ token }) => {
 
 const mapStateToProps = createStructuredSelector({
   token: selectUserJWTToken,
+  submissionsError: selectSubmissionsError,
 });
 
-export default connect(mapStateToProps)(AdminArtSubmissions);
+export default connect(mapStateToProps)(ArtistArtSubmissions);

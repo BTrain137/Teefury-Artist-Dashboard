@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
 import Swal from "sweetalert2";
 
@@ -10,11 +9,13 @@ import { selectUserJWTToken } from "../../redux/user/user.selector";
 import { ReactComponent as UploadIcon } from "../../assets/upload.svg";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
 import { BtnArtSubmitLoading } from "../Button";
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import EmailTemplate from "./email-template.component";
 
 import {
-  SubmissionContainer,
   TabArea,
+  FilterHeader,
+  AdjustableIconWrapper,
   ArtworkContainer,
   PreviewImage,
   ArtPreview,
@@ -27,7 +28,7 @@ import {
   DownloadLink,
 } from "./admin-art-approval.styles";
 
-class ArtistSubmitArt extends Component {
+class AdminArtApproval extends Component {
   constructor(props) {
     super(props);
 
@@ -127,11 +128,11 @@ class ArtistSubmitArt extends Component {
   _getSubmittedArtwork = async () => {
     const {
       token,
-      match: { params },
+      id
     } = this.props;
     const {
       data: { submissionDetails },
-    } = await axios.get(`/api/admin/submissions/review/${params.id}`, {
+    } = await axios.get(`/api/admin/submissions/review/${id}`, {
       headers: {
         Authorization: `JWT ${token}`,
       },
@@ -196,8 +197,15 @@ class ArtistSubmitArt extends Component {
     } = this.state;
 
     return (
-      <SubmissionContainer>
+      <>
         <TabArea>
+          <FilterHeader>
+            <AdjustableIconWrapper
+              onClick={this.props.closeAdminArtApproval}
+            >
+              <HighlightOffIcon />
+            </AdjustableIconWrapper>
+          </FilterHeader>
           <ArtworkContainer
             onSubmit={this.handleSubmit}
             ref={this.artworkSubmissionForm}
@@ -239,6 +247,7 @@ class ArtistSubmitArt extends Component {
                 textAlign="center"
                 style={{ width: "95px", height: "45px" }}
               >
+                {/* TODO: make below better */}
                 <DownloadLink href={`http://${window.location.host}${artFileDownload}`} download>
                   {artFile ? "Art File" : <LoadingIcon />}
                 </DownloadLink>
@@ -287,7 +296,7 @@ class ArtistSubmitArt extends Component {
           </ArtworkContainer>
           <EmailTemplate title={title} artistEmail={artistEmail} />
         </TabArea>
-      </SubmissionContainer>
+      </>
     );
   }
 }
@@ -296,4 +305,4 @@ const mapStateToProps = createStructuredSelector({
   token: selectUserJWTToken,
 });
 
-export default withRouter(connect(mapStateToProps)(ArtistSubmitArt));
+export default connect(mapStateToProps)(AdminArtApproval);

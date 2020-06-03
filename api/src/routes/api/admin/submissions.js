@@ -3,7 +3,7 @@ import passport from "passport";
 import pool from "../../../database/connection";
 
 /**
- * Database quires return an array. Even if 1 item exist.
+ * Database queries return an array. Even if 1 item exists.
  * @typedef {{
  *   artFile:String,
  *   artistName:String,
@@ -13,8 +13,8 @@ import pool from "../../../database/connection";
  *   status:String,
  *   title:String,
  * }} SubmissionDetails
- * 
- * @typedef {{a
+ *
+ * @typedef {{
  *   firstName:String,
  *   lastName:String,
  *   artFile:String,
@@ -31,11 +31,11 @@ import pool from "../../../database/connection";
 const router = express.Router();
 
 router.get(
-  "/submissions",
+  "/submissions/:status",
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     let conn;
-    const { status } = req.query;
+    const { status } = req.params;
 
     try {
       conn = await pool.getConnection();
@@ -43,14 +43,14 @@ router.get(
         "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
         "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
         "`created_at` AS `createdAt` FROM `submissions` ";
-        
-        if(status) {
-          queryString += "WHERE `status`='" + status + "' ";
-        }
 
-        queryString +=  "ORDER BY `created_at` DESC ";
+      if (status) {
+        queryString += "WHERE `status`='" + status + "' ";
+      }
 
-        // TODO: implement a pagination on "DELETE" "APPROVED" "REVIEWED"
+      queryString += "ORDER BY `created_at` DESC ";
+
+      // TODO: implement a pagination on "DELETE" "APPROVED" "REVIEWED"
 
       /**
        * @return {SubmissionDetails[]}
@@ -105,6 +105,7 @@ router.post(
   "/submissions/status",
   passport.authenticate("jwt-admin"),
   async (req, res) => {
+    console.log(req.params);
     const { id: submissionId, status } = req.body;
     let conn;
 

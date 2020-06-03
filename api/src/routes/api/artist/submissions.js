@@ -1,12 +1,12 @@
 import fs from "fs";
 import express from "express";
 import multer from "multer";
-import { cleanFileName, } from "../../../utils/cleanData";
+import { cleanFileName } from "../../../utils/cleanData";
 import passport from "passport";
 import pool from "../../../database/connection";
 
 /**
- * Database quires return an array. Even if 1 item exist.
+ * Database queries return an array. Even if 1 item exists.
  * @typedef {{
  *   artFile:String,
  *   artistName:String,
@@ -166,18 +166,27 @@ router.post(
 // Sending all submissions to client.
 // Client will be sorting the artworks by their status
 router.get(
-  "/submissions",
+  "/submissions/:status",
   passport.authenticate("jwt"),
   async (req, res, next) => {
     const { artistName } = req.user;
+    const { status } = req.params;
+
     let conn;
     try {
       conn = await pool.getConnection();
-      const queryString =
+      let queryString =
         "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
         "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
-        "`created_at` AS `createdAt` FROM `submissions` WHERE `artist_name`=?" +
-        "ORDER BY `created_at` DESC";
+        "`created_at` AS `createdAt` FROM `submissions`" +
+        "WHERE `artist_name`=? ";
+
+      if (status) {
+        queryString += "AND `status`='" + status + "' ";
+      }
+
+      queryString += "ORDER BY `created_at` DESC";
+
       /**
        * @return {SubmissionDetails[]}
        */
@@ -194,7 +203,7 @@ router.get(
 
 // Get one submissions to edit
 router.get(
-  "/submissions/:id",
+  "/submissions/edit/:id",
   passport.authenticate("jwt"),
   async (req, res, next) => {
     const { artistName } = req.user;
@@ -228,7 +237,7 @@ router.get(
 
 // Update Submissions
 router.put(
-  "/submissions/:id",
+  "/submissions/edit/:id",
   passport.authenticate("jwt"),
   cpUpload,
   async (req, res, next) => {

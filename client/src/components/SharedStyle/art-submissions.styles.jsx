@@ -55,6 +55,11 @@ export const FilterHeader = styled.div`
   position: relative;
 `;
 
+export const StatusHeader = styled.div`
+  position: absolute;
+  right: 42%;
+`;
+
 export const SearchBoxWrapper = styled.div`
   position: relative;
 `;
@@ -92,16 +97,16 @@ export const FilterContainer = styled.div`
   box-shadow: 0px 3px 11px 1px rgba(0, 0, 0, 0.2);
   background-color: #fff;
 
-  .selected {
+  /* .selected {
     background-color: #dedddd;
     border-left: 5px solid #6a6a6a;
     border-radius: 0 12px 12px 0;
     padding-left: 30px;
     box-shadow: 0px 3px 11px 1px rgba(0, 0, 0, 0.2);
-  }
+  } */
 `;
 
-export const FilterBtn = styled.button`
+export const FilterLink = styled(Link)`
   background-color: transparent;
   border: none;
   font-size: 16px;
@@ -112,6 +117,18 @@ export const FilterBtn = styled.button`
   padding-left: 35px;
   width: 100%;
   text-align: left;
+  display: block;
+  text-decoration: none;
+  ${(p) =>
+    p.status === "selected"
+      ? css`
+          background-color: #dedddd;
+          border-left: 5px solid #6a6a6a;
+          border-radius: 0 12px 12px 0;
+          padding-left: 30px;
+          box-shadow: 0px 3px 11px 1px rgba(0, 0, 0, 0.2);
+        `
+      : null}
 `;
 
 export const ArtCardContainer = styled.div`

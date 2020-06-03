@@ -229,7 +229,7 @@ class ArtistSubmitArt extends Component {
       <SubmissionContainer>
         <TabHeader>
           <TabTitle>Submit Artwork</TabTitle>
-          <TabSubLink to={`/artist/submissions/all`}>
+          <TabSubLink to={`/artist/submissions/new`}>
             <TabSubTitle>Submissions</TabSubTitle>
           </TabSubLink>
         </TabHeader>

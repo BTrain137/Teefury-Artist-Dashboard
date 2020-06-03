@@ -21,14 +21,12 @@ import {
 import { ReactComponent as Upload } from "../../assets/upload.svg";
 import { ReactComponent as Loading } from "../../assets/loading.svg";
 import { InputArtFile, BtnArtSubmit, InputArtPreview } from "../Button";
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import {
-  SubmissionContainer,
-  TabHeader,
-  TabTitle,
-  TabSubTitle,
-  TabSubLink,
   TabArea,
+  FilterHeader,
+  AdjustableIconWrapper,
   SubTitle,
   FormArtistSubmit,
   SubmitCard,
@@ -42,7 +40,7 @@ import {
   TextAreaStyled,
 } from "./artist-submissions-edit.styles";
 
-class ArtistSubmitArt extends Component {
+class ArtistSubmissionsEdit extends Component {
   constructor(props) {
     super(props);
 
@@ -142,7 +140,7 @@ class ArtistSubmitArt extends Component {
     Swal.fire({
       icon: "warning",
       text:
-        "Please be patient!!! Don't close this window these are large files.",
+        "Please be patient!!! Don't close this window, these are large files.",
       showConfirmButton: false,
     });
 
@@ -239,11 +237,11 @@ class ArtistSubmitArt extends Component {
   _getArtistSubmissions = async () => {
     const {
       token,
-      match: { params },
+      id,
     } = this.props;
     const {
       data: { submissionDetails },
-    } = await axios.get(`/api/artist/submissions/${params.id}`, {
+    } = await axios.get(`/api/artist/submissions/edit/${id}`, {
       headers: {
         Authorization: `JWT ${token}`,
       },
@@ -265,17 +263,15 @@ class ArtistSubmitArt extends Component {
     } = this.state;
 
     return (
-      <SubmissionContainer>
-        <TabHeader>
-          <TabSubLink to={`/artist/submissions`}>
-            <TabSubTitle>Submit Artwork</TabSubTitle>
-          </TabSubLink>
-          <TabSubLink to={`/artist/submissions/all`}>
-            <TabSubTitle>Submissions</TabSubTitle>
-          </TabSubLink>
-          <TabTitle>Edit Artwork</TabTitle>
-        </TabHeader>
+      <>
         <TabArea>
+        <FilterHeader>
+            <AdjustableIconWrapper
+              onClick={this.props.closeSubmissionsEdit}
+            >
+              <HighlightOffIcon />
+            </AdjustableIconWrapper>
+          </FilterHeader>
           <SubTitle>Update Your Submissions</SubTitle>
           <FormArtistSubmit
             onSubmit={this.handleSubmit}
@@ -403,7 +399,7 @@ class ArtistSubmitArt extends Component {
             </SubmitCard>
           </FormArtistSubmit>
         </TabArea>
-      </SubmissionContainer>
+      </>
     );
   }
 }
@@ -423,5 +419,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ArtistSubmitArt)
+  connect(mapStateToProps, mapDispatchToProps)(ArtistSubmissionsEdit)
 );

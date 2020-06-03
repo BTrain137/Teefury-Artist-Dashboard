@@ -1,7 +1,4 @@
-// eslint-disable-next-line
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 
 import {
@@ -22,22 +19,33 @@ const AdminArtCard = ({
   artistName,
   title,
   createdAt,
+  openAdminArtApproval,
 }) => {
-  // eslint-disable-next-line
   const [imageSrc, setImageSrc] = useState("");
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const fetchImage = () => {
-      const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`;
-      fetch(thumbImg, { headers: { Authorization: `JWT ${token}` } })
+      const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(
+        20
+      )}`;
+      fetch(thumbImg, { signal, headers: { Authorization: `JWT ${token}` } })
         .then((res) => {
           return res.blob();
         })
         .then((blob) => {
           setImageSrc(URL.createObjectURL(blob));
-        });
+        })
+        .catch((error) => {
+          // console.error(error);
+        })
     };
     fetchImage();
+
+    return () => {
+      controller.abort();
+    };
   }, [token, previewArt]);
 
   return (
@@ -46,7 +54,7 @@ const AdminArtCard = ({
         <ImgCard
           src={imageSrc ? imageSrc : teefuryBirdLogo}
           alt={title}
-          loaded={imageSrc ? true : false}
+          loaded={imageSrc ? "true" : ""}
         />
         <Figcaption>
           <ArtTitle style={{ fontSize: "16px" }}>
@@ -59,9 +67,9 @@ const AdminArtCard = ({
             {new Date(createdAt).toLocaleDateString()}
           </ArtHeaders>
         </Figcaption>
-        <Link to={`/admin/art-submissions/review/${id}`}>
-          <CardFooter>Review Artwork</CardFooter>
-        </Link>
+        <CardFooter id={id} onClick={openAdminArtApproval}>
+          Review Artwork
+        </CardFooter>
       </CardWrapper>
     </CardContainer>
   );

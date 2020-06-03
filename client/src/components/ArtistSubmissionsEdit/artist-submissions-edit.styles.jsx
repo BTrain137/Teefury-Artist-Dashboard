@@ -50,6 +50,22 @@ export const TabArea = styled.div`
   border-radius: 15px;
   padding: 55px;
   min-height: 70vh;
+  margin-top: 20px;
+`;
+
+export const FilterHeader = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+`;
+
+export const AdjustableIconWrapper = styled.div`
+  width: 30px;
+  cursor: pointer;
+
+  path {
+    fill: #6a6a6a;
+  }
 `;
 
 export const SubTitle = styled.h3`

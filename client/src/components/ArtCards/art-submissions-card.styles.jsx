@@ -40,8 +40,10 @@ export const ImgCard = styled(LazyLoadImage)`
     p.loaded
       ? css`
           box-shadow: 0px 7px 16px 2px rgba(0, 0, 0, 0.2);
-          max-height: 250px;
-          max-width: 140px;
+          /* max-height: 250px; */
+          /* max-width: 140px; */
+          width: 100%;
+          max-width: 150px;
         `
       : css`
           max-height: 110px;
