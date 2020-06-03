@@ -203,7 +203,7 @@ router.get(
 
 // Get one submissions to edit
 router.get(
-  "/submissions/:id",
+  "/submissions/edit/:id",
   passport.authenticate("jwt"),
   async (req, res, next) => {
     const { artistName } = req.user;
@@ -237,7 +237,7 @@ router.get(
 
 // Update Submissions
 router.put(
-  "/submissions/:id",
+  "/submissions/edit/:id",
   passport.authenticate("jwt"),
   cpUpload,
   async (req, res, next) => {

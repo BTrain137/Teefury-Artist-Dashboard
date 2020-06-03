@@ -42,7 +42,7 @@ export function* submissionEditStart({ payload: { formData } }) {
     const token = yield select(selectUserJWTToken);
     const {
       data: { submissionDetails },
-    } = yield axios.put(`/api/artist/submissions/${formData.get("id")}`, formData, {
+    } = yield axios.put(`/api/artist/submissions/edit/${formData.get("id")}`, formData, {
       headers: {
         "content-type": "multipart/form-data",
         Authorization: `JWT ${token}`,

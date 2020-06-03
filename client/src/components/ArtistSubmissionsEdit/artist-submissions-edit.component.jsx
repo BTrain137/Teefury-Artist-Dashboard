@@ -237,11 +237,11 @@ class ArtistSubmissionsEdit extends Component {
   _getArtistSubmissions = async () => {
     const {
       token,
-      match: { params },
+      id,
     } = this.props;
     const {
       data: { submissionDetails },
-    } = await axios.get(`/api/artist/submissions/${params.id}`, {
+    } = await axios.get(`/api/artist/submissions/edit/${id}`, {
       headers: {
         Authorization: `JWT ${token}`,
       },
