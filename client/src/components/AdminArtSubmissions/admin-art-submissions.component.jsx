@@ -83,7 +83,7 @@ const AdminArtSubmissions = ({ token }) => {
   };
 
   const openAdminArtApproval = (event) => {
-    const { id } = event.target;
+    const { id } = event.currentTarget;
 
     setState({
       ...state,

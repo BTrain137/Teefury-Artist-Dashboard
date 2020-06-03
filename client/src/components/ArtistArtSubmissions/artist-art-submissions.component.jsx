@@ -89,7 +89,7 @@ const ArtistArtSubmissions = ({ token }) => {
   };
 
   const openSubmissionsEdit = (event) => {
-    const { id } = event.target.id;
+    const { id } = event.currentTarget;
 
     setState({
       ...state,
