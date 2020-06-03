@@ -47,16 +47,12 @@ const ArtistArtCard = ({
     <CardContainer>
       <CardWrapper>
         <ImgCard
-          src={
-            imageSrc
-              ? `/api/art-submissions-thumb/?src=${previewArt.substring(20)}`
-              : teefuryBirdLogo
-          }
-          alt="test"
+          src={imageSrc ? imageSrc : teefuryBirdLogo}
+          alt={title}
           loaded={imageSrc ? "true" : ""}
         />
         <p className="title">{title}</p>
-        {status === "PENDING" ? (
+        {status === "NEW" || status === "PENDING" ? (
           <CardFooter id={id} onClick={openSubmissionsEdit}>
             VIEW OR EDIT
           </CardFooter>
