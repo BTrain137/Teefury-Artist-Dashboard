@@ -24,7 +24,7 @@ const ArtistArtCard = ({
     const fetchImage = () => {
       const thumbImg = `/api/art-submissions-thumb/?src=${previewArt.substring(
         20
-      )}`;
+      )}&w=180`;
       fetch(thumbImg, { signal, headers: { Authorization: `JWT ${token}` } })
         .then((res) => {
           return res.blob();
@@ -50,6 +50,7 @@ const ArtistArtCard = ({
           src={imageSrc ? imageSrc : teefuryBirdLogo}
           alt={title}
           loaded={imageSrc ? "true" : ""}
+          style={{ maxWidth: "180px" }}
         />
         <p className="title">{title}</p>
         {status === "NEW" || status === "PENDING" ? (
