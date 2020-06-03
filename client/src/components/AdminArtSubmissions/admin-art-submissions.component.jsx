@@ -44,6 +44,11 @@ const AdminArtSubmissions = ({ token }) => {
   });
 
   useEffect(() => {
+    setState({
+      ...state,
+      submissionsArr: [],
+    });
+
     const status = _getCurrentPath();
     _getSubmissions(status);
   }, 
