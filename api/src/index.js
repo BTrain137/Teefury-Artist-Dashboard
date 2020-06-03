@@ -36,6 +36,7 @@ app.use("/api/art-submissions", [
   express.static(path.join(__dirname, "../../art-submissions")),
 ]);
 
+// /api/art-submissions-thumb/?src=/<ArtistName/imageFile.jpg&w=80
 app.get("/api/art-submissions-thumb", (req, res) => {
   if (req.query.src) {
     let image = new Media(req.query.src);
