@@ -14,7 +14,7 @@ module.exports = {
       instances: 1,
       time: true,
       env_dev: {
-        NODE_ENV: "development",
+        NODE_ENV: "production",
       },
       env_production: {
         NODE_ENV: "production",
