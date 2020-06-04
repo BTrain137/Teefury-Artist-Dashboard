@@ -26,7 +26,7 @@ import pool from "../../../database/connection";
 
 const { NODE_ENV } = process.env;
 const router = express.Router();
-const FILE_DIRECTORY = "../../art-submissions/";
+const FILE_DIRECTORY = "../../art-submissions";
 const upload = multer({
   dest: FILE_DIRECTORY,
 });
@@ -130,20 +130,16 @@ router.post(
         "INSERT INTO `submissions` (`artist_name`, `username_contact_email`, " +
         "`title`, `description`, `art_file`, `preview_art`) VALUES (?,?,?,?,?,?)";
 
-      const some = artFileNewPath.replace(/\.\.\//g, "");
-      const some2 = previewArtNewPath.replace(/\.\.\//g, "");
-      console.log({ artFileNewPath });
-      console.log({ previewArtNewPath });
-      console.log({ some });
-      console.log({ some2 });
-
+      const correctedArtFileNewPath = artFileNewPath.replace(/\.\.\//g, "");
+      const correctedPreviewArtNewPath = previewArtNewPath.replace(/\.\.\//g, "");
+      
       const insertValues = [
         artistName,
         contactEmail,
         title,
         description,
-        `/api/${artFileNewPath}`,
-        `/api/${previewArtNewPath}`,
+        `/api/${correctedArtFileNewPath}`,
+        `/api/${correctedPreviewArtNewPath}`,
       ];
 
       /**
@@ -286,19 +282,22 @@ router.put(
 
       // Then delete old files
       //Append
-      fs.unlinkSync(oldArtFile.replace("/api/", ""));
-      fs.unlinkSync(oldPreviewArt.replace("/api/", ""));
+      fs.unlinkSync(oldArtFile.replace("/api/", "../../"));
+      fs.unlinkSync(oldPreviewArt.replace("/api/", "../../"));
 
       // Update Table
       const queryString =
         "UPDATE `submissions` SET `title`=?, `description`=?, `art_file`=?, " +
         "`preview_art`=? WHERE `id`=?";
 
+      const correctedArtFileNewPath = artFileNewPath.replace(/\.\.\//g, "");
+      const correctedPreviewArtNewPath = previewArtNewPath.replace(/\.\.\//g, "");
+
       const updateValues = [
         title,
         description,
-        `/api/${artFileNewPath}`,
-        `/api/${previewArtNewPath}`,
+        `/api/${correctedArtFileNewPath}`,
+        `/api/${correctedPreviewArtNewPath}`,
         id,
       ];
 
