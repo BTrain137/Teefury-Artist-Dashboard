@@ -33,7 +33,7 @@ app.use("/public", express.static(path.join(__dirname, "../../public")));
 // /api/art-submissions/<ArtistName>/imageFile.psd
 const submissionsDirectory =
   NODE_ENV === "stage"
-    ? "../../artist-dashboard/source/art-submissions/"
+    ? "../../artist-dashboard/source/art-submissions"
     : "../../art-submissions";
 app.use("/api/art-submissions", [
   // passport.authenticate("jwt-submissions"),

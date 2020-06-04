@@ -1,7 +1,11 @@
 "use strict";
 
 const path = require("path");
-const ABSPATH = path.join(__dirname, "../../../art-submissions");
+const submissionsDirectory =
+  NODE_ENV === "stage"
+    ? "../../../artist-dashboard/source/art-submissions"
+    : "../../../art-submissions";
+const ABSPATH = path.join(__dirname, submissionsDirectory);
 const gm = require("gm");
 
 const getFileExtension = (filename) => {
