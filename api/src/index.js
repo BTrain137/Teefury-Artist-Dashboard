@@ -31,13 +31,9 @@ app.use("/public", express.static(path.join(__dirname, "../../public")));
 
 // Art files submitted by artist
 // /api/art-submissions/<ArtistName>/imageFile.psd
-const submissionsDirectory =
-  NODE_ENV === "stage"
-    ? "../../../../artist-dashboard/source/art-submissions"
-    : "../../art-submissions";
 app.use("/api/art-submissions", [
   // passport.authenticate("jwt-submissions"),
-  express.static(path.join(__dirname, submissionsDirectory)),
+  express.static(path.join(__dirname, "../../art-submissions")),
 ]);
 
 // /api/art-submissions-thumb/?src=/<ArtistName/imageFile.jpg&w=80
