@@ -166,7 +166,7 @@ class Signup extends Component {
           <ButtonMd
             type="submit"
             disabled={isDisableSubmit}
-            style={{ width: "115px" }}
+            style={{ width: "120px" }}
           >
             Sign Up
           </ButtonMd>
