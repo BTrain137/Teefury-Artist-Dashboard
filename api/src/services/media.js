@@ -1,5 +1,6 @@
 "use strict";
 
+const { NODE_ENV } = process.env;
 const path = require("path");
 const submissionsDirectory =
   NODE_ENV === "stage"
