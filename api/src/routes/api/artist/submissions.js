@@ -24,8 +24,12 @@ import pool from "../../../database/connection";
  * }} InsertDatabaseResponse
  */
 
+const { NODE_ENV } = process.env;
 const router = express.Router();
-const FILE_DIRECTORY = "art-submissions";
+const FILE_DIRECTORY =
+  NODE_ENV === "stage"
+    ? "../../artist-dashboard/source/art-submissions/"
+    : "art-submissions";
 const upload = multer({
   dest: FILE_DIRECTORY,
 });

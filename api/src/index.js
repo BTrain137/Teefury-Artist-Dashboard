@@ -10,7 +10,7 @@ import "./services/passport.js";
 import Media from "./services/media.js";
 
 const app = express();
-const { NODE_ENV, PORT } = process.env;
+const { NODE_ENV, PORT, DEBUG } = process.env;
 const port = PORT || 3001;
 
 // Middleware
@@ -19,7 +19,7 @@ app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
-if (NODE_ENV === "development") app.use(logger("dev"));
+if (DEBUG) app.use(logger("dev"));
 
 // API Routes
 app.use(routes);
@@ -31,9 +31,13 @@ app.use("/public", express.static(path.join(__dirname, "../../public")));
 
 // Art files submitted by artist
 // /api/art-submissions/<ArtistName>/imageFile.psd
+const submissionsDirectory =
+  NODE_ENV === "stage"
+    ? "../../artist-dashboard/source/art-submissions/"
+    : "../../art-submissions";
 app.use("/api/art-submissions", [
   // passport.authenticate("jwt-submissions"),
-  express.static(path.join(__dirname, "../../art-submissions")),
+  express.static(path.join(__dirname, submissionsDirectory)),
 ]);
 
 // /api/art-submissions-thumb/?src=/<ArtistName/imageFile.jpg&w=80
@@ -47,7 +51,7 @@ app.get("/api/art-submissions-thumb", (req, res) => {
 });
 
 app.use((error, req, res, next) => {
-  if (NODE_ENV === "development") {
+  if (DEBUG) {
     console.log("-----------------------------------------------");
     console.log("Error status: ", error.status);
     console.log("Message: ", error.message);
@@ -72,7 +76,7 @@ app.use((error, req, res, next) => {
 });
 
 // Serve React In Production
-if (NODE_ENV === "production") {
+if (NODE_ENV === "production" || NODE_ENV === "stage") {
   app.use(express.static(path.join(__dirname, "../../client/build")));
   app.get("*", function (_, res) {
     res.sendFile(path.join(__dirname, "../../client/build", "index.html"));
