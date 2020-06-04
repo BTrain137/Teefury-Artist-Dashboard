@@ -176,3 +176,9 @@ export const TermsWrapper = styled.div`
   margin: 0 auto;
   min-height: 50px;
 `;
+
+export const FlipButtonsWrapper = styled.div`
+  display: flex;
+  position: relative;
+  justify-content: center;
+`;

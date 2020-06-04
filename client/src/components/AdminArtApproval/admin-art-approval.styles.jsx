@@ -29,7 +29,6 @@ export const AdjustableIconWrapper = styled.div`
   }
 `;
 
-
 export const ArtworkContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -147,10 +146,16 @@ export const DownloadLink = styled.a`
   text-decoration: none;
 `;
 
+export const FlipButtonsWrapper = styled.div`
+  display: flex;
+  position: relative;
+  justify-content: center;
+`;
+
 // Approval Email
 
 export const MockEmailContainer = styled.section`
-  margin-top: 60px;
+  margin-top: 20px;
   border-top: 2px solid black;
 `;
 
