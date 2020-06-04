@@ -8,15 +8,13 @@ module.exports = {
   apps: [
     {
       name: "artist-dashboard",
-      cwd: "/var/www/artist-dashboard/source",
-      script: "npm start",
+      cwd: "/var/www/artist-dashboard/source/api/dist",
+      script: "index.js",
       max_memory_restart: "200M",
-      instances: 1,
+      instances: "MAX",
+      exec_mode: "cluster",
       time: true,
-      env_dev: {
-        NODE_ENV: "production",
-      },
-      env_production: {
+      env: {
         NODE_ENV: "production",
       },
     },
@@ -30,11 +28,11 @@ module.exports = {
       time: true,
       env: {
         PORT: 4001,
-        NODE_ENV: "production",
+        NODE_ENV: "stage",
       },
     },
     {
-      name: "local",
+      name: "local-artist-dashboard",
       cwd: "/Users/btran/Documents/Code/Teefury/artist-dashboard-2/api/dist",
       script: "index.js",
       max_memory_restart: "200M",
@@ -56,7 +54,7 @@ module.exports = {
       path: "/var/www/artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
       "post-deploy":
-        "npm install && cd client && npm install && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only artist-dashboard --env production",
+        "npm install && npm run build && cd client && npm install && npm run build && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only artist-dashboard",
     },
     stage: {
       user: "root",
