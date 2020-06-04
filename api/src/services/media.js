@@ -4,7 +4,7 @@ const { NODE_ENV } = process.env;
 const path = require("path");
 const submissionsDirectory =
   NODE_ENV === "stage"
-    ? "../../../artist-dashboard/source/art-submissions"
+    ? "../../../../../artist-dashboard/source/art-submissions"
     : "../../../art-submissions";
 const ABSPATH = path.join(__dirname, submissionsDirectory);
 const gm = require("gm");
