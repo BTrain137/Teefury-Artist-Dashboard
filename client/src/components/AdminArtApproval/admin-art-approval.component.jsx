@@ -9,7 +9,10 @@ import { selectUserJWTToken } from "../../redux/user/user.selector";
 import { ReactComponent as UploadIcon } from "../../assets/upload.svg";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
 import { BtnArtSubmitLoading } from "../Button";
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import { IconButton } from "@material-ui/core";
 import EmailTemplate from "./email-template.component";
 
 import {
@@ -26,6 +29,7 @@ import {
   GreyTextArea,
   CaptionTitle,
   DownloadLink,
+  FlipButtonsWrapper,
 } from "./admin-art-approval.styles";
 
 class AdminArtApproval extends Component {
@@ -58,6 +62,12 @@ class AdminArtApproval extends Component {
     this._loadArtwork();
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.id !== prevProps.id) {
+      this._loadArtwork();
+    }
+  }
+
   handleChange = (event) => {
     const { name, value } = event.target;
     this.setState({ [name]: value, isDisableSubmit: false });
@@ -88,7 +98,6 @@ class AdminArtApproval extends Component {
         artFileDownload: artFile,
         artFile,
       });
-
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -113,7 +122,9 @@ class AdminArtApproval extends Component {
 
   _loadPreviewArt = async (previewArt) => {
     try {
-      const largeThumb = `/api/art-submissions-thumb/?src=${previewArt.substring(20)}&w=500`;
+      const largeThumb = `/api/art-submissions-thumb/?src=${previewArt.substring(
+        20
+      )}&w=500`;
       const artPreviewImg = await this._createBlob(largeThumb);
       this.setState({ artPreviewImg });
     } catch (error) {
@@ -126,10 +137,7 @@ class AdminArtApproval extends Component {
   };
 
   _getSubmittedArtwork = async () => {
-    const {
-      token,
-      id
-    } = this.props;
+    const { token, id } = this.props;
     const {
       data: { submissionDetails },
     } = await axios.get(`/api/admin/submissions/review/${id}`, {
@@ -196,13 +204,19 @@ class AdminArtApproval extends Component {
       isEnlargeImg,
     } = this.state;
 
+    const {
+      closeAdminArtApproval,
+      flipLeft,
+      flipRight,
+      isFlipLeftDisabled,
+      isFlipRightDisabled,
+    } = this.props;
+
     return (
       <>
         <TabArea>
           <FilterHeader>
-            <AdjustableIconWrapper
-              onClick={this.props.closeAdminArtApproval}
-            >
+            <AdjustableIconWrapper onClick={closeAdminArtApproval}>
               <HighlightOffIcon />
             </AdjustableIconWrapper>
           </FilterHeader>
@@ -248,7 +262,10 @@ class AdminArtApproval extends Component {
                 style={{ width: "95px", height: "45px" }}
               >
                 {/* TODO: make below better */}
-                <DownloadLink href={`http://${window.location.host}${artFileDownload}`} download>
+                <DownloadLink
+                  href={`http://${window.location.host}${artFileDownload}`}
+                  download
+                >
                   {artFile ? "Art File" : <LoadingIcon />}
                 </DownloadLink>
               </BtnArtSubmitLoading>
@@ -294,6 +311,14 @@ class AdminArtApproval extends Component {
               </div>
             </SubmitCard>
           </ArtworkContainer>
+          <FlipButtonsWrapper>
+            <IconButton onClick={flipLeft} disabled={isFlipLeftDisabled}>
+              <KeyboardArrowLeftIcon /> Previous
+            </IconButton>
+            <IconButton onClick={flipRight} disabled={isFlipRightDisabled}>
+              Next <KeyboardArrowRightIcon />
+            </IconButton>
+          </FlipButtonsWrapper>
           <EmailTemplate title={title} artistEmail={artistEmail} />
         </TabArea>
       </>

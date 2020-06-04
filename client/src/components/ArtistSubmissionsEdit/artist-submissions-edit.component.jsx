@@ -21,7 +21,13 @@ import {
 import { ReactComponent as Upload } from "../../assets/upload.svg";
 import { ReactComponent as Loading } from "../../assets/loading.svg";
 import { InputArtFile, BtnArtSubmit, InputArtPreview } from "../Button";
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+// eslint-disable-next-line
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
+// eslint-disable-next-line
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+// eslint-disable-next-line
+import { IconButton } from "@material-ui/core";
 
 import {
   TabArea,
@@ -38,6 +44,8 @@ import {
   FormInputArtistStyled,
   FormInputTitleStyled,
   TextAreaStyled,
+  // eslint-disable-next-line
+  FlipButtonsWrapper,
 } from "./artist-submissions-edit.styles";
 
 class ArtistSubmissionsEdit extends Component {
@@ -72,8 +80,11 @@ class ArtistSubmissionsEdit extends Component {
     this._loadArtwork();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this._submissionMessages();
+    if (this.props.id !== prevProps.id) {
+      this._loadArtwork();
+    }
   }
 
   handleChange = (event) => {
@@ -235,10 +246,7 @@ class ArtistSubmissionsEdit extends Component {
   };
 
   _getArtistSubmissions = async () => {
-    const {
-      token,
-      id,
-    } = this.props;
+    const { token, id } = this.props;
     const {
       data: { submissionDetails },
     } = await axios.get(`/api/artist/submissions/edit/${id}`, {
@@ -262,13 +270,23 @@ class ArtistSubmissionsEdit extends Component {
       artFileName,
     } = this.state;
 
+    const {
+      closeSubmissionsEdit,
+      // eslint-disable-next-line
+      flipLeft,
+      // eslint-disable-next-line
+      flipRight,
+      // eslint-disable-next-line
+      isFlipLeftDisabled,
+      // eslint-disable-next-line
+      isFlipRightDisabled,
+    } = this.props;
+
     return (
       <>
         <TabArea>
-        <FilterHeader>
-            <AdjustableIconWrapper
-              onClick={this.props.closeSubmissionsEdit}
-            >
+          <FilterHeader>
+            <AdjustableIconWrapper onClick={closeSubmissionsEdit}>
               <HighlightOffIcon />
             </AdjustableIconWrapper>
           </FilterHeader>
@@ -398,6 +416,14 @@ class ArtistSubmissionsEdit extends Component {
               </div>
             </SubmitCard>
           </FormArtistSubmit>
+          {/* <FlipButtonsWrapper>
+            <IconButton onClick={flipLeft} disabled={isFlipLeftDisabled}>
+              <KeyboardArrowLeftIcon /> Previous
+            </IconButton>
+            <IconButton onClick={flipRight} disabled={isFlipRightDisabled}>
+              Next <KeyboardArrowRightIcon />
+            </IconButton>
+          </FlipButtonsWrapper> */}
         </TabArea>
       </>
     );
