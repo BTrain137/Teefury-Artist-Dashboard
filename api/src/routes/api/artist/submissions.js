@@ -26,7 +26,7 @@ import pool from "../../../database/connection";
 
 const { NODE_ENV } = process.env;
 const router = express.Router();
-const FILE_DIRECTORY = "art-submissions";
+const FILE_DIRECTORY = "../../art-submissions/";
 const upload = multer({
   dest: FILE_DIRECTORY,
 });
@@ -129,6 +129,9 @@ router.post(
       const insertQueryString =
         "INSERT INTO `submissions` (`artist_name`, `username_contact_email`, " +
         "`title`, `description`, `art_file`, `preview_art`) VALUES (?,?,?,?,?,?)";
+
+      artFileNewPath.replace(/\.\.\//g, "");
+      previewArtNewPath.replace(/\.\.\//g, "");
 
       const insertValues = [
         artistName,
@@ -273,10 +276,12 @@ router.put(
       const { artFile: oldArtFile, previewArt: oldPreviewArt } = oldArtwork;
 
       // Create file first
+      // replace
       fs.renameSync(artFile.path, artFileNewPath);
       fs.renameSync(previewArt.path, previewArtNewPath);
 
       // Then delete old files
+      //Append
       fs.unlinkSync(oldArtFile.replace("/api/", ""));
       fs.unlinkSync(oldPreviewArt.replace("/api/", ""));
 
