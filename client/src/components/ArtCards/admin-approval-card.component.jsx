@@ -16,6 +16,7 @@ const AdminArtCard = ({
   token,
   previewArt,
   id,
+  index,
   artistName,
   title,
   createdAt,
@@ -67,7 +68,7 @@ const AdminArtCard = ({
             {new Date(createdAt).toLocaleDateString()}
           </ArtHeaders>
         </Figcaption>
-        <CardFooter id={id} onClick={openAdminArtApproval}>
+        <CardFooter id={id} data-index={index} onClick={openAdminArtApproval}>
           Review Artwork
         </CardFooter>
       </CardWrapper>
