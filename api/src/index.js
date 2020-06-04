@@ -52,12 +52,12 @@ app.get("/api/art-submissions-thumb", (req, res) => {
 
 app.use((error, req, res, next) => {
   if (DEBUG) {
-    console.log("-----------------------------------------------");
-    console.log("Error status: ", error.status);
+    console.log("---------------------------------------------------------");
+    console.log("HTTP Error Status: ", error.status);
     console.log("Message: ", error.message);
     console.log("Header Sent: ", res.headersSent);
     console.log("Stack: ", error.stack);
-    console.log("-----------------------------------------------");
+    console.log("---------------------------------------------------------");
   }
 
   if (res.headersSent) {
