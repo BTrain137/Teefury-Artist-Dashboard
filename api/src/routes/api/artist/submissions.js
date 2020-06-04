@@ -130,8 +130,12 @@ router.post(
         "INSERT INTO `submissions` (`artist_name`, `username_contact_email`, " +
         "`title`, `description`, `art_file`, `preview_art`) VALUES (?,?,?,?,?,?)";
 
-      artFileNewPath.replace(/\.\.\//g, "");
-      previewArtNewPath.replace(/\.\.\//g, "");
+      const some = artFileNewPath.replace(/\.\.\//g, "");
+      const some2 = previewArtNewPath.replace(/\.\.\//g, "");
+      console.log({ artFileNewPath });
+      console.log({ previewArtNewPath });
+      console.log({ some });
+      console.log({ some2 });
 
       const insertValues = [
         artistName,
