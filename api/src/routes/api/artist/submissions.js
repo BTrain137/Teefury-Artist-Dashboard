@@ -114,9 +114,6 @@ router.post(
       previewArt.originalname
     )}`;
 
-    console.log({ NODE_ENV });
-    console.log({ artistDirectory });
-
     let conn;
     try {
       // Create Artist Directory if not exist
