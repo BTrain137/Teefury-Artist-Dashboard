@@ -43,22 +43,39 @@ const ArtistArtSubmissions = ({ token }) => {
     status: "NEW",
     imageSrc: teefuryBirdLogo,
     submissionsArr: [],
+    submissionsArrIndex: 0,
     submissionCard: null,
     id: 0,
     isSubmissionsEdit: false,
+    isFlipLeftDisabled: false,
+    isFlipRightDisabled: false,
   });
+  const {
+    // eslint-disable-next-line
+    search,
+    isShowingFilter,
+    status,
+    submissionsArr,
+    submissionsArrIndex,
+    id,
+    isSubmissionsEdit,
+    isFlipLeftDisabled,
+    isFlipRightDisabled,
+  } = state;
 
-  useEffect(() => {
-    setState({
-      ...state,
-      submissionsArr: [],
-    });
+  useEffect(
+    () => {
+      setState({
+        ...state,
+        submissionsArr: [],
+      });
 
-    const status = _getCurrentPath();
-    _getSubmissions(status);
-  }, 
-  // eslint-disable-next-line
-  [params]);
+      const status = _getCurrentPath();
+      _getSubmissions(status);
+    },
+    // eslint-disable-next-line
+    [params]
+  );
 
   // eslint-disable-next-line
   const handleChange = (event) => {
@@ -95,11 +112,18 @@ const ArtistArtSubmissions = ({ token }) => {
 
   const openSubmissionsEdit = (event) => {
     const { id } = event.currentTarget;
+    const index = parseInt(event.target.getAttribute("data-index"), 10);
+    const isFlipLeftDisabled = index === 0 ? true : false;
+    const isFlipRightDisabled =
+      index === submissionsArr.length - 1 ? true : false;
 
     setState({
       ...state,
       id: id,
+      submissionsArrIndex: index,
       isSubmissionsEdit: true,
+      isFlipLeftDisabled,
+      isFlipRightDisabled,
     });
   };
 
@@ -114,15 +138,38 @@ const ArtistArtSubmissions = ({ token }) => {
     _getSubmissions(status);
   };
 
-  const {
-    // eslint-disable-next-line
-    search,
-    isShowingFilter,
-    status,
-    submissionsArr,
-    id,
-    isSubmissionsEdit,
-  } = state;
+  const flipLeft = () => {
+    if (submissionsArrIndex > 0) {
+      let previousIndex = submissionsArrIndex - 1;
+      const newCardId = submissionsArr[previousIndex].id;
+      let isFlipLeftDisabled = previousIndex === 0 ? true : false;
+
+      setState({
+        ...state,
+        id: newCardId,
+        submissionsArrIndex: previousIndex,
+        isFlipLeftDisabled,
+        isFlipRightDisabled: false,
+      });
+    }
+  };
+
+  const flipRight = () => {
+    if (submissionsArrIndex < submissionsArr.length - 1) {
+      let nextIndex = submissionsArrIndex + 1;
+      const newCardId = submissionsArr[nextIndex].id;
+      const isFlipRightDisabled =
+        nextIndex === submissionsArr.length - 1 ? true : false;
+
+      setState({
+        ...state,
+        id: newCardId,
+        submissionsArrIndex: nextIndex,
+        isFlipLeftDisabled: false,
+        isFlipRightDisabled,
+      });
+    }
+  };
 
   return (
     <SubmissionContainer>
@@ -198,6 +245,10 @@ const ArtistArtSubmissions = ({ token }) => {
           <ArtistSubmissionsEdit
             id={id}
             closeSubmissionsEdit={closeSubmissionsEdit}
+            flipLeft={flipLeft}
+            flipRight={flipRight}
+            isFlipLeftDisabled={isFlipLeftDisabled}
+            isFlipRightDisabled={isFlipRightDisabled}
           />
         ) : (
           <ArtCardContainer>
@@ -207,8 +258,8 @@ const ArtistArtSubmissions = ({ token }) => {
                   <ArtCard
                     key={i}
                     {...submissionDetails}
-                    delay={i}
                     token={token}
+                    index={i}
                     openSubmissionsEdit={openSubmissionsEdit}
                   />
                 );

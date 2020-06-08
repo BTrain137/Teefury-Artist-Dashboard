@@ -13,6 +13,7 @@ const ArtistArtCard = ({
   previewArt,
   status,
   id,
+  index,
   title,
   openSubmissionsEdit,
 }) => {
@@ -54,7 +55,7 @@ const ArtistArtCard = ({
         />
         <p className="title">{title}</p>
         {status === "NEW" || status === "PENDING" ? (
-          <CardFooter id={id} onClick={openSubmissionsEdit}>
+          <CardFooter id={id} data-index={index} onClick={openSubmissionsEdit}>
             VIEW OR EDIT
           </CardFooter>
         ) : null}
