@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -8,12 +8,14 @@ import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 import { ReactComponent as UploadIcon } from "../../assets/upload.svg";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
-import { BtnArtSubmitLoading } from "../Button";
+import { ButtonSm, BtnArtSubmitLoading } from "../Button";
+import EmailTemplate from "./email-template.component";
+
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
-import { IconButton } from "@material-ui/core";
-import EmailTemplate from "./email-template.component";
+import SaveIcon from "@material-ui/icons/Save";
+import { IconButton, MenuItem, Select } from "@material-ui/core";
 
 import {
   TabArea,
@@ -26,75 +28,119 @@ import {
   IconBottomSubtitle,
   IconTopSubtitle,
   SubmitCard,
+  FormInputTitleStyled,
+  TextAreaStyled,
   GreyTextArea,
   CaptionTitle,
   DownloadLink,
-  FlipButtonsWrapper,
+  CenterButtonsWrapper,
 } from "./admin-art-approval.styles";
 
-class AdminArtApproval extends Component {
-  constructor(props) {
-    super(props);
+const buttonAndTextFontStyle = {
+  fontFamily:
+    "'-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+  fontSize: "15px",
+  fontWeight: "bold",
+};
 
-    this.artworkSubmissionForm = React.createRef();
+const AdminArtApproval = (props) => {
+  const {
+    id,
+    token,
+    closeAdminArtApproval,
+    flipLeft,
+    flipRight,
+    isFlipLeftDisabled,
+    isFlipRightDisabled,
+  } = props;
 
-    this.state = {
-      artFile: "",
-      artFileDownload: "",
-      artistName: "",
-      artistEmail: "",
-      firstName: "",
-      lastName: "",
-      createdAt: "",
-      description: "",
-      id: null,
-      previewArt: "",
-      artPreviewImg: "",
-      isEnlargeImg: false,
-      status: "",
-      title: "",
-      artHasSubmitted: false,
-      isDisableSubmit: false,
-    };
-  }
+  const [state, setState] = useState({
+    artFile: "",
+    artFileDownload: "",
+    artistName: "",
+    artistEmail: "",
+    firstName: "",
+    lastName: "",
+    createdAt: "",
+    description: "",
+    previewArt: "",
+    isEnlargeImg: false,
+    status: "",
+    title: "",
+    artHasSubmitted: false,
+    isDisableSubmit: false,
+  });
 
-  componentDidMount() {
-    this._loadArtwork();
-  }
+  const [artPreviewImg, setArtPreviewImg] = useState("");
 
-  componentDidUpdate(prevProps) {
-    if (this.props.id !== prevProps.id) {
-      this._loadArtwork();
-    }
-  }
+  const {
+    artFile,
+    artFileDownload,
+    artistName,
+    artistEmail,
+    firstName,
+    lastName,
+    createdAt,
+    description,
+    status,
+    title,
+    isEnlargeImg,
+  } = state;
 
-  handleChange = (event) => {
+  useEffect(() => {
+    _loadArtwork();
+  }, [id]);
+
+  const handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value, isDisableSubmit: false });
+    setState({ ...state, [name]: value, isDisableSubmit: false });
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-  };
-
-  clickEnlargeImg = () => {
-    this.setState({ isEnlargeImg: !this.state.isEnlargeImg });
-  };
-
-  _loadArtwork = async () => {
+  const handleSave = async () => {
     try {
-      const submissionDetailsAll = await this._getSubmittedArtwork();
+      await axios.put(
+        "/api/admin/submissions",
+        { title, description, status, id },
+        {
+          headers: { Authorization: `JWT ${token}` },
+        }
+      );
+      setState({
+        ...state,
+        title,
+        description,
+        status,
+      });
+      Swal.fire({
+        icon: "success",
+        title: "Successfully saved your changes!",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong. Please try again.",
+      });
+    }
+  };
+
+  const clickEnlargeImg = () => {
+    setState({ ...state, isEnlargeImg: !isEnlargeImg });
+  };
+
+  const _loadArtwork = async () => {
+    try {
+      const submissionDetailsAll = await _getSubmittedArtwork();
       const {
         previewArt,
         artFile,
         ...submissionDetails
       } = submissionDetailsAll;
-      this._loadPreviewArt(previewArt);
-      // this._loadPSDFile(artFile);
+      _loadPreviewArt(previewArt);
+      // _loadPSDFile(artFile);
 
-      this.setState({
+      setState({
+        ...state,
         ...submissionDetails,
-        // artPreviewImg: previewArt,
         artFileDownload: artFile,
         artFile,
       });
@@ -107,26 +153,27 @@ class AdminArtApproval extends Component {
     }
   };
 
-  _loadPSDFile = async (artFile) => {
+  // eslint-disable-next-line
+  const _loadPSDFile = async (artFile) => {
     try {
-      const artFileDownload = await this._createBlob(artFile);
-      this.setState({ artFileDownload });
+      const artFileDownload = await _createBlob(artFile);
+      setState({ ...state, artFileDownload });
     } catch (error) {
       Swal.fire({
         icon: "error",
-        text: "Sorry could not lot PSD file",
+        text: "Sorry could not load PSD file",
         showConfirmButton: false,
       });
     }
   };
 
-  _loadPreviewArt = async (previewArt) => {
+  const _loadPreviewArt = async (previewArt) => {
     try {
       const largeThumb = `/api/art-submissions-thumb/?src=${previewArt.substring(
         20
       )}&w=500`;
-      const artPreviewImg = await this._createBlob(largeThumb);
-      this.setState({ artPreviewImg });
+      const artPreviewImg = await _createBlob(largeThumb);
+      setArtPreviewImg(artPreviewImg);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -136,8 +183,7 @@ class AdminArtApproval extends Component {
     }
   };
 
-  _getSubmittedArtwork = async () => {
-    const { token, id } = this.props;
+  const _getSubmittedArtwork = async () => {
     const {
       data: { submissionDetails },
     } = await axios.get(`/api/admin/submissions/review/${id}`, {
@@ -149,8 +195,7 @@ class AdminArtApproval extends Component {
     return submissionDetails;
   };
 
-  _createBlob = async (previewArt) => {
-    const { token } = this.props;
+  const _createBlob = async (previewArt) => {
     return await fetch(previewArt, {
       headers: { Authorization: `JWT ${token}` },
     })
@@ -162,169 +207,171 @@ class AdminArtApproval extends Component {
       });
   };
 
-  onChange = async (event) => {
-    const { value } = event.currentTarget;
-    const { token } = this.props;
-    const { id } = this.state;
-
-    try {
-      await axios.post(
-        "/api/admin/submissions/status",
-        { status: value, id },
-        {
-          headers: { Authorization: `JWT ${token}` },
-        }
-      );
-      this.setState({ status: value });
-      Swal.fire({
-        icon: "success",
-        title: "Status Changed to " + value,
-      });
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Nothing Happened Sorry!",
-      });
-    }
-  };
-
-  render() {
-    const {
-      artFile,
-      artFileDownload,
-      artistName,
-      artistEmail,
-      firstName,
-      lastName,
-      createdAt,
-      description,
-      status,
-      title,
-      artPreviewImg,
-      isEnlargeImg,
-    } = this.state;
-
-    const {
-      closeAdminArtApproval,
-      flipLeft,
-      flipRight,
-      isFlipLeftDisabled,
-      isFlipRightDisabled,
-    } = this.props;
-
-    return (
-      <>
-        <TabArea>
-          <FilterHeader>
-            <AdjustableIconWrapper onClick={closeAdminArtApproval}>
-              <HighlightOffIcon />
-            </AdjustableIconWrapper>
-          </FilterHeader>
-          <ArtworkContainer
-            onSubmit={this.handleSubmit}
-            ref={this.artworkSubmissionForm}
-          >
-            <SubmitCard>
-              <h4 style={{ color: "#6A6A6A" }}>Preview Image</h4>
-              {artPreviewImg ? (
-                <PreviewImage
-                  src={this.state.artPreviewImg}
-                  alt="Art Preview"
-                  isEnlargeImg={isEnlargeImg}
-                  onClick={this.clickEnlargeImg}
-                />
-              ) : (
-                <ArtPreview>
-                  <IconContainer>
-                    <UploadIcon />
-                  </IconContainer>
-                  <IconBottomSubtitle style={{ position: "absolute" }}>
-                    No Art Was Submitted
-                  </IconBottomSubtitle>
-                </ArtPreview>
-              )}
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <IconTopSubtitle>Downloads</IconTopSubtitle>
-              </div>
-              <BtnArtSubmitLoading
-                type="button"
-                textAlign="center"
-                style={{ width: "150px", height: "45px" }}
-                loaded={artPreviewImg}
+  return (
+    <>
+      <TabArea>
+        <FilterHeader>
+          <AdjustableIconWrapper onClick={closeAdminArtApproval}>
+            <HighlightOffIcon />
+          </AdjustableIconWrapper>
+        </FilterHeader>
+        <ArtworkContainer>
+          <SubmitCard>
+            <h4 style={{ color: "#6A6A6A" }}>Preview Image</h4>
+            {artPreviewImg ? (
+              <PreviewImage
+                src={artPreviewImg}
+                alt="Art Preview"
+                isEnlargeImg={isEnlargeImg}
+                onClick={clickEnlargeImg}
+              />
+            ) : (
+              <ArtPreview>
+                <IconContainer>
+                  <UploadIcon />
+                </IconContainer>
+                <IconBottomSubtitle style={{ position: "absolute" }}>
+                  No Art Was Submitted
+                </IconBottomSubtitle>
+              </ArtPreview>
+            )}
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <IconTopSubtitle>Downloads</IconTopSubtitle>
+            </div>
+            <BtnArtSubmitLoading
+              type="button"
+              textAlign="center"
+              style={{ width: "150px", height: "45px" }}
+              loaded={artPreviewImg}
+            >
+              <DownloadLink href={artPreviewImg} download>
+                {artPreviewImg ? "Preview Image" : <LoadingIcon />}
+              </DownloadLink>
+            </BtnArtSubmitLoading>
+            <BtnArtSubmitLoading
+              type="button"
+              textAlign="center"
+              style={{ width: "95px", height: "45px" }}
+            >
+              {/* TODO: make below better */}
+              <DownloadLink
+                href={`http://${window.location.host}${artFileDownload}`}
+                download
               >
-                <DownloadLink href={artPreviewImg} download>
-                  {artPreviewImg ? "Preview Image" : <LoadingIcon />}
-                </DownloadLink>
-              </BtnArtSubmitLoading>
-              <BtnArtSubmitLoading
-                type="button"
-                textAlign="center"
-                style={{ width: "95px", height: "45px" }}
+                {artFile ? "Art File" : <LoadingIcon />}
+              </DownloadLink>
+            </BtnArtSubmitLoading>
+          </SubmitCard>
+          <SubmitCard style={{ maxWidth: "355px" }}>
+            <h4 style={{ color: "#fff" }}>Description box</h4>
+            <div>
+              <CaptionTitle>Artist:</CaptionTitle>
+              <GreyTextArea>@{artistName}</GreyTextArea>
+              <CaptionTitle>Name:</CaptionTitle>
+              <GreyTextArea style={{ fontSize: "15px" }}>
+                {firstName} {lastName}
+              </GreyTextArea>
+              <CaptionTitle>Email:</CaptionTitle>
+              <GreyTextArea style={{ fontSize: "15px" }}>
+                {artistEmail}
+              </GreyTextArea>
+              <CaptionTitle>Title:</CaptionTitle>
+              <FormInputTitleStyled
+                type="text"
+                name="title"
+                label="title"
+                placeholder="TITLE"
+                data-lpignore="true"
+                autoComplete="off"
+                handleChange={handleChange}
+                value={title}
+                maxlength="180"
+                required
+              />
+              <CaptionTitle>Description:</CaptionTitle>
+              <TextAreaStyled
+                type="text"
+                name="description"
+                label="Description"
+                placeholder="DESCRIPTION"
+                data-lpignore="true"
+                autoComplete="off"
+                handleChange={handleChange}
+                value={description}
+                maxlength="255"
+                required
+              />
+              <CaptionTitle>Submitted:</CaptionTitle>
+              <GreyTextArea style={{ fontSize: "15px" }}>
+                {new Date(createdAt).toLocaleString("en-US", {
+                  timeZone: "GMT",
+                })}
+              </GreyTextArea>
+              <CaptionTitle>Status:</CaptionTitle>
+              <GreyTextArea>
+                <Select
+                  labelId="statusSelect"
+                  id="statusSelect"
+                  name="status"
+                  value={status}
+                  onChange={handleChange}
+                  disableUnderline
+                  style={{
+                    ...buttonAndTextFontStyle,
+                    width: "100%",
+                  }}
+                >
+                  <MenuItem value={"NEW"} style={buttonAndTextFontStyle}>
+                    NEW
+                  </MenuItem>
+                  <MenuItem value={"PENDING"} style={buttonAndTextFontStyle}>
+                    PENDING
+                  </MenuItem>
+                  <MenuItem value={"REVIEWED"} style={buttonAndTextFontStyle}>
+                    REVIEWED
+                  </MenuItem>
+                  <MenuItem value={"APPROVED"} style={buttonAndTextFontStyle}>
+                    APPROVED
+                  </MenuItem>
+                  <MenuItem value={"DECLINED"} style={buttonAndTextFontStyle}>
+                    DECLINED
+                  </MenuItem>
+                </Select>
+              </GreyTextArea>
+            </div>
+            <CenterButtonsWrapper>
+              <ButtonSm
+                onClick={handleSave}
+                style={
+                  {
+                    ...buttonAndTextFontStyle,
+                    backgroundColor: "yellowgreen",
+                    color: "#ffffff",
+                    borderRadius: "20px",
+                    padding: "13px 22px",
+                    display: "flex",
+                    alignItems: "center",
+                  }
+                }
               >
-                {/* TODO: make below better */}
-                <DownloadLink
-                  href={`http://${window.location.host}${artFileDownload}`}
-                  download
-                >
-                  {artFile ? "Art File" : <LoadingIcon />}
-                </DownloadLink>
-              </BtnArtSubmitLoading>
-            </SubmitCard>
-            <SubmitCard style={{ maxWidth: "355px" }}>
-              <h4 style={{ color: "#fff" }}>Description box</h4>
-              <div>
-                <CaptionTitle>Artist:</CaptionTitle>
-                <GreyTextArea>@{artistName}</GreyTextArea>
-                <CaptionTitle>Name:</CaptionTitle>
-                <GreyTextArea style={{ fontSize: "15px" }}>
-                  {firstName} {lastName}
-                </GreyTextArea>
-                <CaptionTitle>Email:</CaptionTitle>
-                <GreyTextArea style={{ fontSize: "15px" }}>
-                  {artistEmail}
-                </GreyTextArea>
-                <CaptionTitle>Title:</CaptionTitle>
-                <GreyTextArea>{title}</GreyTextArea>
-                <CaptionTitle>Description:</CaptionTitle>
-                <GreyTextArea style={{ fontSize: "15px" }}>
-                  {description}
-                </GreyTextArea>
-                <CaptionTitle>Submitted:</CaptionTitle>
-                <GreyTextArea style={{ fontSize: "15px" }}>
-                  {new Date(createdAt).toLocaleString("en-US")}
-                </GreyTextArea>
-                <CaptionTitle>Status:</CaptionTitle>
-                <GreyTextArea style={{ fontSize: "15px" }}>
-                  {status}
-                </GreyTextArea>
-                <div
-                  style={{ display: "flex", justifyContent: "space-around" }}
-                >
-                  <select onChange={this.onChange}>
-                    <option value="NEW">NEW</option>
-                    <option value="PENDING">PENDING</option>
-                    <option value="REVIEWED">REVIEWED</option>
-                    <option value="APPROVED">APPROVED</option>
-                    <option value="DECLINED">DECLINED</option>
-                  </select>
-                </div>
-              </div>
-            </SubmitCard>
-          </ArtworkContainer>
-          <FlipButtonsWrapper>
-            <IconButton onClick={flipLeft} disabled={isFlipLeftDisabled}>
-              <KeyboardArrowLeftIcon /> Previous
-            </IconButton>
-            <IconButton onClick={flipRight} disabled={isFlipRightDisabled}>
-              Next <KeyboardArrowRightIcon />
-            </IconButton>
-          </FlipButtonsWrapper>
-          <EmailTemplate title={title} artistEmail={artistEmail} />
-        </TabArea>
-      </>
-    );
-  }
-}
+                Save <SaveIcon style={{ marginLeft: "5px" }} />
+              </ButtonSm>
+            </CenterButtonsWrapper>
+          </SubmitCard>
+        </ArtworkContainer>
+        <CenterButtonsWrapper>
+          <IconButton onClick={flipLeft} disabled={isFlipLeftDisabled}>
+            <KeyboardArrowLeftIcon /> Previous
+          </IconButton>
+          <IconButton onClick={flipRight} disabled={isFlipRightDisabled}>
+            Next <KeyboardArrowRightIcon />
+          </IconButton>
+        </CenterButtonsWrapper>
+        <EmailTemplate title={title} artistEmail={artistEmail} />
+      </TabArea>
+    </>
+  );
+};
 
 const mapStateToProps = createStructuredSelector({
   token: selectUserJWTToken,
