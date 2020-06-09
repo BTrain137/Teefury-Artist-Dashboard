@@ -345,7 +345,6 @@ const AdminArtApproval = (props) => {
                 style={
                   {
                     ...buttonAndTextFontStyle,
-                    backgroundColor: "yellowgreen",
                     color: "#ffffff",
                     borderRadius: "20px",
                     padding: "13px 22px",
