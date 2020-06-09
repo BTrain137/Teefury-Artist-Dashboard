@@ -107,7 +107,10 @@ export const FormInputArtistStyled = styled(FormInput)`
 `;
 
 const formInputStyle = css`
-  font-size: 14px;
+  font-size: 15px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
   margin-bottom: 15px;
   border-radius: 20px;
 `;
@@ -118,6 +121,7 @@ export const FormInputTitleStyled = styled(FormInput)`
 
 export const TextAreaStyled = styled(TextArea)`
   ${formInputStyle}
+  resize: vertical;
   min-height: 75px;
   // min-height: 265px;
 `;
@@ -146,7 +150,7 @@ export const DownloadLink = styled.a`
   text-decoration: none;
 `;
 
-export const FlipButtonsWrapper = styled.div`
+export const CenterButtonsWrapper = styled.div`
   display: flex;
   position: relative;
   justify-content: center;
