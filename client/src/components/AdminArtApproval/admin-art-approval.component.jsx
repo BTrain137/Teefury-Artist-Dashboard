@@ -336,6 +336,9 @@ const AdminArtApproval = (props) => {
                   <MenuItem value={"DECLINED"} style={buttonAndTextFontStyle}>
                     DECLINED
                   </MenuItem>
+                  <MenuItem value={"PUBLISHED"} style={buttonAndTextFontStyle}>
+                    PUBLISHED
+                  </MenuItem>
                 </Select>
               </GreyTextArea>
             </div>
