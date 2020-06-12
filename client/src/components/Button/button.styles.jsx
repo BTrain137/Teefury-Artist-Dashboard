@@ -36,11 +36,13 @@ export const ButtonMdStyled = styled.button`
 const artSubmitCTA = css`
   padding: 13px 22px;
   border-radius: 20px;
-  font-size: 14px;
-  font-weight: bold;
+  border: none;
   background-color: #50b8bd;
   color: white;
   cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
 `;
 
 export const BtnArtSubmitStyled = styled.button`

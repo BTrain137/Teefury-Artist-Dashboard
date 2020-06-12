@@ -112,11 +112,43 @@ router.post(
     try {
       conn = await pool.getConnection();
       const queryString =
-        "UPDATE `submissions` SET `status`= ?" + "WHERE `id`=?";
+        "UPDATE `submissions` SET `status` = ? WHERE `id` = ?";
 
       const { affectedRows } = await pool.query(queryString, [
         status,
         submissionId,
+      ]);
+
+      conn.end();
+
+      res.sendStatus(202);
+    } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+// Update Title/Description/Submission Status
+router.put(
+  "/submissions",
+  passport.authenticate("jwt-admin"),
+  async (req, res) => {
+    const { title, description, status, id } = req.body;
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+      const queryString =
+        "UPDATE `submissions` " +
+        "SET `title` = ?, `description` = ?, `status` = ? " +
+        "WHERE `id` = ?";
+
+      const { affectedRows } = await pool.query(queryString, [
+        title,
+        description,
+        status,
+        id,
       ]);
 
       conn.end();
