@@ -227,6 +227,13 @@ const AdminArtSubmissions = ({ token }) => {
               >
                 DECLINED
               </FilterLink>
+              <FilterLink
+                to="/admin/art-submissions/published"
+                data-filter="PUBLISHED"
+                status={status === "PUBLISHED" ? "selected" : ""}
+              >
+                PUBLISHED
+              </FilterLink>
             </FilterContainer>
           ) : null}
         </FilterHeader>
