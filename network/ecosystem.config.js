@@ -19,8 +19,19 @@ module.exports = {
       },
     },
     {
+      name: "Shopify Order Cron",
+      cwd: "/var/www/artist-dashboard/source/api/dist/services",
+      script: "cron.js",
+      max_memory_restart: "100M",
+      instances: 1,
+      time: true,
+      env: {
+        NODE_ENV: "production",
+      },
+    },
+    {
       name: "stage-artist-dashboard",
-      cwd: "/var/www/stage-artist-dashboard/source/api/dist",
+      cwd: "/var/www/stage-artist-dashboard/",
       script: "index.js",
       max_memory_restart: "200M",
       instances: 2,
