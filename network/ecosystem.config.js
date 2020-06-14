@@ -65,7 +65,7 @@ module.exports = {
       path: "/var/www/artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
       "post-deploy":
-        "npm install && npm run build && cd client && npm install && npm run build && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only artist-dashboard && pm2 start ecosystem.config.js --only shopify-order-cron",
+        "npm install && npm run build && cd client && npm install && npm run build && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only artist-dashboard && pm2 startOrRestart ./network/ecosystem.config.js --only shopify-order-cron",
     },
     stage: {
       user: "root",
