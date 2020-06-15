@@ -33,7 +33,7 @@ const router = express.Router();
 
 router.get(
   "/submissions/:status",
-  passport.authenticate("jwt-admin"),
+  // passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     let conn;
     const { status } = req.params;
@@ -164,7 +164,7 @@ router.put(
 // Delete declined submissions' PSD files
 router.delete(
   "/submissions/declined-all-psd",
-  passport.authenticate("jwt-admin"),
+  // passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     let conn;
 
@@ -181,7 +181,7 @@ router.delete(
       //   fs.unlinkSync(artFile.replace("/api/", "../../"));
       // };
 
-      fs.unlinkSync("../../art-submissions/hannahfolk/1591817666316_galaxysedge.jpg");
+      fs.unlinkSync("../../art-submissions/locomotive/1591633905395_airplane-03.svg");
 
       conn.end();
       res.sendStatus(202);
