@@ -24,9 +24,6 @@ if (DEBUG) app.use(logger("dev"));
 // API Routes
 app.use(routes);
 
-// Cron Jobs
-require("./services/cron");
-
 app.use("/public", express.static(path.join(__dirname, "../../public")));
 
 // Art files submitted by artist

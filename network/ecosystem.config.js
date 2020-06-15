@@ -19,8 +19,19 @@ module.exports = {
       },
     },
     {
+      name: "shopify-order-cron",
+      cwd: "/var/www/artist-dashboard/source/api/dist/services",
+      script: "cron.js",
+      max_memory_restart: "100M",
+      instances: 1,
+      time: true,
+      env: {
+        NODE_ENV: "production",
+      },
+    },
+    {
       name: "stage-artist-dashboard",
-      cwd: "/var/www/stage-artist-dashboard/source/api/dist",
+      cwd: "/var/www/stage-artist-dashboard/",
       script: "index.js",
       max_memory_restart: "200M",
       instances: 2,
@@ -54,7 +65,7 @@ module.exports = {
       path: "/var/www/artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
       "post-deploy":
-        "npm install && npm run build && cd client && npm install && npm run build && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only artist-dashboard",
+        "npm install && npm run build && cd client && npm install && npm run build && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only artist-dashboard && pm2 startOrRestart ./network/ecosystem.config.js --only shopify-order-cron",
     },
     stage: {
       user: "root",

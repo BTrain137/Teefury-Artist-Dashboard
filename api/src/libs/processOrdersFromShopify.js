@@ -166,7 +166,11 @@ const storeEdgesIntoDatabase = function (edges) {
       }
 
       conn.end();
-      resolve(edges[lastEdge].cursor);
+      if (edges[lastEdge]) {
+        resolve(edges[lastEdge].cursor);
+      } else {
+        resolve();
+      }
     } catch (error) {
       if (conn) conn.end();
       reject(error);
