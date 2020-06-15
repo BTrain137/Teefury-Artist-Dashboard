@@ -111,6 +111,9 @@ const AdminArtApproval = (props) => {
         description,
         status,
       });
+
+      _deleteDeclinedPSD();
+
       Swal.fire({
         icon: "success",
         title: "Successfully saved your changes!",
@@ -205,6 +208,14 @@ const AdminArtApproval = (props) => {
       .then((blob) => {
         return URL.createObjectURL(blob);
       });
+  };
+
+  const _deleteDeclinedPSD = () => {
+    axios.delete(`/api/admin/submissions/declined-all-psd`, {
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    });
   };
 
   return (
