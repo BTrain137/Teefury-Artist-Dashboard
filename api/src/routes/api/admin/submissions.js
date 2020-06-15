@@ -177,18 +177,21 @@ router.delete(
         "WHERE `status` = 'DECLINED' AND `art_file` != ''";
 
       const allDecSubArr = await pool.query(query);
-      console.log(allDecSubArr);
 
       for (let i = 0; i < allDecSubArr.length; i++) {
         const { id, art_file } = allDecSubArr[i];
         if (art_file) {
           // Delete Art File
-          const artDiskLocation = path.join(
-            __dirname,
-            art_file.replace("/api/", "../../../../../")
-          );
-          fs.unlinkSync(artDiskLocation);
-          console.log({ artDiskLocation });
+          try {
+            const artDiskLocation = path.join(
+              __dirname,
+              art_file.replace("/api/", "../../../../../")
+            );
+            fs.unlinkSync(artDiskLocation);
+            console.log({ artDiskLocation });
+          } catch (error) {
+            console.log("File Not Found");
+          }
 
           // Update Database
           const query =
