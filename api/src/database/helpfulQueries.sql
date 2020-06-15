@@ -16,7 +16,7 @@ SELECT `orders`.`order_created_at`, `orders`.`order`, `orders`.`product_title`,
 FROM `orders` INNER JOIN `artist_profile`
 ON `orders`.`vendor`=`artist_profile`.`artist_name`
 WHERE `order_created_at` BETWEEN 
-'2020-5-18 00:00:00' AND '2020-5-24 23:59:59'
+'2020-5-01 00:00:00' AND '2020-5-31 23:59:59'
 ORDER BY `order_created_at` DESC;
 
 -- Update pending to new status in submissions
