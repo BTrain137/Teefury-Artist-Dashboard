@@ -1,3 +1,4 @@
+import fs from "fs";
 import express from "express";
 import passport from "passport";
 import pool from "../../../database/connection";
@@ -104,8 +105,7 @@ router.get(
 router.post(
   "/submissions/status",
   passport.authenticate("jwt-admin"),
-  async (req, res) => {
-    console.log(req.params);
+  async (req, res, next) => {
     const { id: submissionId, status } = req.body;
     let conn;
 
@@ -133,7 +133,7 @@ router.post(
 router.put(
   "/submissions",
   passport.authenticate("jwt-admin"),
-  async (req, res) => {
+  async (req, res, next) => {
     const { title, description, status, id } = req.body;
     let conn;
 
@@ -155,6 +155,38 @@ router.put(
 
       res.sendStatus(202);
     } catch (error) {
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+// Delete declined submissions' PSD files
+router.delete(
+  "/submissions/declined-all-psd",
+  passport.authenticate("jwt-admin"),
+  async (req, res, next) => {
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+
+      // const query = "SELECT * FROM `submissions` WHERE `status` = 'DECLINED'";
+
+      // const allDecSubArr = await pool.query(query);
+    
+      // for (let i = 0; i < allDecSubArr.length; i++) {
+      //   const artFile = allDecSubArr[i].art_file;
+      //   console.log(artFile.replace("/api/", "../../"))
+      //   fs.unlinkSync(artFile.replace("/api/", "../../"));
+      // };
+
+      fs.unlinkSync("../../art-submissions/hannahfolk/1591817666316_galaxysedge.jpg");
+
+      conn.end();
+      res.sendStatus(202);
+    } catch (error) {
+      console.log(error);
       conn.end();
       next(error);
     }

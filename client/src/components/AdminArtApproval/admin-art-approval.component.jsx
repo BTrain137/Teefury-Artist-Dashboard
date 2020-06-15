@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -345,16 +345,14 @@ const AdminArtApproval = (props) => {
             <CenterButtonsWrapper>
               <ButtonSm
                 onClick={handleSave}
-                style={
-                  {
-                    ...buttonAndTextFontStyle,
-                    color: "#ffffff",
-                    borderRadius: "20px",
-                    padding: "13px 22px",
-                    display: "flex",
-                    alignItems: "center",
-                  }
-                }
+                style={{
+                  ...buttonAndTextFontStyle,
+                  color: "#ffffff",
+                  borderRadius: "20px",
+                  padding: "13px 22px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
               >
                 Save <SaveIcon style={{ marginLeft: "5px" }} />
               </ButtonSm>
