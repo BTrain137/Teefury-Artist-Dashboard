@@ -180,12 +180,12 @@ router.delete(
       console.log(allDecSubArr);
 
       for (let i = 0; i < allDecSubArr.length; i++) {
-        const { id, artFile } = allDecSubArr[i];
-        if (artFile) {
+        const { id, art_file } = allDecSubArr[i];
+        if (art_file) {
           // Delete Art File
           const artDiskLocation = path.join(
             __dirname,
-            artFile.replace("/api/", "../../../../../")
+            art_file.replace("/api/", "../../../../../")
           );
           fs.unlinkSync(artDiskLocation);
           
