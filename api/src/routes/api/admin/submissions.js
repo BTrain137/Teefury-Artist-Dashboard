@@ -174,7 +174,7 @@ router.delete(
 
       const query =
         "SELECT `id`, `art_file` FROM `submissions` " +
-        "WHERE `status` = 'DECLINED' AND `art_file` != '";
+        "WHERE `status` = 'DECLINED' AND `art_file` != ''";
 
       const allDecSubArr = await pool.query(query);
       console.log(allDecSubArr);
