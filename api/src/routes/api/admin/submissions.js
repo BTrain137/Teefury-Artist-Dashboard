@@ -173,19 +173,23 @@ router.delete(
       conn = await pool.getConnection();
 
       const query =
-        "SELECT `art_file` FROM `submissions` WHERE `status` = 'DECLINED' AND `artist_name` = 'locoMotive' ";
+        "SELECT `id`, `art_file` FROM `submissions` " +
+        "WHERE `status` = 'DECLINED' AND `artist_name` = 'locoMotive' ";
+        
 
       const allDecSubArr = await pool.query(query);
-      console.log(allDecSubArr);
 
       for (let i = 0; i < allDecSubArr.length; i++) {
-        const artFile = allDecSubArr[i].art_file;
+        const { id, artFile } = allDecSubArr[i];
         const artDiskLocation = path.join(
           __dirname,
           artFile.replace("/api/", "../../../../../")
         );
         console.log({ artDiskLocation });
-        fs.unlinkSync(artDiskLocation);
+        // fs.unlinkSync(artDiskLocation);
+        const query = "UPDATE `submissions` SET `art_file` = ? WHERE `id` = ?";
+        const { affectedRows } = await pool.query(query, ["", id]);
+        console.log({affectedRows});
       }
 
       conn.end();
