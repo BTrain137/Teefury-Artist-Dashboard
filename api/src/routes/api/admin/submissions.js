@@ -174,22 +174,27 @@ router.delete(
 
       const query =
         "SELECT `id`, `art_file` FROM `submissions` " +
-        "WHERE `status` = 'DECLINED' AND `artist_name` = 'locoMotive' ";
-        
+        "WHERE `status` = 'DECLINED' AND `art_file` != '' AND `artist_name` = 'locoMotive' ";
 
       const allDecSubArr = await pool.query(query);
+      console.log(allDecSubArr);
 
       for (let i = 0; i < allDecSubArr.length; i++) {
         const { id, artFile } = allDecSubArr[i];
-        const artDiskLocation = path.join(
-          __dirname,
-          artFile.replace("/api/", "../../../../../")
-        );
-        console.log({ artDiskLocation });
-        // fs.unlinkSync(artDiskLocation);
-        const query = "UPDATE `submissions` SET `art_file` = ? WHERE `id` = ?";
-        const { affectedRows } = await pool.query(query, ["", id]);
-        console.log({affectedRows});
+        if (artFile) {
+          // Delete Art File
+          const artDiskLocation = path.join(
+            __dirname,
+            artFile.replace("/api/", "../../../../../")
+          );
+          fs.unlinkSync(artDiskLocation);
+          
+          // Update Database 
+          const query =
+            "UPDATE `submissions` SET `art_file` = ? WHERE `id` = ?";
+          const { affectedRows } = await pool.query(query, ["", id]);
+          console.log({ affectedRows });
+        }
       }
 
       conn.end();
