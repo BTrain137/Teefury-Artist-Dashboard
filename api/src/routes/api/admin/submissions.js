@@ -176,16 +176,17 @@ router.delete(
         "SELECT `art_file` FROM `submissions` WHERE `status` = 'DECLINED' AND `artist_name` = 'locoMotive' ";
 
       const allDecSubArr = await pool.query(query);
+      console.log(allDecSubArr);
 
-      for (let i = 0; i < allDecSubArr.length; i++) {
-        const artFile = allDecSubArr[i].art_file;
-        const artDiskLocation = path.join(
-          __dirname,
-          artFile.replace("/api/", "../../../../../")
-        );
-        console.log({ artDiskLocation });
-        fs.unlinkSync(artDiskLocation);
-      }
+      // for (let i = 0; i < allDecSubArr.length; i++) {
+      //   const artFile = allDecSubArr[i].art_file;
+      //   const artDiskLocation = path.join(
+      //     __dirname,
+      //     artFile.replace("/api/", "../../../../../")
+      //   );
+      //   console.log({ artDiskLocation });
+      //   fs.unlinkSync(artDiskLocation);
+      // }
 
       conn.end();
       res.sendStatus(202);
