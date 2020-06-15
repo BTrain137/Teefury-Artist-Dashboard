@@ -6,13 +6,13 @@ GET http://localhost:3001/api/admin/submissions
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTI5NywiY29udGFjdEVtYWlsIjoiYnRyYW5AdGVlZnVyeS5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNTkwNTI5ODUwLCJleHAiOjE1OTgzMDU4NTB9.Sx1rl982Jd3t6a93QddU-qg70HYp-BvfWkLhkhTWvkk
 
 ###
-GET http://localhost:3001/api/admin/submissions?status=NEW
+GET http://localhost:3001/api/admin/submissions/NEW
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiY29udGFjdEVtYWlsIjoiaGZvbGtAdGVlZnVyeS5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNTkyMjQxNzk2LCJleHAiOjE2MDAwMTc3OTZ9.5F-jJkPuJ7K7MtMfM0M-pnkk07TH2jlW1qO_3zvCsZw
+###
+GET http://localhost:3001/api/admin/submissions/PENDING
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTI5NywiY29udGFjdEVtYWlsIjoiYnRyYW5AdGVlZnVyeS5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNTkwNTI5ODUwLCJleHAiOjE1OTgzMDU4NTB9.Sx1rl982Jd3t6a93QddU-qg70HYp-BvfWkLhkhTWvkk
 ###
-GET http://localhost:3001/api/admin/submissions?status=PENDING
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTI5NywiY29udGFjdEVtYWlsIjoiYnRyYW5AdGVlZnVyeS5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNTkwNTI5ODUwLCJleHAiOjE1OTgzMDU4NTB9.Sx1rl982Jd3t6a93QddU-qg70HYp-BvfWkLhkhTWvkk
-###
-GET http://localhost:3001/api/admin/submissions?status=DECLINED
+GET http://localhost:3001/api/admin/submissions/DECLINED
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTI5NywiY29udGFjdEVtYWlsIjoiYnRyYW5AdGVlZnVyeS5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNTkwNTI5ODUwLCJleHAiOjE1OTgzMDU4NTB9.Sx1rl982Jd3t6a93QddU-qg70HYp-BvfWkLhkhTWvkk
 
 
@@ -22,3 +22,8 @@ Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTI4NiwiY29udGFj
 ###
 GET http://localhost:3001/api/artist/submissions/PENDING
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTI4NiwiY29udGFjdEVtYWlsIjoiYnJ5YW44OXRyYW5AeWFob28uY29tIiwiaXNfYWRtaW4iOjAsImNsZWFuQXJ0aXN0TmFtZSI6InZwMDIxIiwiYXJ0aXN0TmFtZSI6InZwMDIxIiwiaWF0IjoxNTkxMDU1NTI0LCJleHAiOjE1OTg4MzE1MjR9.08rjcNThI2kj5P5e7Ze-LnqJNopi1lkgTM8lFTVgFGg
+
+###
+# Delete all declined submissions' PSD files
+DELETE http://localhost:3001/api/admin/submissions/declined-all-psd
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiY29udGFjdEVtYWlsIjoiaGZvbGtAdGVlZnVyeS5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNTkyMjQxNzk2LCJleHAiOjE2MDAwMTc3OTZ9.5F-jJkPuJ7K7MtMfM0M-pnkk07TH2jlW1qO_3zvCsZw
