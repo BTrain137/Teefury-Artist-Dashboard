@@ -172,17 +172,20 @@ router.delete(
     try {
       conn = await pool.getConnection();
 
-      // const query = "SELECT * FROM `submissions` WHERE `status` = 'DECLINED'";
+      const query =
+        "SELECT `art_file` FROM `submissions` WHERE `status` = 'DECLINED' AND `artist_name` = 'locoMotive' ";
 
-      // const allDecSubArr = await pool.query(query);
-    
-      // for (let i = 0; i < allDecSubArr.length; i++) {
-      //   const artFile = allDecSubArr[i].art_file;
-      //   console.log(artFile.replace("/api/", "../../"))
-      //   fs.unlinkSync(artFile.replace("/api/", "../../"));
-      // };
+      const allDecSubArr = await pool.query(query);
 
-      fs.unlinkSync(path.join(__dirname, "../../../../../art-submissions/locomotive/1591982755238_american_flag.png"));
+      for (let i = 0; i < allDecSubArr.length; i++) {
+        const artFile = allDecSubArr[i].art_file;
+        const artDiskLocation = path.join(
+          __dirname,
+          artFile.replace("/api/", "../../../../../")
+        );
+        console.log({ artDiskLocation });
+        fs.unlinkSync(artDiskLocation);
+      }
 
       conn.end();
       res.sendStatus(202);
