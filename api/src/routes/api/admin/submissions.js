@@ -174,7 +174,7 @@ router.delete(
 
       const query =
         "SELECT `id`, `art_file` FROM `submissions` " +
-        "WHERE `status` = 'DECLINED' AND `art_file` != '' AND `artist_name` = 'locoMotive' ";
+        "WHERE `status` = 'DECLINED' AND `art_file` != '";
 
       const allDecSubArr = await pool.query(query);
       console.log(allDecSubArr);
@@ -188,8 +188,9 @@ router.delete(
             art_file.replace("/api/", "../../../../../")
           );
           fs.unlinkSync(artDiskLocation);
-          
-          // Update Database 
+          console.log({ artDiskLocation });
+
+          // Update Database
           const query =
             "UPDATE `submissions` SET `art_file` = ? WHERE `id` = ?";
           const { affectedRows } = await pool.query(query, ["", id]);
