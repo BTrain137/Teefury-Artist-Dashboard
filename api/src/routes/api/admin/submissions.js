@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import express from "express";
 import passport from "passport";
 import pool from "../../../database/connection";
@@ -181,8 +182,7 @@ router.delete(
       //   fs.unlinkSync(artFile.replace("/api/", "../../"));
       // };
 
-      fs.unlinkSync("../../../art-submissions/locomotive/1591633905395_airplane-03.svg");
-      fs.unlinkSync("../../../art-submissions/hannahfolk/1591817666316_galaxysedge.jpg");
+      fs.unlinkSync(path.join(__dirname, "../../../../../art-submissions/locomotive/1591982755238_american_flag.png"));
 
       conn.end();
       res.sendStatus(202);
