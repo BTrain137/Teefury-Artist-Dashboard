@@ -181,7 +181,8 @@ router.delete(
       //   fs.unlinkSync(artFile.replace("/api/", "../../"));
       // };
 
-      fs.unlinkSync("../../art-submissions/locomotive/1591633905395_airplane-03.svg");
+      fs.unlinkSync("../../../art-submissions/locomotive/1591633905395_airplane-03.svg");
+      fs.unlinkSync("../../../art-submissions/hannahfolk/1591817666316_galaxysedge.jpg");
 
       conn.end();
       res.sendStatus(202);
