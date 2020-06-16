@@ -52,9 +52,6 @@ export const PreviewImage = styled.img`
         `}
 `;
 
-export const IconContainer = styled.div`
-  width: 85px;
-`;
 
 export const ArtPreview = styled.div`
   display: flex;
@@ -71,13 +68,15 @@ export const ArtPreview = styled.div`
   // min-height: 310px;
 `;
 
-const previewTxt = css`
-  font-weight: bold;
-  display: inline-block;
-  margin-top: 10px;
-  width: 76%;
-  text-align: center;
-  color: #b5b4b4;
+export const ArtFileButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const IconContainer = styled.div`
+  width: 85px;
 `;
 
 export const IconTopSubtitle = styled.span`
@@ -90,6 +89,15 @@ export const IconTopSubtitle = styled.span`
   font-family: sans-serif;
   margin-top: 20px;
   margin-bottom: -16px;
+`;
+
+const previewTxt = css`
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 10px;
+  width: 76%;
+  text-align: center;
+  color: #b5b4b4;
 `;
 
 export const IconBottomSubtitle = styled.span`
