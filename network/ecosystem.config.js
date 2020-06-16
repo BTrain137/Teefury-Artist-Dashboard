@@ -31,7 +31,7 @@ module.exports = {
     },
     {
       name: "stage-artist-dashboard",
-      cwd: "/var/www/stage-artist-dashboard/",
+      cwd: "/var/www/stage-artist-dashboard/source/api/dist",
       script: "index.js",
       max_memory_restart: "200M",
       instances: 2,
