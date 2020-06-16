@@ -1,6 +1,6 @@
 {
   "name": "artist-dashboard",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Teefury Artist Dashboard",
   "main": "api/dist/index.js",
   "scripts": {
