@@ -136,7 +136,7 @@ const AdminArtApproval = (props) => {
         status,
       });
 
-      _deleteDeclinedArtFile();
+      _deleteDeclinedArtFileById();
 
       Swal.fire({
         icon: "success",
@@ -239,7 +239,7 @@ const AdminArtApproval = (props) => {
       });
   };
 
-  const _deleteDeclinedArtFile = () => {
+  const _deleteDeclinedArtFileById = () => {
     axios.delete(`/api/admin/submissions/declined-art-file/${id}`, {
       headers: {
         Authorization: `JWT ${token}`,
