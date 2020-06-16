@@ -8,7 +8,7 @@ import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 import { ReactComponent as UploadIcon } from "../../assets/upload.svg";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
-import { ButtonSm, BtnArtSubmitLoading } from "../Button";
+import { MainButton } from "../Button";
 import EmailTemplate from "./email-template.component";
 
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
@@ -46,17 +46,26 @@ const buttonAndTextFontStyle = {
   fontWeight: "bold",
 };
 
+const cntrTxtBtnsWithIcons = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+};
+
 const deleteArtFileBtnStyle = {
   fontSize: "10px",
-  borderRadius: "20px",
-  display: "flex",
-  alignItems: "center",
-  marginLeft: "5px",
-  marginTop: "20px",
-  width: "150px",
-  height: "45px",
   fontWeight: "normal",
-  border: "1px solid #f4f2f2",
+  backgroundColor: "transparent",
+  border: "1px solid #c23b22",
+  color: "#c23b22",
+  width: "150px",
+  marginLeft: "5px",
+};
+
+const nextPreviousBtnStyle = {
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+  fontSize: "14px",
 };
 
 const AdminArtApproval = (props) => {
@@ -166,7 +175,6 @@ const AdminArtApproval = (props) => {
       // _loadArtFile(artFile);
 
       if (artFile === "" || artFile === null) {
-        console.log("yo");
         setIsArtFileDeleted(true);
       }
 
@@ -301,79 +309,59 @@ const AdminArtApproval = (props) => {
                 </IconBottomSubtitle>
               </ArtPreview>
             )}
-            <BtnArtSubmitLoading
+            <MainButton
               type="button"
-              textAlign="center"
-              style={{ width: "250px", height: "45px" }}
+              style={{ width: "250px" }}
               loaded={artPreviewImg}
             >
               <DownloadLink href={artPreviewImg} download>
                 {artPreviewImg ? "Download Preview Image" : <LoadingIcon />}
               </DownloadLink>
-            </BtnArtSubmitLoading>
+            </MainButton>
             <ArtFileButtonsWrapper>
               {isArtFileDeleted ? (
                 <>
-                  <ButtonSm
+                  <MainButton
                     style={{
-                      ...buttonAndTextFontStyle,
-                      borderRadius: "20px",
-                      backgroundColor: "#f4f2f2",
-                      color: "white",
+                      backgroundColor: "lightgrey",
                       cursor: "default",
-                      fontSize: "14px",
-                      padding: "0",
                       width: "150px",
-                      height: "45px",
-                      marginTop: "20px",
                     }}
                     disabled
                   >
                     Download Art File
-                  </ButtonSm>
-                  <IconButton
+                  </MainButton>
+                  <MainButton
                     style={{
-                      ...buttonAndTextFontStyle,
+                      ...cntrTxtBtnsWithIcons,
                       ...deleteArtFileBtnStyle,
+                      cursor: "default",
                     }}
                     disabled
                   >
                     <DoneIcon style={{ marginRight: "5px" }} /> Art File Deleted
-                  </IconButton>
+                  </MainButton>
                 </>
               ) : (
                 <>
-                  <BtnArtSubmitLoading
-                    type="button"
-                    textAlign="center"
-                    style={{ width: "150px", height: "45px" }}
-                  >
+                  <MainButton type="button" style={{ width: "150px" }}>
                     <DownloadLink
                       href={`http://${window.location.host}${artFileDownload}`}
                       download
                     >
                       {artFile ? "Download Art File" : <LoadingIcon />}
                     </DownloadLink>
-                  </BtnArtSubmitLoading>
-                  <IconButton
+                  </MainButton>
+                  <MainButton
                     onClick={_handleDeleteArtFileClick}
                     style={{
-                      ...buttonAndTextFontStyle,
-                      fontSize: "10px",
-                      borderRadius: "20px",
-                      display: "flex",
-                      alignItems: "center",
-                      marginLeft: "5px",
-                      marginTop: "20px",
-                      width: "150px",
-                      height: "45px",
-                      fontWeight: "normal",
-                      border: "1px solid #f4f2f2",
+                      ...cntrTxtBtnsWithIcons,
+                      ...deleteArtFileBtnStyle,
                     }}
                   >
                     <DeleteIcon style={{ marginRight: "5px" }} /> Delete Art
                     File
-                  </IconButton>
+                  </MainButton>
                 </>
               )}
             </ArtFileButtonsWrapper>
@@ -459,27 +447,26 @@ const AdminArtApproval = (props) => {
               </GreyTextArea>
             </div>
             <CenterButtonsWrapper>
-              <ButtonSm
-                onClick={handleSave}
-                style={{
-                  ...buttonAndTextFontStyle,
-                  color: "#ffffff",
-                  borderRadius: "20px",
-                  padding: "13px 22px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <SaveIcon style={{ marginLeft: "5px" }} /> Save
-              </ButtonSm>
+              <MainButton onClick={handleSave} style={cntrTxtBtnsWithIcons}>
+                <SaveIcon style={{ marginRight: "5px" }} />
+                Save
+              </MainButton>
             </CenterButtonsWrapper>
           </SubmitCard>
         </ArtworkContainer>
         <CenterButtonsWrapper>
-          <IconButton onClick={flipLeft} disabled={isFlipLeftDisabled}>
+          <IconButton
+            onClick={flipLeft}
+            style={nextPreviousBtnStyle}
+            disabled={isFlipLeftDisabled}
+          >
             <KeyboardArrowLeftIcon /> Previous
           </IconButton>
-          <IconButton onClick={flipRight} disabled={isFlipRightDisabled}>
+          <IconButton
+            onClick={flipRight}
+            style={nextPreviousBtnStyle}
+            disabled={isFlipRightDisabled}
+          >
             Next <KeyboardArrowRightIcon />
           </IconButton>
         </CenterButtonsWrapper>

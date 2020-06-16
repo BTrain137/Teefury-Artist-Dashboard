@@ -40,9 +40,13 @@ const artSubmitCTA = css`
   background-color: #50b8bd;
   color: white;
   cursor: pointer;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
   font-size: 14px;
   font-weight: bold;
+  height: 45px;
+  min-width: 95px;
 `;
 
 export const BtnArtSubmitStyled = styled.button`
@@ -57,7 +61,7 @@ export const BtnArtSubmitLoadingStyled = styled.button`
       : css`
           padding: 0;
         `}
-`
+`;
 
 export const InputArtPreviewWrapper = styled.div`
   // min-width: 290px;
@@ -79,4 +83,32 @@ export const SpanStyled = styled.span`
 export const ButtonSmStyled = styled.button`
   ${buttonStyle}
   padding: 10px 15px;
+`;
+
+export const MainButtonStyled = styled.button`
+  /* padding: 13px 22px; */
+  border-radius: 20px;
+  border: none;
+  background-color: #50b8bd;
+  color: white;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  height: 45px;
+  min-width: 95px;
+  ${(p) =>
+    p.loaded
+      ? null
+      : css`
+          padding: 0;
+        `}
+`;
+
+export const MainButtonContainer = styled.div`
+  margin-top: 20px;
+  text-align: center;
 `;

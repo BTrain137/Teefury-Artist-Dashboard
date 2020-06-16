@@ -52,7 +52,6 @@ export const PreviewImage = styled.img`
         `}
 `;
 
-
 export const ArtPreview = styled.div`
   display: flex;
   justify-content: center;
