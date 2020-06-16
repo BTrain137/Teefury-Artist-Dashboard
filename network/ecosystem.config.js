@@ -72,7 +72,7 @@ module.exports = {
       user: "root",
       key: "~/.ssh/id_rsa_hetnzer_artist_dashboard_2",
       host: ["95.217.162.146"],
-      ref: "origin/feature/hfolk_add-new-status-filter",
+      ref: "origin/feature/hfolk_create-delete-button-for-art-file",
       path: "/var/www/stage-artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
       "post-deploy":
