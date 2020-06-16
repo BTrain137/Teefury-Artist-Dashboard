@@ -145,7 +145,9 @@ const AdminArtApproval = (props) => {
         status,
       });
 
-      _deleteDeclinedArtFileById();
+      if (status === "DECLINED") {
+        _deleteDeclinedArtFileById();
+      }
 
       Swal.fire({
         icon: "success",
@@ -253,6 +255,7 @@ const AdminArtApproval = (props) => {
         Authorization: `JWT ${token}`,
       },
     });
+    setIsArtFileDeleted(true);
   };
 
   const _handleDeleteArtFileClick = () => {
