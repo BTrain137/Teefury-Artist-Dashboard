@@ -45,8 +45,6 @@ const artSubmitCTA = css`
     sans-serif;
   font-size: 14px;
   font-weight: bold;
-  height: 45px;
-  min-width: 95px;
 `;
 
 export const BtnArtSubmitStyled = styled.button`
