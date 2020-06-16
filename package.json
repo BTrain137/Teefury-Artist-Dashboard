@@ -8,7 +8,7 @@
     "client": "cd client && npm start",
     "deploy-production": "cd network && pm2 deploy production",
     "deploy-stage-setup": "cd network && pm2 deploy stage setup",
-    "deploy-stage": "pm2 deploy ./network/ecosystem.config.js stage update",
+    "deploy-stage": "pm2 deploy ./network/ecosystem.config.js stage",
     "install": "cd client && npm install",
     "prod-server": "NODE_ENV=production nodemon --ignore 'client/*' ./api/src/index.js --exec babel-node -e js",
     "dev-server": "NODE_ENV=development nodemon --ignore 'client/*' ./api/src/index.js --exec babel-node -e js",
