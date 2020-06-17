@@ -10,6 +10,8 @@ import {
   InputArtFileStyled,
   SpanStyled,
   InputArtPreviewWrapper,
+  MainButtonContainer,
+  MainButtonStyled,
 } from "./button.styles";
 
 export const ButtonLgCenter = ({ children, ...props }) => (
@@ -56,4 +58,10 @@ export const BtnArtSubmitLoading = ({ children, textAlign, ...props }) => (
   <ButtonMdContainer style={{ textAlign }}>
     <BtnArtSubmitLoadingStyled {...props}>{children}</BtnArtSubmitLoadingStyled>
   </ButtonMdContainer>
+);
+
+export const MainButton = ({ children, ...props }) => (
+  <MainButtonContainer>
+    <MainButtonStyled {...props}>{children}</MainButtonStyled>
+  </MainButtonContainer>
 );

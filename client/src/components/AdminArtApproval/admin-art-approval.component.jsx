@@ -8,12 +8,14 @@ import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 import { ReactComponent as UploadIcon } from "../../assets/upload.svg";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
-import { ButtonSm, BtnArtSubmitLoading } from "../Button";
+import { MainButton } from "../Button";
 import EmailTemplate from "./email-template.component";
 
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import DeleteIcon from "@material-ui/icons/Delete";
+import DoneIcon from "@material-ui/icons/Done";
 import SaveIcon from "@material-ui/icons/Save";
 import { IconButton, MenuItem, Select } from "@material-ui/core";
 
@@ -24,6 +26,7 @@ import {
   ArtworkContainer,
   PreviewImage,
   ArtPreview,
+  ArtFileButtonsWrapper,
   IconContainer,
   IconBottomSubtitle,
   IconTopSubtitle,
@@ -43,6 +46,28 @@ const buttonAndTextFontStyle = {
   fontWeight: "bold",
 };
 
+const cntrTxtBtnsWithIcons = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+};
+
+const deleteArtFileBtnStyle = {
+  fontSize: "10px",
+  fontWeight: "normal",
+  backgroundColor: "transparent",
+  border: "1px solid #c23b22",
+  color: "#c23b22",
+  width: "150px",
+  marginLeft: "5px",
+};
+
+const nextPreviousBtnStyle = {
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+  fontSize: "14px",
+};
+
 const AdminArtApproval = (props) => {
   const {
     id,
@@ -55,27 +80,28 @@ const AdminArtApproval = (props) => {
   } = props;
 
   const [state, setState] = useState({
+    previewArt: "",
     artFile: "",
     artFileDownload: "",
+    isEnlargeImg: false,
     artistName: "",
     artistEmail: "",
     firstName: "",
     lastName: "",
     createdAt: "",
     description: "",
-    previewArt: "",
-    isEnlargeImg: false,
     status: "",
     title: "",
     artHasSubmitted: false,
     isDisableSubmit: false,
   });
-
+  const [isArtFileDeleted, setIsArtFileDeleted] = useState(false);
   const [artPreviewImg, setArtPreviewImg] = useState("");
 
   const {
     artFile,
     artFileDownload,
+    isEnlargeImg,
     artistName,
     artistEmail,
     firstName,
@@ -84,7 +110,6 @@ const AdminArtApproval = (props) => {
     description,
     status,
     title,
-    isEnlargeImg,
   } = state;
 
   useEffect(() => {
@@ -93,6 +118,14 @@ const AdminArtApproval = (props) => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+
+    if (value === "DECLINED") {
+      Swal.fire({
+        text: "If you decline this art, the art file will be deleted.",
+        icon: "warning",
+      });
+    }
+
     setState({ ...state, [name]: value, isDisableSubmit: false });
   };
 
@@ -112,7 +145,9 @@ const AdminArtApproval = (props) => {
         status,
       });
 
-      _deleteDeclinedPSD();
+      if (status === "DECLINED") {
+        _deleteDeclinedArtFileById();
+      }
 
       Swal.fire({
         icon: "success",
@@ -139,7 +174,11 @@ const AdminArtApproval = (props) => {
         ...submissionDetails
       } = submissionDetailsAll;
       _loadPreviewArt(previewArt);
-      // _loadPSDFile(artFile);
+      // _loadArtFile(artFile);
+
+      artFile === "" || artFile === null
+        ? setIsArtFileDeleted(true)
+        : setIsArtFileDeleted(false);
 
       setState({
         ...state,
@@ -150,14 +189,14 @@ const AdminArtApproval = (props) => {
     } catch (error) {
       Swal.fire({
         icon: "error",
-        text: "Sorry Something went wrong, Please check back later.",
+        text: "Sorry something went wrong, Please check back later.",
         showConfirmButton: false,
       });
     }
   };
 
   // eslint-disable-next-line
-  const _loadPSDFile = async (artFile) => {
+  const _loadArtFile = async (artFile) => {
     try {
       const artFileDownload = await _createBlob(artFile);
       setState({ ...state, artFileDownload });
@@ -210,11 +249,33 @@ const AdminArtApproval = (props) => {
       });
   };
 
-  const _deleteDeclinedPSD = () => {
-    axios.delete(`/api/admin/submissions/declined-all-psd`, {
+  const _deleteDeclinedArtFileById = () => {
+    axios.delete(`/api/admin/submissions/declined-art-file/${id}`, {
       headers: {
         Authorization: `JWT ${token}`,
       },
+    });
+    setIsArtFileDeleted(true);
+  };
+
+  const _handleDeleteArtFileClick = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "The art file will be deleted.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonColor: "#d33",
+    }).then((response) => {
+      if (response.value) {
+        Swal.fire({
+          title: "Poof! The art file has been deleted!",
+          icon: "success",
+        });
+        _deleteDeclinedArtFileById();
+      } else {
+        Swal.fire("The art file was not deleted.");
+      }
     });
   };
 
@@ -246,32 +307,62 @@ const AdminArtApproval = (props) => {
                 </IconBottomSubtitle>
               </ArtPreview>
             )}
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <IconTopSubtitle>Downloads</IconTopSubtitle>
-            </div>
-            <BtnArtSubmitLoading
+            <MainButton
               type="button"
-              textAlign="center"
-              style={{ width: "150px", height: "45px" }}
+              style={{ width: "250px" }}
               loaded={artPreviewImg}
             >
               <DownloadLink href={artPreviewImg} download>
-                {artPreviewImg ? "Preview Image" : <LoadingIcon />}
+                {artPreviewImg ? "Download Preview Image" : <LoadingIcon />}
               </DownloadLink>
-            </BtnArtSubmitLoading>
-            <BtnArtSubmitLoading
-              type="button"
-              textAlign="center"
-              style={{ width: "95px", height: "45px" }}
-            >
-              {/* TODO: make below better */}
-              <DownloadLink
-                href={`http://${window.location.host}${artFileDownload}`}
-                download
-              >
-                {artFile ? "Art File" : <LoadingIcon />}
-              </DownloadLink>
-            </BtnArtSubmitLoading>
+            </MainButton>
+            <ArtFileButtonsWrapper>
+              {isArtFileDeleted ? (
+                <>
+                  <MainButton
+                    style={{
+                      backgroundColor: "lightgrey",
+                      cursor: "default",
+                      width: "150px",
+                    }}
+                    disabled
+                  >
+                    Download Art File
+                  </MainButton>
+                  <MainButton
+                    style={{
+                      ...cntrTxtBtnsWithIcons,
+                      ...deleteArtFileBtnStyle,
+                      cursor: "default",
+                    }}
+                    disabled
+                  >
+                    <DoneIcon style={{ marginRight: "5px" }} /> Art File Deleted
+                  </MainButton>
+                </>
+              ) : (
+                <>
+                  <MainButton type="button" style={{ width: "150px" }}>
+                    <DownloadLink
+                      href={`http://${window.location.host}${artFileDownload}`}
+                      download
+                    >
+                      {artFile ? "Download Art File" : <LoadingIcon />}
+                    </DownloadLink>
+                  </MainButton>
+                  <MainButton
+                    onClick={_handleDeleteArtFileClick}
+                    style={{
+                      ...cntrTxtBtnsWithIcons,
+                      ...deleteArtFileBtnStyle,
+                    }}
+                  >
+                    <DeleteIcon style={{ marginRight: "5px" }} /> Delete Art
+                    File
+                  </MainButton>
+                </>
+              )}
+            </ArtFileButtonsWrapper>
           </SubmitCard>
           <SubmitCard style={{ maxWidth: "355px" }}>
             <h4 style={{ color: "#fff" }}>Description box</h4>
@@ -354,27 +445,26 @@ const AdminArtApproval = (props) => {
               </GreyTextArea>
             </div>
             <CenterButtonsWrapper>
-              <ButtonSm
-                onClick={handleSave}
-                style={{
-                  ...buttonAndTextFontStyle,
-                  color: "#ffffff",
-                  borderRadius: "20px",
-                  padding: "13px 22px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                Save <SaveIcon style={{ marginLeft: "5px" }} />
-              </ButtonSm>
+              <MainButton onClick={handleSave} style={cntrTxtBtnsWithIcons}>
+                <SaveIcon style={{ marginRight: "5px" }} />
+                Save
+              </MainButton>
             </CenterButtonsWrapper>
           </SubmitCard>
         </ArtworkContainer>
         <CenterButtonsWrapper>
-          <IconButton onClick={flipLeft} disabled={isFlipLeftDisabled}>
+          <IconButton
+            onClick={flipLeft}
+            style={nextPreviousBtnStyle}
+            disabled={isFlipLeftDisabled}
+          >
             <KeyboardArrowLeftIcon /> Previous
           </IconButton>
-          <IconButton onClick={flipRight} disabled={isFlipRightDisabled}>
+          <IconButton
+            onClick={flipRight}
+            style={nextPreviousBtnStyle}
+            disabled={isFlipRightDisabled}
+          >
             Next <KeyboardArrowRightIcon />
           </IconButton>
         </CenterButtonsWrapper>
