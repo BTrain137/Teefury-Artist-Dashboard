@@ -176,9 +176,9 @@ const AdminArtApproval = (props) => {
       _loadPreviewArt(previewArt);
       // _loadArtFile(artFile);
 
-      if (artFile === "" || artFile === null) {
-        setIsArtFileDeleted(true);
-      }
+      artFile === "" || artFile === null
+        ? setIsArtFileDeleted(true)
+        : setIsArtFileDeleted(false);
 
       setState({
         ...state,
@@ -272,12 +272,7 @@ const AdminArtApproval = (props) => {
           title: "Poof! The art file has been deleted!",
           icon: "success",
         });
-        axios.delete(`/api/admin/submissions/declined-art-file/${id}`, {
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
-        });
-        setIsArtFileDeleted(true);
+        _deleteDeclinedArtFileById();
       } else {
         Swal.fire("The art file was not deleted.");
       }
