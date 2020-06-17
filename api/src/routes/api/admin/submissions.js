@@ -34,7 +34,7 @@ const router = express.Router();
 
 router.get(
   "/submissions/:status",
-  // passport.authenticate("jwt-admin"),
+  passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     let conn;
     const { status } = req.params;
@@ -162,10 +162,11 @@ router.put(
   }
 );
 
+// TODO: Write a delete psd by id instead
 // Delete declined submissions' PSD files
 router.delete(
   "/submissions/declined-all-psd",
-  // passport.authenticate("jwt-admin"),
+  passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     let conn;
 
