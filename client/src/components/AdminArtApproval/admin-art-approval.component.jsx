@@ -16,6 +16,7 @@ import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DoneIcon from "@material-ui/icons/Done";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import SaveIcon from "@material-ui/icons/Save";
 import { IconButton, MenuItem, Select } from "@material-ui/core";
 
@@ -29,12 +30,12 @@ import {
   ArtFileButtonsWrapper,
   IconContainer,
   IconBottomSubtitle,
-  IconTopSubtitle,
   SubmitCard,
   FormInputTitleStyled,
   TextAreaStyled,
   GreyTextArea,
   CaptionTitle,
+  EmailStatus,
   DownloadLink,
   CenterButtonsWrapper,
 } from "./admin-art-approval.styles";
@@ -82,34 +83,36 @@ const AdminArtApproval = (props) => {
   const [state, setState] = useState({
     previewArt: "",
     artFile: "",
-    artFileDownload: "",
     isEnlargeImg: false,
     artistName: "",
-    artistEmail: "",
     firstName: "",
     lastName: "",
-    createdAt: "",
-    description: "",
-    status: "",
+    artistEmail: "",
     title: "",
-    artHasSubmitted: false,
+    description: "",
+    createdAt: "",
+    status: "",
     isDisableSubmit: false,
   });
   const [isArtFileDeleted, setIsArtFileDeleted] = useState(false);
   const [artPreviewImg, setArtPreviewImg] = useState("");
+  const [artFileDownload, setArtFileDownload] = useState("");
+  const [emailStatus, setEmailStatus] = useState("Not emailed");
+  const [emailStatusColor, setEmailStatusColor] = useState({
+    color: "#6a6a6a",
+  });
 
   const {
     artFile,
-    artFileDownload,
     isEnlargeImg,
     artistName,
-    artistEmail,
     firstName,
     lastName,
-    createdAt,
-    description,
-    status,
+    artistEmail,
     title,
+    description,
+    createdAt,
+    status,
   } = state;
 
   useEffect(() => {
@@ -161,6 +164,26 @@ const AdminArtApproval = (props) => {
     }
   };
 
+  const changeEmailStatusColor = (approvalType) => {
+    switch (approvalType) {
+      case "Not emailed":
+        setEmailStatusColor({ color: "#6a6a6a" });
+        break;
+      case "Approved - Daily":
+        setEmailStatusColor({ color: "orange" });
+        break;
+      case "Approved - Gallery":
+        setEmailStatusColor({ color: "green" });
+        break;
+      case "Denied":
+        setEmailStatusColor({ color: "red" });
+        break;
+      default:
+        setEmailStatusColor({ color: "#6a6a6a" });
+    }
+    setEmailStatus(approvalType);
+  };
+
   const clickEnlargeImg = () => {
     setState({ ...state, isEnlargeImg: !isEnlargeImg });
   };
@@ -171,21 +194,25 @@ const AdminArtApproval = (props) => {
       const {
         previewArt,
         artFile,
+        emailStatus,
         ...submissionDetails
       } = submissionDetailsAll;
+
       _loadPreviewArt(previewArt);
       // _loadArtFile(artFile);
 
       artFile === "" || artFile === null
         ? setIsArtFileDeleted(true)
         : setIsArtFileDeleted(false);
+      changeEmailStatusColor(emailStatus);
 
       setState({
         ...state,
         ...submissionDetails,
-        artFileDownload: artFile,
+        emailStatus,
         artFile,
       });
+      setArtFileDownload(artFile);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -199,7 +226,7 @@ const AdminArtApproval = (props) => {
   const _loadArtFile = async (artFile) => {
     try {
       const artFileDownload = await _createBlob(artFile);
-      setState({ ...state, artFileDownload });
+      setArtFileDownload(artFileDownload);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -443,6 +470,14 @@ const AdminArtApproval = (props) => {
                   </MenuItem>
                 </Select>
               </GreyTextArea>
+              <EmailStatus
+                style={{ ...emailStatusColor, marginBottom: "20px" }}
+              >
+                <MailOutlineIcon
+                  style={{ marginRight: "5px", fontSize: "12px" }}
+                />
+                {emailStatus}
+              </EmailStatus>
             </div>
             <CenterButtonsWrapper>
               <MainButton onClick={handleSave} style={cntrTxtBtnsWithIcons}>
@@ -468,7 +503,12 @@ const AdminArtApproval = (props) => {
             Next <KeyboardArrowRightIcon />
           </IconButton>
         </CenterButtonsWrapper>
-        <EmailTemplate title={title} artistEmail={artistEmail} />
+        <EmailTemplate
+          title={title}
+          artistEmail={artistEmail}
+          id={id}
+          changeEmailStatusColor={changeEmailStatusColor}
+        />
       </TabArea>
     </>
   );
