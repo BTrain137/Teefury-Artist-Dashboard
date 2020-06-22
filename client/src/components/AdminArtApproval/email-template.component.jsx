@@ -35,6 +35,10 @@ const EmailTemplate = (props) => {
     "<h2>Please Select an Option</h2>"
   );
 
+  useEffect(() => {
+    setApprovalType("Not Selected");
+  }, [id]);
+  
   const handleOnChange = (event) => {
     const { value } = event.target;
 
