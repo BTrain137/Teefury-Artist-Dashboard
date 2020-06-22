@@ -8,10 +8,10 @@ USE `artist_dashboard`;
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `username_contact_email` VARCHAR(191) UNIQUE,
+  `username_contact_email` VARCHAR(255) UNIQUE,
   `password` BINARY(60),
   `is_admin` BOOLEAN NOT NULL DEFAULT 0,
-  `reset_password_token` varchar(255) DEFAULT NULL,
+  `reset_password_token` VARCHAR(255) DEFAULT NULL,
   `reset_password_expires` BIGINT DEFAULT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -27,10 +27,14 @@ CREATE TABLE `artist_profile` (
   `username_contact_email` VARCHAR(180) UNIQUE,
   `paypal_email` VARCHAR(255),
   `phone` VARCHAR(20),
-  `social_facebook` TEXT,
-  `social_instagram` TEXT,
-  `social_twitter` TEXT,
-  `social_tumblr` TEXT,
+  -- Max fb username length is 50 characters
+  `social_facebook` VARCHAR(100),
+  -- Max ig handle length is 30 characters
+  `social_instagram` VARCHAR(100),
+  -- Max twitter handle length is 15 characters
+  `social_twitter` VARCHAR(100),
+  -- Max tumblr username length is 32 characters
+  `social_tumblr` VARCHAR(100),
   `is_international` BOOLEAN,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -47,6 +51,8 @@ CREATE TABLE `submissions` (
   `art_file` VARCHAR(200),
   `preview_art` VARCHAR(200),
   `status` VARCHAR(100) NOT NULL DEFAULT "NEW",
+  `email_status` VARCHAR(50) NOT NULL DEFAULT "Not emailed",
+  `email_content` VARCHAR(3000),
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`)
@@ -58,8 +64,8 @@ CREATE TABLE `orders` (
   `order` VARCHAR(20),
   `order_id` BIGINT,
   `order_created_at` DATETIME,
-  `product_title` TEXT,
-  `variant_sku` TEXT,
+  `product_title` VARCHAR(255),
+  `variant_sku` VARCHAR(255),
   `vendor` VARCHAR(30),
   `quantity` TINYINT,
   `product_type` VARCHAR(20),
