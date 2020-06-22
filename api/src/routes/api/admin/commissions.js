@@ -4,7 +4,7 @@ import pool from "../../../database/connection";
 import { cleanDate } from "../../../utils/cleanData";
 
 /**
- * Database quires return an array. Even if 1 item exist.
+ * Database queries return an array. Even if 1 item exist.
  * @typedef {{
  *   dbRowId:Number,
  *   order:String,

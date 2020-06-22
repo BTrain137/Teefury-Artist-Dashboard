@@ -24,7 +24,7 @@ VALUES ("Tee", 2.00),
  ("ODAD-Tank", 1.00),
  ("Weekly-Tee", 1.00),
  ("Weekly-Sweatshirt", 1.00),
- ("Weekly-Tank", 1.00);
+ ("Weekly-Tank", 1.00),
  ("Grab Bag", 0.00),
  ("Face Mask", 1.00),
  ("none", 0.00);
