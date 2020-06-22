@@ -14,6 +14,9 @@ import { AdminArtCart as ArtCard } from "../ArtCards";
 // eslint-disable-next-line
 import { ReactComponent as MagnifyGlassIcon } from "../../assets/magnify-glass.svg";
 import { ReactComponent as AdjustablesIcon } from "../../assets/adjustables.svg";
+
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+
 import AdminArtApproval from "../AdminArtApproval";
 
 import {
@@ -31,12 +34,18 @@ import {
   ArtCardContainer,
 } from "../SharedStyle/art-submissions.styles";
 
+// import {
+//   EmailIconLegend,
+//   EmailIconLegendSpan,
+// } from "./admin-art-submissions.styles";
+
 const AdminArtSubmissions = ({ token }) => {
   const params = useParams();
   const [state, setState] = useState({
     search: "",
     isShowingFilter: false,
     status: "NEW",
+    emailStatus: "Not emailed",
     imageSrc: teefuryBirdLogo,
     submissionsArr: [],
     submissionsArrIndex: 0,
@@ -50,6 +59,7 @@ const AdminArtSubmissions = ({ token }) => {
     search,
     isShowingFilter,
     status,
+    emailStatus,
     submissionsArr,
     submissionsArrIndex,
     id,
@@ -170,6 +180,24 @@ const AdminArtSubmissions = ({ token }) => {
     <SubmissionContainer>
       <TabArea>
         <FilterHeader>
+          {/* <EmailIconLegend>
+            <EmailIconLegendSpan style={{ color: "#ffffff" }}>
+              <MailOutlineIcon style={{ fontSize: "10px" }} />: Not emailed
+            </EmailIconLegendSpan>
+            <br></br>
+            <EmailIconLegendSpan style={{ color: "#ffa500" }}>
+              <MailOutlineIcon style={{ fontSize: "10px" }} />: Approved - Daily
+            </EmailIconLegendSpan>
+            <br></br>
+            <EmailIconLegendSpan style={{ color: "#66ff00" }}>
+              <MailOutlineIcon style={{ fontSize: "10px" }} />: Approved -
+              Gallery
+            </EmailIconLegendSpan>
+            <br></br>
+            <EmailIconLegendSpan style={{ color: "#ff0000" }}>
+              <MailOutlineIcon style={{ fontSize: "10px" }} />: Denied
+            </EmailIconLegendSpan>
+          </EmailIconLegend> */}
           {/* <SearchBoxWrapper>
               <Form style={{ marginTop: "0" }}>
                 <Input
