@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import teefuryBirdLogo from "../../assets/teefury-bird.jpg";
 
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+
 import {
   CardContainer,
   CardWrapper,
@@ -19,10 +21,14 @@ const AdminArtCard = ({
   index,
   artistName,
   title,
+  emailStatus,
   createdAt,
   openAdminArtApproval,
 }) => {
   const [imageSrc, setImageSrc] = useState("");
+  const [emailStatusColor, setEmailStatusColor] = useState({
+    color: "#6a6a6a",
+  });
 
   useEffect(() => {
     const controller = new AbortController();
@@ -40,14 +46,34 @@ const AdminArtCard = ({
         })
         .catch((error) => {
           // console.error(error);
-        })
+        });
     };
     fetchImage();
 
+    _changeEmailStatusColor();
     return () => {
       controller.abort();
     };
   }, [token, previewArt]);
+
+  const _changeEmailStatusColor = () => {
+    switch (emailStatus) {
+      case "Not emailed":
+        setEmailStatusColor({ color: "white" });
+        break;
+      case "Approved - Daily":
+        setEmailStatusColor({ color: "orange" });
+        break;
+      case "Approved - Gallery":
+        setEmailStatusColor({ color: "green" });
+        break;
+      case "Denied":
+        setEmailStatusColor({ color: "red" });
+        break;
+      default:
+        setEmailStatusColor({ color: "white" });
+    }
+  };
 
   return (
     <CardContainer>
@@ -67,6 +93,7 @@ const AdminArtCard = ({
           <ArtHeaders style={{ fontSize: "14px" }}>
             {new Date(createdAt).toLocaleDateString()}
           </ArtHeaders>
+          <MailOutlineIcon style={emailStatusColor} />
         </Figcaption>
         <CardFooter id={id} data-index={index} onClick={openAdminArtApproval}>
           Review Artwork
