@@ -1,8 +1,5 @@
 USE artist_dashboard;
 
-ALTER TABLE users
-MODIFY COLUMN username_contact_email VARCHAR(255) UNIQUE;
-
 ALTER TABLE artist_profile
 MODIFY COLUMN social_facebook VARCHAR(100),
 MODIFY COLUMN social_instagram VARCHAR(100),
