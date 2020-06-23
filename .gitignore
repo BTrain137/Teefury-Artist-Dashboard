@@ -3,3 +3,4 @@ dist
 .env*
 art-submissions
 .DS_Store
+package-lock.json
