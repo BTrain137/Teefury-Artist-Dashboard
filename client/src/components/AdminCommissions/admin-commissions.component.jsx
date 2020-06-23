@@ -1,6 +1,8 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import Swal from "sweetalert2";
+
 import { selectUserJWTToken } from "../../redux/user/user.selector";
 
 import { AdminTable } from "../Table";
@@ -39,8 +41,8 @@ const TABLE_COLUMNS = [
     filter: "fuzzyText",
   },
   {
-    Header: "Vendor",
-    accessor: "vendor",
+    Header: "Artist",
+    accessor: "artist",
     filter: "fuzzyText",
   },
   {
@@ -62,27 +64,25 @@ const TABLE_COLUMNS = [
   },
 ];
 
-class AdminCommissions extends Component {
-  constructor(props) {
-    super(props);
+const AdminCommissions = (props) => {
+  const [state, setState] = useState({
+    tableData: [],
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
-    this.state = {
-      tableData: [],
-      startDate: new Date(),
-      endDate: new Date(),
-    };
-  }
+  const { tableData, startDate, endDate } = state;
+  const { token } = props;
 
-  componentDidMount() {
-    this.getAllCommissions();
-  }
+  useEffect(() => {
+    getAllCommissions();
+  }, []);
 
-  setTableData = (data) => {
-    this.setState({ tableData: data });
+  const setTableData = (data) => {
+    setState({ ...state, tableData: data });
   };
 
-  getAllCommissions = async () => {
-    const { token } = this.props;
+  const getAllCommissions = async () => {
     const reqBody = {
       url: "/api/admin/commissions",
       method: "GET",
@@ -90,11 +90,10 @@ class AdminCommissions extends Component {
 
     const tableData = await fetchComForTable(reqBody, token);
 
-    this.setState({ tableData });
+    setState({ ...state, tableData });
   };
 
-  handleDateFilter = async ({ startDate, endDate }) => {
-    const { token } = this.props;
+  const handleDateFilter = async ({ startDate, endDate }) => {
     const reqBody = {
       url: "/api/admin/commissions/dates",
       method: "POST",
@@ -104,50 +103,55 @@ class AdminCommissions extends Component {
       },
     };
 
-    const tableData = await fetchComForTable(reqBody, token);
+    try {
+      const tableData = await fetchComForTable(reqBody, token);
+      
+      setState({
+        tableData,
+        startDate,
+        endDate,
+      });
+      
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong. Please try again.",
+      })
+    }
 
-    this.setState({
-      tableData,
-      startDate,
-      endDate,
-    });
+    return;
   };
 
-
-  render() {
-    const { tableData, startDate, endDate } = this.state;
-    const { token } = this.props;
-    return (
-      <SubmissionContainer>
-        <TabHeader>
-          <TabTitle>Commissions</TabTitle>
-          <TabSubLink to={`/admin/commissions/payouts`}>
-            <TabSubTitle>Payouts</TabSubTitle>
-          </TabSubLink>
-        </TabHeader>
-        <TabArea>
-          <TableQueries
-            handleDateFilter={this.handleDateFilter}
+  return (
+    <SubmissionContainer>
+      <TabHeader>
+        <TabTitle>Commissions</TabTitle>
+        <TabSubLink to={`/admin/commissions/payouts`}>
+          <TabSubTitle>Payouts</TabSubTitle>
+        </TabSubLink>
+      </TabHeader>
+      <TabArea>
+        <TableQueries
+          handleDateFilter={handleDateFilter}
+          globalStartDate={startDate}
+          globalEndDate={endDate}
+        />
+        {tableData.length > 1 ? (
+          <AdminTable
+            columns={TABLE_COLUMNS}
+            setTableData={setTableData}
+            data={tableData}
+            token={token}
             globalStartDate={startDate}
             globalEndDate={endDate}
           />
-          {tableData.length > 1 ? (
-            <AdminTable
-              columns={TABLE_COLUMNS}
-              setTableData={this.setTableData}
-              data={tableData}
-              token={token}
-              globalStartDate={startDate}
-              globalEndDate={endDate}
-            />
-          ) : (
-            <h2> No Records Found </h2>
-          )}
-        </TabArea>
-      </SubmissionContainer>
-    );
-  }
-}
+        ) : (
+          <h2> No Records Found </h2>
+        )}
+      </TabArea>
+    </SubmissionContainer>
+  );
+};
 
 const mapStateToProps = createStructuredSelector({
   token: selectUserJWTToken,
