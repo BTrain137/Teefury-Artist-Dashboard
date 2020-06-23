@@ -10,22 +10,24 @@ import pool from "../../../database/connection";
  *   artFile:String,
  *   artistName:String,
  *   artistEmail:String,
- *   description:String,
- *   previewArt:String,
- *   status:String,
  *   title:String,
+ *   description:String,
+ *   status:String,
+ *   emailStatus:String,
+ *   previewArt:String,
  * }} SubmissionDetails
  *
  * @typedef {{
- *   firstName:String,
- *   lastName:String,
  *   artFile:String,
  *   artistName:String,
+ *   firstName:String,
+ *   lastName:String,
  *   artistEmail:String,
- *   description:String,
- *   previewArt:String,
- *   status:String,
  *   title:String,
+ *   description:String,
+ *   status:String,
+ *   emailStatus:String,
+ *   previewArt:String,
  * }} SubmissionDetailsEdit
  *
  */
@@ -34,7 +36,7 @@ const router = express.Router();
 
 router.get(
   "/submissions/:status",
-  // passport.authenticate("jwt-admin"),
+  passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     let conn;
     const { status } = req.params;
@@ -44,6 +46,7 @@ router.get(
       let queryString =
         "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
         "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
+        "`email_status` AS `emailStatus`, " +
         "`created_at` AS `createdAt` FROM `submissions` ";
 
       if (status) {
@@ -82,6 +85,7 @@ router.get(
         "`artist_profile`.`first_name` AS `firstName`, `artist_profile`.`last_name` AS `lastName`, " +
         "`submissions`.`artist_name` AS `artistName`, `submissions`.`title`, `description`, " +
         "`submissions`.`art_file` AS `artFile`, `submissions`.`preview_art` AS `previewArt`, `submissions`.`status`, " +
+        "`submissions`.`email_status` AS `emailStatus`, " +
         "`submissions`.`created_at` AS `createdAt` " +
         "FROM `submissions` INNER JOIN `artist_profile` " +
         "ON `submissions`.`username_contact_email`=`artist_profile`.`username_contact_email` " +
@@ -162,21 +166,21 @@ router.put(
   }
 );
 
-// Delete declined submissions' PSD files
+// Delete declined submissions' art file
 router.delete(
-  "/submissions/declined-all-psd",
-  // passport.authenticate("jwt-admin"),
+  "/submissions/declined-all-art-files",
+  passport.authenticate("jwt-admin"),
   async (req, res, next) => {
     let conn;
 
     try {
       conn = await pool.getConnection();
 
-      const query =
+      const querySelect =
         "SELECT `id`, `art_file` FROM `submissions` " +
         "WHERE `status` = 'DECLINED' AND `art_file` != ''";
 
-      const allDecSubArr = await pool.query(query);
+      const allDecSubArr = await pool.query(querySelect);
 
       for (let i = 0; i < allDecSubArr.length; i++) {
         const { id, art_file } = allDecSubArr[i];
@@ -194,9 +198,9 @@ router.delete(
           }
 
           // Update Database
-          const query =
+          const queryUpdate =
             "UPDATE `submissions` SET `art_file` = ? WHERE `id` = ?";
-          const { affectedRows } = await pool.query(query, ["", id]);
+          const { affectedRows } = await pool.query(queryUpdate, ["", id]);
           console.log({ affectedRows });
         }
       }
@@ -205,6 +209,56 @@ router.delete(
       res.sendStatus(202);
     } catch (error) {
       console.log(error);
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+// Delete declined submissions' art file by id
+router.delete(
+  "/submissions/declined-art-file/:id",
+  passport.authenticate("jwt-admin"),
+  async (req, res, next) => {
+    const { id } = req.params;
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+
+      const querySelect =
+        "SELECT `art_file` FROM `submissions` " +
+        "WHERE `id` = ? AND `art_file` != ''";
+
+      const allDecSubArr = await pool.query(querySelect, [id]);
+      console.log(allDecSubArr);
+
+      for (let i = 0; i < allDecSubArr.length; i++) {
+        const { art_file } = allDecSubArr[i];
+        if (art_file) {
+          // Delete Art File
+          try {
+            const artDiskLocation = path.join(
+              __dirname,
+              art_file.replace("/api/", "../../../../../")
+            );
+            fs.unlinkSync(artDiskLocation);
+            console.log({ artDiskLocation });
+          } catch (error) {
+            console.log("File Not Found");
+          }
+
+          // Update Database
+          const queryUpdate =
+            "UPDATE `submissions` SET `art_file` = ? WHERE `id` = ?";
+          const { affectedRows } = await pool.query(queryUpdate, ["", id]);
+          console.log({ affectedRows });
+        }
+      }
+
+      conn.end();
+      res.sendStatus(202);
+    } catch (error) {
       conn.end();
       next(error);
     }

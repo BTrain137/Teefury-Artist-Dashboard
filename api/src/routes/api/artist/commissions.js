@@ -3,7 +3,7 @@ import passport from "passport";
 import pool from "../../../database/connection";
 
 /**
- * Database quires return an array. Even if 1 item exist.
+ * Database queries return an array. Even if 1 item exist.
  * @typedef {{
  *   dbRowId:Number,
  *   order:String,
