@@ -10,9 +10,11 @@ import { cleanDate } from "../../../utils/cleanData";
  *   order:String,
  *   order_created_at:String,
  *   product_title:String,
- *   vendor:String,
+ *   artist:String,
  *   product_type:String,
  *   commissions_paid:Boolean,
+ *   is_international:Boolean,
+ *   paypal_email:String
  * }} CommissionsDetails
  *
  * @typedef {{
@@ -35,9 +37,11 @@ router.get(
     try {
       conn = await pool.getConnection();
       const queryString =
-        "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
-        "`vendor`, `product_type`, `quantity`, `commissions_amount`, `commissions_paid` " +
-        "FROM `orders` " +
+        "SELECT `orders`.`id` AS `dbRowId`, `orders`.`order`, `orders`.`order_created_at`, `orders`.`product_title`, " +
+        "`orders`.`vendor` AS `artist`, `orders`.`quantity`, `orders`.`product_type`, " +
+        "`orders`.`commissions_amount`, `orders`.`commissions_paid`, " +
+        "`artist_profile`.`paypal_email`, `artist_profile`.`is_international` " +
+        "FROM `orders` INNER JOIN `artist_profile` ON `orders`.`vendor` = `artist_profile`.`artist_name` " +
         "WHERE `order_created_at` BETWEEN '" +
         todaysDate +
         " 00:00:00' AND '" +
@@ -53,6 +57,7 @@ router.get(
 
       res.status(200).json({ commissionsDetailsArr });
     } catch (error) {
+      console.log(error);
       conn.end();
       next(error);
     }
@@ -122,9 +127,11 @@ router.post(
     try {
       conn = await pool.getConnection();
       let queryString =
-        "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
-        "`vendor`, `product_type`, `commissions_amount`, `commissions_paid` " +
-        "FROM `orders` ";
+        "SELECT `orders`.`id` AS `dbRowId`, `orders`.`order`, `orders`.`order_created_at`, `orders`.`product_title`, " +
+        "`orders`.`vendor` AS `artist`, `orders`.`quantity`, `orders`.`product_type`, " +
+        "`orders`.`commissions_amount`, `orders`.`commissions_paid`, " +
+        "`artist_profile`.`paypal_email`, `artist_profile`.`is_international` " +
+        "FROM `orders` INNER JOIN `artist_profile` ON `orders`.`vendor` = `artist_profile`.`artist_name` ";
 
       if (startDate && endDate) {
         queryString +=
