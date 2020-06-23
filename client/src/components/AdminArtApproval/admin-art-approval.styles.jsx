@@ -152,6 +152,13 @@ export const CaptionTitle = styled.span`
   color: #b5b4b4;
 `;
 
+export const EmailStatus = styled.span`
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 12px;
+`;
+
 export const DownloadLink = styled.a`
   color: #fff;
   text-decoration: none;

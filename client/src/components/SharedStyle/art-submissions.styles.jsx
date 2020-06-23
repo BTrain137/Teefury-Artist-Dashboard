@@ -51,13 +51,11 @@ export const TabArea = styled.div`
 
 export const FilterHeader = styled.div`
   display: flex;
-  justify-content: flex-end;
   position: relative;
 `;
 
 export const StatusHeader = styled.div`
-  position: absolute;
-  right: 42%;
+  margin: 0 auto;
 `;
 
 export const SearchBoxWrapper = styled.div`

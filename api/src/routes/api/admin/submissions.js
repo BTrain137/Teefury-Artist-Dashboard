@@ -10,22 +10,24 @@ import pool from "../../../database/connection";
  *   artFile:String,
  *   artistName:String,
  *   artistEmail:String,
- *   description:String,
- *   previewArt:String,
- *   status:String,
  *   title:String,
+ *   description:String,
+ *   status:String,
+ *   emailStatus:String,
+ *   previewArt:String,
  * }} SubmissionDetails
  *
  * @typedef {{
- *   firstName:String,
- *   lastName:String,
  *   artFile:String,
  *   artistName:String,
+ *   firstName:String,
+ *   lastName:String,
  *   artistEmail:String,
- *   description:String,
- *   previewArt:String,
- *   status:String,
  *   title:String,
+ *   description:String,
+ *   status:String,
+ *   emailStatus:String,
+ *   previewArt:String,
  * }} SubmissionDetailsEdit
  *
  */
@@ -44,6 +46,7 @@ router.get(
       let queryString =
         "SELECT `id`, `artist_name` AS `artistName`, `title`, `description`, " +
         "`art_file` AS `artFile`, `preview_art` AS `previewArt`, `status`, " +
+        "`email_status` AS `emailStatus`, " +
         "`created_at` AS `createdAt` FROM `submissions` ";
 
       if (status) {
@@ -82,6 +85,7 @@ router.get(
         "`artist_profile`.`first_name` AS `firstName`, `artist_profile`.`last_name` AS `lastName`, " +
         "`submissions`.`artist_name` AS `artistName`, `submissions`.`title`, `description`, " +
         "`submissions`.`art_file` AS `artFile`, `submissions`.`preview_art` AS `previewArt`, `submissions`.`status`, " +
+        "`submissions`.`email_status` AS `emailStatus`, " +
         "`submissions`.`created_at` AS `createdAt` " +
         "FROM `submissions` INNER JOIN `artist_profile` " +
         "ON `submissions`.`username_contact_email`=`artist_profile`.`username_contact_email` " +

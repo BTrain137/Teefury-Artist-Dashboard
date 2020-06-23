@@ -1,9 +1,10 @@
 import express from "express";
 import passport from "passport";
+import pool from "../../../database/connection";
 import { sendMail } from "../../../services/email";
 
 /**
- * Database quires return an array. Even if 1 item exist.
+ * Database queries return an array. Even if 1 item exist.
  * @typedef {{
  *   artFile:String,
  *   artistName:String,
@@ -17,20 +18,34 @@ import { sendMail } from "../../../services/email";
 
 const router = express.Router();
 
-router.post(
+// Update Email Status and Content, and Send Email
+router.put(
   "/email",
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
-    const {
-      artistEmail,
-      subject,
-      htmlContent,
-    } = req.body;
+    let conn;
+    const { artistEmail, subject, htmlContent, emailStatus, id } = req.body;
+    const emailContent = `to: ${artistEmail}<br/>subject: ${subject}<br/>${htmlContent}`;
 
     try {
+      conn = await pool.getConnection();
+      const queryString =
+        "UPDATE `submissions` " +
+        "SET `email_status` = ?, `email_content` = ? " +
+        "WHERE `id` = ?";
+
+      const { affectedRows } = await pool.query(queryString, [
+        emailStatus,
+        emailContent,
+        id,
+      ]);
+
       await sendMail(artistEmail, subject, htmlContent);
+      conn.end();
+
       res.sendStatus(202);
     } catch (error) {
+      conn.end();
       next(error);
     }
   }

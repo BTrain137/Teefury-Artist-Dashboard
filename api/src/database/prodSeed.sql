@@ -1,4 +1,4 @@
--- Insesrt Test Artist Account
+-- Insert Test Artist Account
 INSERT INTO `artist_profile` (`artist_name`, `first_name`, `last_name`, `username_contact_email`, `paypal_email`, `phone`, `social_facebook`, `social_instagram`, `social_twitter`, `is_international`) 
 VALUES ("locoMotive", "Tom", "Thomas", "bryan89tran@yahoo.com", "bryan89tran@yahoo.com", "", "", "", "",  true);
 

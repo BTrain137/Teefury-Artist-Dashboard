@@ -138,6 +138,7 @@ class Signup extends Component {
             // TODO: possibly push error up to redux
             <SignInSignUpError />
           )}
+          {/*TODO: Add validate length error message (191 max characters including handle) */}
           <FormInput
             type="email"
             name="contactEmail"
