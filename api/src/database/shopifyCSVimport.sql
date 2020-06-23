@@ -79,7 +79,7 @@ ON `orders`.`product_type`=`payouts`.`product_type`
 ORDER BY `order_created_at` ASC;
 
 
--- Helpful tabel creation to accept shopfiy orders
+-- Helpful table creation to accept shopify orders
 
 CREATE TABLE `orders` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

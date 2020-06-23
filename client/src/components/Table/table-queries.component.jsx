@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import { ButtonSm } from "../Button/button.component";
+import { MainButton } from "../Button";
 import { DateRange } from "react-date-range";
+import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
+
+import CloseIcon from '@material-ui/icons/Close';
 
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css f
 
-const TableQueries = ({
-  handleDateFilter,
-  globalStartDate,
-  globalEndDate,
-}) => {
+import {
+  FilterDateBtnsWrapper
+} from "./table.styles.jsx";
+
+const calendarBtnStyles = {
+              height: "40px",
+              fontSize: "17px",
+              fontFamily: "Arial",
+              color: "#0b7c80",
+}
+
+const TableQueries = ({ handleDateFilter, globalStartDate, globalEndDate }) => {
   const [dates, setDates] = useState({
     startDate: globalStartDate,
     endDate: globalEndDate,
@@ -18,19 +29,30 @@ const TableQueries = ({
 
   const [state, setState] = useState({
     isDateOpen: false,
+    isLoading: false,
   });
 
-  const { isDateOpen } = state;
+  const { isDateOpen, isLoading } = state;
 
   const handleChange = (item) => {
     setDates(item.selection);
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    setState({ ...state, isLoading: true });
     const { startDate, endDate } = dates;
     const start = new Date(startDate).toLocaleDateString("en-CA");
     const end = new Date(endDate).toLocaleDateString("en-CA");
-    handleDateFilter({ startDate: start, endDate: end });
+
+    try {
+      await handleDateFilter({
+        startDate: start,
+        endDate: end,
+      });
+      setState({ ...state, isLoading: false });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -58,22 +80,28 @@ const TableQueries = ({
               moveRangeOnFirstSelection={false}
               ranges={[dates]}
             />
-            <div>
-              <ButtonSm style={{ marginLeft: "20px" }} onClick={handleClick}>
-                Filter By Date
-              </ButtonSm>
-              <ButtonSm
-                style={{ marginLeft: "20px" }}
+            <FilterDateBtnsWrapper>
+              <MainButton style={{...calendarBtnStyles, width: "138px", marginLeft: "20px" }} onClick={handleClick}>
+                {isLoading ? <LoadingIcon /> : "Filter by Date"}
+              </MainButton>
+              <MainButton
+                style={{color: "#0b7c80", height: "40px", marginLeft: "20px" }}
                 onClick={() => setState({ ...state, isDateOpen: false })}
               >
-                X
-              </ButtonSm>
-            </div>
+                <CloseIcon/>
+              </MainButton>
+            </FilterDateBtnsWrapper>
           </>
         ) : (
-          <ButtonSm onClick={() => setState({ ...state, isDateOpen: true })}>
+          <MainButton
+            style={{
+              ...calendarBtnStyles,
+              width: "151px",
+            }}
+            onClick={() => setState({ ...state, isDateOpen: true })}
+          >
             Open Calendar
-          </ButtonSm>
+          </MainButton>
         )}
       </div>
     </div>
