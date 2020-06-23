@@ -10,7 +10,8 @@ VALUES ("btran@teefury.com", true),
 ("psandoval@teefury.com", true),
 ("ithiessen@teefury.com", true),
 ("rminjares@teefury.com", true),
-("joyce@teefury.com", true);
+("joyce@teefury.com", true),
+("hfolk@teefury.com", true);
 
 -- Artist users
 INSERT INTO `users` (`username_contact_email`, `password`, `is_admin`)
@@ -22,7 +23,8 @@ VALUES ("artist-btran@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j
 ("artist-psandoval@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK",  false),
 ("artist-ithiessen@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK",  false),
 ("artist-rminjares@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false),
-("artist-joyce@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false);
+("artist-joyce@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false),
+("artist-hfolk@teefury.com", "$2b$10$z491qJsDhk6/y4hhEoy0Q.xJVH3QmAwwwH3j3N4GOjENFTDfzmImK", false);
 
 -- Artist accounts
 INSERT INTO `artist_profile` (`artist_name`, `first_name`, `last_name`, `username_contact_email`, `paypal_email`, `phone`, `social_facebook`, `social_instagram`, `social_twitter`, `is_international`)
