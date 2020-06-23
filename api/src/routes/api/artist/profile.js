@@ -5,8 +5,6 @@ import pool from "../../../database/connection";
 import { secret } from "../../../services/jwtConfig";
 import { cleanStringShopify } from "../../../utils/cleanData";
 
-import main from "../../../services/cron";
-
 /**
  * Complete Artist Profile
  * @typedef {{
@@ -48,7 +46,9 @@ router.get("/profile", passport.authenticate("jwt"), async (req, res, next) => {
     );
     conn.end();
 
-    artistProfile.isInternational = artistProfile.is_international ? true : false;
+    artistProfile.isInternational = artistProfile.is_international
+      ? true
+      : false;
 
     /**
      * @return {ArtistProfile}
@@ -226,7 +226,9 @@ router.put("/profile", passport.authenticate("jwt"), async (req, res, next) => {
     );
     conn.end();
 
-    artistProfile.isInternational = artistProfile.is_international ? true : false;
+    artistProfile.isInternational = artistProfile.is_international
+      ? true
+      : false;
 
     res.status(200).json({
       message: "Artist Profile Updated.",
@@ -267,22 +269,10 @@ router.delete(
 );
 
 router.get("/test-artist-profile", (req, res) => {
-  main()
-    .then((success) => {
-      console.log("Success", success);
-      res.status(200).send({
-        message: "artist found in db",
-        isAuth: req.isAuthenticated(),
-      });
-    })
-    .catch((error) => {
-      console.log("error", error);
-      console.log(req.user);
-      res.status(200).send({
-        message: "artist found in db",
-        isAuth: req.isAuthenticated(),
-      });
-    });
+  res.status(200).send({
+    message: "artist found in db",
+    isAuth: req.isAuthenticated(),
+  });
 });
 
 export default router;
