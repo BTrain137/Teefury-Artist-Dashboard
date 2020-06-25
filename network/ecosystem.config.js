@@ -48,7 +48,7 @@ module.exports = {
     production: {
       user: "root",
       key: "~/.ssh/id_rsa_hetnzer_artist_dashboard_2",
-      host: ["95.217.162.146"],
+      host: ["78.46.197.151"],
       ref: "origin/master",
       path: "/var/www/artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
@@ -58,7 +58,7 @@ module.exports = {
     stage: {
       user: "root",
       key: "~/.ssh/id_rsa_hetnzer_artist_dashboard_2",
-      host: ["95.217.162.146"],
+      host: ["78.46.197.151"],
       ref: "origin/stage",
       path: "/var/www/stage-artist-dashboard",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
