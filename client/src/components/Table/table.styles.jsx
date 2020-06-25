@@ -35,3 +35,9 @@ export const TableContainer = styled.div`
     margin-top: 25px;
   }
 `;
+
+export const FilterDateBtnsWrapper = styled.div`
+  display: flex;
+  position: relative;
+  justify-content: center;
+`;

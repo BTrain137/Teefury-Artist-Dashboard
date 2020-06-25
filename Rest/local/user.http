@@ -4,7 +4,7 @@ POST http://localhost:3001/api/user/register
 Content-Type: application/json
 
 { 
-	"contactEmail": "tom@email.com", 
+	"contactEmail": "hfolk25@gmail.com", 
 	"password": "123456"
 }
 

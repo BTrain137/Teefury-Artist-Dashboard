@@ -134,20 +134,24 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
   const [csvData, setCsvData] = useState({ csvBodyData: [], csvHeaders: [] });
   const { csvBodyData, csvHeaders } = csvData;
 
-  const exportCSV = () => {
+  const exportCSV = async () => {
     const csvHeaders = [
       { label: "id", key: "dbRowId" },
       { label: "Date", key: "order_created_at" },
       { label: "Order #", key: "order" },
       { label: "Title", key: "product_title" },
-      { label: "Vendor", key: "vendor" },
+      { label: "Artist", key: "artist" },
       { label: "Product", key: "product_type" },
       { label: "Commissions Amount", key: "commissions_amount" },
       { label: "Paid or Unpaid", key: "commissions_paid" },
+      { label: "Paypal Email", key: "paypal_email" },
+      { label: "Is International", key: "is_international" },
     ];
     const csvBodyData = rows.map((row) => row.original);
 
-    setCsvData({ csvBodyData, csvHeaders });
+    // TODO: Watch MYSTERY CODE!!
+    await setCsvData({ csvBodyData, csvHeaders });
+    setCsvData({ csvBodyData: [], csvHeaders: [] });
   };
 
   return (

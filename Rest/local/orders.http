@@ -1,3 +1,6 @@
 # TODO: do queries correctly
 GET http://localhost:3001/api/admin/order-pull?inputDate=2020-05-29
 
+###
+GET http://localhost:3001/api/admin/commissions
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiY29udGFjdEVtYWlsIjoiaGZvbGtAdGVlZnVyeS5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNTkyMjQxNzk2LCJleHAiOjE2MDAwMTc3OTZ9.5F-jJkPuJ7K7MtMfM0M-pnkk07TH2jlW1qO_3zvCsZw
