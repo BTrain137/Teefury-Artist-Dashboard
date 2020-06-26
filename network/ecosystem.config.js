@@ -19,7 +19,7 @@ module.exports = {
     },
     {
       name: "stage-artist-dashboard",
-      cwd: "/var/www/stage-artist-dashboard/source/api/dist",
+      cwd: "/home/artist-test/stage-artist-dashboard/source/api/dist",
       script: "index.js",
       max_memory_restart: "200M",
       instances: 2,
@@ -57,10 +57,10 @@ module.exports = {
     },
     stage: {
       user: "root",
-      key: "~/.ssh/id_rsa_hetnzer_artist_dashboard_2",
+      key: "~/.ssh/id_rsa_hetnzer_art-dash-2",
       host: ["78.46.197.151"],
       ref: "origin/stage",
-      path: "/var/www/stage-artist-dashboard",
+      path: "/home/artist-test",
       repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
       "post-deploy":
         "npm install && npm run build && cd client && npm install && npm run build && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only stage-artist-dashboard",
