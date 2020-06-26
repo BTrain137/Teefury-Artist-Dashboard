@@ -61,7 +61,7 @@ module.exports = {
       key: "~/.ssh/id_rsa_hetnzer_art-dash-2",
       host: ["78.46.197.151"],
       ref: "origin/stage",
-      path: "/home/artist-test",
+      path: "/home/artist-test/stage-artist-dashboard",
       // Using RSA key
       repo: "git@github.com:btran-teefury/artist-dashboard-2.git",
       "post-deploy":
