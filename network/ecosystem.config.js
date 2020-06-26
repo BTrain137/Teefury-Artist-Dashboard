@@ -19,6 +19,7 @@ module.exports = {
     },
     {
       name: "stage-artist-dashboard",
+      // TODO: Switch to correct user
       cwd: "/home/artist-test/stage-artist-dashboard/source/api/dist",
       script: "index.js",
       max_memory_restart: "200M",
@@ -61,7 +62,8 @@ module.exports = {
       host: ["78.46.197.151"],
       ref: "origin/stage",
       path: "/home/artist-test",
-      repo: "https://github.com/btran-teefury/artist-dashboard-2.git",
+      // Using RSA key
+      repo: "git@github.com:btran-teefury/artist-dashboard-2.git",
       "post-deploy":
         "npm install && npm run build && cd client && npm install && npm run build && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only stage-artist-dashboard",
     },
