@@ -56,7 +56,7 @@ module.exports = {
         "npm install && npm run build && cd client && npm install && npm run build && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only artist-dashboard",
     },
     stage: {
-      user: "root",
+      user: "artist-test",
       key: "~/.ssh/id_rsa_hetnzer_art-dash-2",
       host: ["78.46.197.151"],
       ref: "origin/stage",
