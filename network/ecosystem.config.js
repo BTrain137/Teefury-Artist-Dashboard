@@ -57,11 +57,11 @@ module.exports = {
         "npm install && npm run build && cd client && npm install && npm run build && cd ./.. && pm2 startOrRestart ./network/ecosystem.config.js --only artist-dashboard",
     },
     stage: {
-      user: "artist-test",
+      user: "root",
       key: "~/.ssh/id_rsa_hetnzer_artist_dashboard_2",
       host: ["78.46.197.151"],
       ref: "origin/stage",
-      path: "/home/artist-test/stage-artist-dashboard",
+      path: "/var/www/stage-artist-dashboard",
       // Using RSA key
       repo: "git@github.com:btran-teefury/artist-dashboard-2.git",
       "post-deploy":
