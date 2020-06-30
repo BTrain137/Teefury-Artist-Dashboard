@@ -58,7 +58,7 @@ module.exports = {
     },
     stage: {
       user: "artist-test",
-      key: "~/.ssh/id_rsa_hetnzer_art-dash-2",
+      key: "~/.ssh/id_rsa_hetnzer_artist_dashboard_2",
       host: ["78.46.197.151"],
       ref: "origin/stage",
       path: "/home/artist-test/stage-artist-dashboard",
