@@ -73,7 +73,7 @@ ALTER TABLE `orders`
 
 SELECT `orders`.`order`, `orders`.`order_id`, `orders`.`order_created_at`, `orders`.`product_title`, 
 `orders`.`vendor`, `orders`.`variant_sku`, `orders`.`quantity`, `orders`.`product_type`, 
-`payouts`.`commissions_payout`, `orders`.`commissions_paid` 
+`payouts`.`commissions_payout`, `orders`.`is_commissions_paid` 
 FROM `orders` INNER JOIN  `payouts` 
 ON `orders`.`product_type`=`payouts`.`product_type`
 ORDER BY `order_created_at` ASC;
@@ -92,7 +92,7 @@ CREATE TABLE `orders` (
   `17. Lineitem quantity` int(4) DEFAULT NULL,
   `product_type` varchar(20) DEFAULT NULL,
   `commissions_amount` FLOAT(4,2),
-  `commissions_paid` tinyint(1) NOT NULL DEFAULT 0,
+  `is_commissions_paid` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 );
 

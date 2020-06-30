@@ -13,3 +13,6 @@ ADD COLUMN email_content VARCHAR(3000);
 ALTER TABLE orders
 MODIFY COLUMN product_title VARCHAR(255),
 MODIFY COLUMN variant_sku VARCHAR(255);
+
+ALTER TABLE orders
+CHANGE commissions_paid is_commissions_paid BOOLEAN NOT NULL DEFAULT 0;
