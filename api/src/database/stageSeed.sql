@@ -36,7 +36,8 @@ VALUES ("Raffiti", "Bryan", "Tran", "artist-btran@teefury.com", "artist-btran@te
 ("otisframpton", "Pedro", "Sandoval", "artist-psandoval@teefury.com", "psandoval@teefury.com",  "", "", "", "", false),
 ("eduely", "Isabel", "Thiessen", "artist-ithiessen@teefury.com", "ithiessen@teefury.com",  "", "", "", "", false),
 ("beware1984", "Rebecca", "Minajares", "artist-rminjares@teefury.com", "rminjares@teefury.com", "", "", "", "", false),
-("Geekydog", "Joyce", "Armstrong", "artist-joyce@teefury.com", "joyce@teefury.com", "", "", "", "", false);
+("Geekydog", "Joyce", "Armstrong", "artist-joyce@teefury.com", "joyce@teefury.com", "", "", "", "", false),
+("vp021", "Hannah", "Folk", "artist-hfolk@teefury.com", "hfolk@teefury.com",  "", "", "", "", false);
 
 
 -- Comissions payout
