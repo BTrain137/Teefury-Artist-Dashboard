@@ -5,6 +5,8 @@ import { useTable, useFilters, usePagination, useRowSelect } from "react-table";
 
 import TableToolbar from "./table-tool-bar.component";
 import { fetchComForTable } from "../../utils/table";
+import getCsvHeaders from "../../utils/csvHeaders";
+
 import {
   DefaultColumnFilter,
   IndeterminateCheckbox,
@@ -17,7 +19,7 @@ import { TableContainer } from "./table.styles";
 // Remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
-const AdminTable = ({ columns, data, token, setTableData }) => {
+const AdminTable = ({ columns, setTableData, type, data, token}) => {
   const filterTypes = React.useMemo(
     () => ({
       fuzzyText: fuzzyTextFilterFn,
@@ -135,18 +137,7 @@ const AdminTable = ({ columns, data, token, setTableData }) => {
   const { csvBodyData, csvHeaders } = csvData;
 
   const exportCSV = async () => {
-    const csvHeaders = [
-      { label: "id", key: "dbRowId" },
-      { label: "Date", key: "order_created_at" },
-      { label: "Order #", key: "order" },
-      { label: "Title", key: "product_title" },
-      { label: "Artist", key: "artist" },
-      { label: "Product", key: "product_type" },
-      { label: "Commissions Amount", key: "commissions_amount" },
-      { label: "Paid or Unpaid", key: "commissions_paid" },
-      { label: "Paypal Email", key: "paypal_email" },
-      { label: "Is International", key: "is_international" },
-    ];
+    const csvHeaders = getCsvHeaders(type);
     const csvBodyData = rows.map((row) => row.original);
 
     // TODO: Watch MYSTERY CODE!!

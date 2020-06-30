@@ -12,7 +12,7 @@ import pool from "../../../database/connection";
  *   vendor:String,
  *   product_type:String,
  *   commissions_amount:Number,
- *   commissions_paid:Boolean,
+ *   is_commissions_paid:Boolean,
  * }} CommissionsDetails
  *
  */
@@ -35,7 +35,7 @@ router.get(
       conn = await pool.getConnection();
       const queryString =
         "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
-        "`vendor`, `product_type`, `commissions_amount`, `commissions_paid` " +
+        "`vendor`, `product_type`, `commissions_amount`, `is_commissions_paid` " +
         "FROM `orders` WHERE `vendor`=? " +
         "ORDER BY `order_created_at` DESC ";
 
@@ -69,7 +69,7 @@ router.post(
       conn = await pool.getConnection();
       let queryString =
         "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
-        "`vendor`, `product_type`, `commissions_amount`, `commissions_paid` " +
+        "`vendor`, `product_type`, `commissions_amount`, `is_commissions_paid` " +
         "FROM `orders` WHERE `vendor`=? ";
 
       if (startDate && endDate) {
