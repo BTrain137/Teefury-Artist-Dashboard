@@ -12,11 +12,19 @@ import { cleanDate } from "../../../utils/cleanData";
  *   product_title:String,
  *   artist:String,
  *   product_type:String,
- *   commissions_paid:Boolean,
+ *   is_commissions_paid:Boolean,
  *   is_international:Boolean,
  *   paypal_email:String
  * }} CommissionsDetails
  *
+ * @typedef {{
+ *  artist:String,
+ *  product_type:String,
+ *  quantity:Number,
+ *  paidAmount:Number,
+ *  unpaidAmount:Number
+ * }}
+ * 
  * @typedef {{
  *   id: Number,
  *   commissions_payout: String,
@@ -27,27 +35,32 @@ import { cleanDate } from "../../../utils/cleanData";
 
 const router = express.Router();
 
-router.get(
+router.post(
   "/commissions",
   passport.authenticate("jwt-admin"),
   async (req, res, next) => {
+    const { startDate, endDate } = req.body;
     let conn;
 
-    const todaysDate = cleanDate();
     try {
       conn = await pool.getConnection();
-      const queryString =
+      let queryString =
         "SELECT `orders`.`id` AS `dbRowId`, `orders`.`order`, `orders`.`order_created_at`, `orders`.`product_title`, " +
         "`orders`.`vendor` AS `artist`, `orders`.`quantity`, `orders`.`product_type`, " +
-        "`orders`.`commissions_amount`, `orders`.`commissions_paid`, " +
+        "`orders`.`commissions_amount`, `orders`.`is_commissions_paid`, " +
         "`artist_profile`.`paypal_email`, `artist_profile`.`is_international` " +
-        "FROM `orders` INNER JOIN `artist_profile` ON `orders`.`vendor` = `artist_profile`.`artist_name` " +
-        "WHERE `order_created_at` BETWEEN '" +
-        todaysDate +
-        " 00:00:00' AND '" +
-        todaysDate +
-        " 23:59:59' " +
-        "ORDER BY `order_created_at` DESC ";
+        "FROM `orders` INNER JOIN `artist_profile` ON `orders`.`vendor` = `artist_profile`.`artist_name` ";
+
+      if (startDate && endDate) {
+        queryString +=
+          "WHERE `order_created_at` BETWEEN '" +
+          startDate +
+          " 00:00:00' AND '" +
+          endDate +
+          " 23:59:59' ";
+      }
+
+      queryString += "ORDER BY `order_created_at` DESC ";
 
       /**
        * @return {CommissionsDetails[]}
@@ -56,8 +69,47 @@ router.get(
       conn.end();
 
       res.status(200).json({ commissionsDetailsArr });
+      // res.sendStatus(200)
     } catch (error) {
-      console.log(error);
+      conn.end();
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/commissions/by-artist",
+  passport.authenticate("jwt-admin"),
+  async (req, res, next) => {
+    const { startDate, endDate } = req.body;
+    let conn;
+
+    try {
+      conn = await pool.getConnection();
+      const queryString =
+        "SELECT `artist`, `product`, `productType`, " +
+        "SUM(`quantity`) AS `quantity`, SUM(`paidAmount`) AS `paidAmount`, " + 
+        "SUM(`unpaidAmount`) AS `unpaidAmount` " +
+        "FROM (SELECT `vendor` AS `artist`, `product_title` AS `product`, " +  "`product_type` AS `productType`, COUNT(`product_type`) AS `quantity`, " + 
+        "IF(`is_commissions_paid`, `commissions_amount` * SUM(`quantity`), 0.00) AS `paidAmount`, " + 
+        "IF(NOT `is_commissions_paid`, `commissions_amount` * SUM(`quantity`), 0.00) AS `unpaidAmount` " + 
+        "FROM `orders` " +
+        "WHERE `order_created_at` BETWEEN '" +
+        startDate + 
+        " 00:00:00' AND '" +
+        endDate +
+        " 23:59:59' " +
+        "GROUP BY `vendor`, `product_title`, `product_type`, `commissions_amount`, `is_commissions_paid`) AS subTable " + 
+        "GROUP BY `artist`, `product`, `productType`";
+
+      /**
+       * @return {CommissionsDetailsByArtist[]}
+       */
+      const commissionsDetailsByArtistArr = await pool.query(queryString);
+      conn.end();
+
+      res.status(200).json({ commissionsDetailsByArtistArr: commissionsDetailsByArtistArr });
+    } catch (error) {
       conn.end();
       next(error);
     }
@@ -88,13 +140,13 @@ router.put(
     try {
       conn = await pool.getConnection();
       const queryUpdate =
-        "UPDATE `orders` SET `commissions_paid`=? WHERE (" + ids + ");";
+        "UPDATE `orders` SET `is_commissions_paid`=? WHERE (" + ids + ");";
 
       const { affectedRows } = await pool.query(queryUpdate, [isPaid]);
 
       const queryString =
         "SELECT `id` as `dbRowId`, `order_created_at`, `order`, `product_title`, " +
-        "`vendor`, `product_type`, `order_id` as `commissions_amount`, `commissions_paid` " +
+        "`vendor`, `product_type`, `order_id` as `commissions_amount`, `is_commissions_paid` " +
         "FROM `orders` " +
         "WHERE `order_created_at` BETWEEN '" +
         start +
@@ -110,48 +162,6 @@ router.put(
       conn.end();
 
       res.status(200).json({ commissionsDetailsArr });
-    } catch (error) {
-      conn.end();
-      next(error);
-    }
-  }
-);
-
-router.post(
-  "/commissions/dates",
-  passport.authenticate("jwt-admin"),
-  async (req, res, next) => {
-    const { startDate, endDate } = req.body;
-    let conn;
-
-    try {
-      conn = await pool.getConnection();
-      let queryString =
-        "SELECT `orders`.`id` AS `dbRowId`, `orders`.`order`, `orders`.`order_created_at`, `orders`.`product_title`, " +
-        "`orders`.`vendor` AS `artist`, `orders`.`quantity`, `orders`.`product_type`, " +
-        "`orders`.`commissions_amount`, `orders`.`commissions_paid`, " +
-        "`artist_profile`.`paypal_email`, `artist_profile`.`is_international` " +
-        "FROM `orders` INNER JOIN `artist_profile` ON `orders`.`vendor` = `artist_profile`.`artist_name` ";
-
-      if (startDate && endDate) {
-        queryString +=
-          "WHERE `order_created_at` BETWEEN '" +
-          startDate +
-          " 00:00:00' AND '" +
-          endDate +
-          " 23:59:59' ";
-      }
-
-      queryString += "ORDER BY `order_created_at` DESC ";
-
-      /**
-       * @return {CommissionsDetails[]}
-       */
-      const commissionsDetailsArr = await pool.query(queryString);
-      conn.end();
-
-      res.status(200).json({ commissionsDetailsArr });
-      // res.sendStatus(200)
     } catch (error) {
       conn.end();
       next(error);

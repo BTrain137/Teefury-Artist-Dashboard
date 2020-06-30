@@ -13,11 +13,11 @@ export const fetchComForTable = async (reqBody, token) => {
     } = await axios(request);
 
     const convertDetailsForAdmin = commissionsDetailsArr.map((details) => {
-      const { order_created_at, commissions_paid, ...otherProperty } = details;
+      const { order_created_at, is_commissions_paid, ...otherProperty } = details;
       return {
         ...otherProperty,
         order_created_at: justDate(order_created_at),
-        commissions_paid: commissions_paid ? "Paid" : "Unpaid",
+        is_commissions_paid: is_commissions_paid ? "Paid" : "Unpaid",
       };
     });
 
@@ -26,3 +26,21 @@ export const fetchComForTable = async (reqBody, token) => {
     throw error;
   }
 };
+
+export const fetchComByArtistForTable = async (reqBody, token) => {
+  const request = {
+    ...reqBody,
+    headers: { Authorization: `JWT ${token}` },
+  };
+
+  try {
+    const {
+      data: { commissionsDetailsByArtistArr },
+    } = await axios(request);
+
+    return commissionsDetailsByArtistArr;
+  } catch (error) {
+    throw error;
+  }
+};
+
