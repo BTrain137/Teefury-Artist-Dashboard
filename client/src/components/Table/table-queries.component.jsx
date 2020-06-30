@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ButtonSm } from "../Button/button.component";
+// import { ButtonSm } from "../Button/button.component";
 import { MainButton } from "../Button";
 import { DateRange } from "react-date-range";
 import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
@@ -93,6 +93,7 @@ const TableQueries = ({ handleDateFilter, globalStartDate, globalEndDate }) => {
             </FilterDateBtnsWrapper>
           </>
         ) : (
+          <>
           <MainButton
             style={{
               ...calendarBtnStyles,
@@ -102,6 +103,8 @@ const TableQueries = ({ handleDateFilter, globalStartDate, globalEndDate }) => {
           >
             Open Calendar
           </MainButton>
+          <p>Note: Default is today.</p>
+          </>
         )}
       </div>
     </div>
