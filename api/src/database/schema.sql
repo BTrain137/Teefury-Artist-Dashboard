@@ -70,7 +70,7 @@ CREATE TABLE `orders` (
   `quantity` TINYINT,
   `product_type` VARCHAR(20),
   `commissions_amount` FLOAT(4,2),
-  `commissions_paid` BOOLEAN NOT NULL DEFAULT 0,
+  `is_commissions_paid` BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY(`id`)
 );
 

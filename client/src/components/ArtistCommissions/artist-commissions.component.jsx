@@ -35,7 +35,7 @@ const TABLE_COLUMNS = [
   },
   // {
   //   Header: "Paid or Unpaid",
-  //   accessor: "commissions_paid",
+  //   accessor: "is_commissions_paid",
   //   Filter: SelectColumnFilter,
   //   filter: "includes",
   // },
